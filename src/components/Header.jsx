@@ -1,10 +1,126 @@
-import React from 'react'
+import React, { useState } from "react";
+import { Menu, X } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navLinks = (
+    <li className="list-none flex flex-col lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
+      <a
+        href="#features"
+        className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        onClick={() => setIsMenuOpen(false)} // Close menu on click
+      >
+        Features
+      </a>
+      <a
+        href="#pricing"
+        className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        Pricing
+      </a>
+      <a
+        href="#about"
+        className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        About
+      </a>
+    </li>
+  );
+
+  const actionButtons = (
+    <div className="flex flex-col lg:flex-row items-center gap-5 lg:gap-10 mt-6 lg:mt-0 w-full lg:w-auto">
+      <button
+        className="cursor-pointer transition-all duration-300 hover:text-gray-300 active:text-gray-400 hover:scale-105 text-lg lg:text-base"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        Sign In
+      </button>
+      <button
+        className="border font-semibold rounded py-3 px-6 cursor-pointer transition-all duration-300 hover:bg-gray-100 hover:text-[#333] active:bg-gray-400 w-full lg:w-auto"
+        onClick={() => setIsMenuOpen(false)}
+      >
+        Get Started
+      </button>
+    </div>
+  );
+
+  // Framer Motion properties for the overall container animation
+  const containerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
+  // Framer Motion properties for the mobile menu
+  const menuVariants = {
+    open: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+      },
+    },
+    closed: {
+      opacity: 0,
+      x: "100%",
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+      },
+    },
+  };
+
   return (
-    <header>
-      {/* Logo */}
-      
-    </header>
-  )
+    <motion.header
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="flex font-medium justify-between items-center text-white bg-gradient-to-r from-[#00031F] via-[rgb(0,20,44)] to-[#21000B] py-5 px-4 lg:px-10 relative z-50"
+    >
+      {/* Logo (Visible on all screens) */}
+      <div className="flex items-center space-x-4 p-4 font-medium">
+        <div>
+          <img src="/favicon.png" alt="Logo" className="w-8" />
+        </div>
+        <h1 className="text-xl sm:text-3xl">
+          H<span className="font-light">el</span>ply
+          <span className="font-bold italic">AI</span>
+        </h1>
+      </div>
+
+      {/* Navlinks - Desktop (Hidden on small screens) */}
+      <nav className="hidden lg:block">{navLinks}</nav>
+
+      {/* Action - Desktop (Hidden on small screens) */}
+      <div className="hidden lg:flex items-center gap-10">{actionButtons}</div>
+
+      {/* Hamburger Icon - Mobile (Visible only on small screens) */}
+      <button
+        className="lg:hidden text-white p-2 z-50"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+      >
+        {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+      </button>
+
+      {/* Mobile Menu Overlay */}
+      <motion.div
+        initial={false}
+        animate={isMenuOpen ? "open" : "closed"}
+        variants={menuVariants}
+        className="fixed top-0 right-0 h-full w-full max-w-xs bg-gradient-to-b from-[#00031F] via-[rgb(0,20,44)] to-[#21000B] p-8 shadow-xl lg:hidden z-40"
+      >
+        <div className="flex flex-col items-start pt-20 h-full">
+          <nav className="w-full">{navLinks}</nav>
+          <div className="mt-10 w-full">{actionButtons}</div>
+        </div>
+      </motion.div>
+    </motion.header>
+  );
 }
