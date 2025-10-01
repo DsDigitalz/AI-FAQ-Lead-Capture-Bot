@@ -97,7 +97,7 @@ export default function Header() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="flex font-medium justify-between items-center lg:backdrop-blur text-white bg-gradient-to-r from-[#1A1A1B] via-[#343434] to-[#1A1A1B] py-1 px-1 lg:py-5 md:px-4 lg:px-10 relative z-50"
+      className="flex font-medium justify-between items-center lg:backdrop-blur text-white bg-gradient-to-r from-[#181818] via-[#2e2e2e] to-[#181818] py-1 px-1 lg:py-5 md:px-4 lg:px-10 relative z-50"
     >
       {/* Logo (Visible on all screens) */}
       <div className="flex items-center space-x-2 md:space-x-4 p-4 font-medium">
@@ -131,7 +131,7 @@ export default function Header() {
         initial={false}
         animate={isMenuOpen ? "open" : "closed"}
         variants={menuVariants}
-        className="fixed top-0 right-0 h-full w-70 max-w-xs bg-gradient-to-b from-[#1A1A1B] via-[#343434] to-[#1A1A1B] p-6 shadow-xl lg:hidden z-40"
+        className="fixed top-0 right-0 h-full w-70 max-w-xs bg-gradient-to-b from-[#181818] via-[#2e2e2e] to-[#181818] p-6 shadow-xl lg:hidden z-40"
       >
         <div className="flex flex-col items-start pt-20 h-full">
           <nav className="w-full">{navLinks}</nav>
