@@ -1,16 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null); // Reference to the mobile menu
+
+  // Handle clicks outside the menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false); // Close the menu if click is outside
+      }
+    };
+
+    // Add event listener when menu is open
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    // Cleanup event listener
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   const navLinks = (
     <li className="list-none flex flex-col lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
       <a
         href="#features"
         className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
-        onClick={() => setIsMenuOpen(false)} // Close menu on click
+        onClick={() => setIsMenuOpen(false)}
       >
         Features
       </a>
@@ -48,28 +68,23 @@ export default function Header() {
     </div>
   );
 
-  // Framer Motion properties for the overall container animation
-  // (Using the requested fade-in and slide-in for this component)
   const containerVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
-  // 🎯 MODIFIED: Framer Motion properties for the mobile menu (made faster)
   const menuVariants = {
     open: {
       opacity: 1,
       x: 0,
-      // 🎯 Faster transition: Reduced duration for a quick, snappy feel
       transition: {
-        type: "tween", // Simple tween is often faster than spring
-        duration: 0.2, // Very short duration for fast opening
+        type: "tween",
+        duration: 0.2,
       },
     },
     closed: {
       opacity: 0,
       x: "100%",
-      // Ensure closing transition is also fast and snappy
       transition: {
         type: "tween",
         duration: 0.2,
@@ -82,7 +97,7 @@ export default function Header() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="flex font-medium justify-between items-center text-white bg-gradient-to-r from-[#00031F] via-[rgb(7,0,25)] to-[#21000B] py-1 px-1 lg:py-5 md:px-4 lg:px-10 relative z-50"
+      className="flex font-medium justify-between items-center lg:backdrop-blur text-white bg-gradient-to-r from-[#1A1A1B] via-[#343434] to-[#1A1A1B] py-1 px-1 lg:py-5 md:px-4 lg:px-10 relative z-50"
     >
       {/* Logo (Visible on all screens) */}
       <div className="flex items-center space-x-2 md:space-x-4 p-4 font-medium">
@@ -112,10 +127,11 @@ export default function Header() {
 
       {/* Mobile Menu Overlay */}
       <motion.div
+        ref={menuRef} // Attach ref to the mobile menu
         initial={false}
         animate={isMenuOpen ? "open" : "closed"}
         variants={menuVariants}
-        className="fixed top-0 right-0 h-full w-70 max-w-xs bg-gradient-to-b from-[#00031F]via-[rgb(7,0,25)] to-[#21000B] p-6 shadow-xl lg:hidden z-40"
+        className="fixed top-0 right-0 h-full w-70 max-w-xs bg-gradient-to-b from-[#1A1A1B] via-[#343434] to-[#1A1A1B] p-6 shadow-xl lg:hidden z-40"
       >
         <div className="flex flex-col items-start pt-20 h-full">
           <nav className="w-full">{navLinks}</nav>
