@@ -49,29 +49,30 @@ export default function Header() {
   );
 
   // Framer Motion properties for the overall container animation
+  // (Using the requested fade-in and slide-in for this component)
   const containerVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
-  // Framer Motion properties for the mobile menu
+  // 🎯 MODIFIED: Framer Motion properties for the mobile menu (made faster)
   const menuVariants = {
     open: {
       opacity: 1,
       x: 0,
+      // 🎯 Faster transition: Reduced duration for a quick, snappy feel
       transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 20,
+        type: "tween", // Simple tween is often faster than spring
+        duration: 0.2, // Very short duration for fast opening
       },
     },
     closed: {
       opacity: 0,
       x: "100%",
+      // Ensure closing transition is also fast and snappy
       transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 20,
+        type: "tween",
+        duration: 0.2,
       },
     },
   };
@@ -81,12 +82,12 @@ export default function Header() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="flex font-medium justify-between items-center text-white bg-gradient-to-r from-[#00031F] via-[rgb(0,20,44)] to-[#21000B] py-5 px-4 lg:px-10 relative z-50"
+      className="flex font-medium justify-between items-center text-white bg-gradient-to-r from-[#00031F] via-[rgb(0,20,44)] to-[#21000B] py-1 px-1 lg:py-5 md:px-4 lg:px-10 relative z-50"
     >
       {/* Logo (Visible on all screens) */}
-      <div className="flex items-center space-x-4 p-4 font-medium">
+      <div className="flex items-center space-x-2 md:space-x-4 p-4 font-medium">
         <div>
-          <img src="/favicon.png" alt="Logo" className="w-8" />
+          <img src="/favicon.png" alt="Logo" className="lg:w-8" />
         </div>
         <h1 className="text-xl sm:text-3xl">
           H<span className="font-light">el</span>ply
@@ -114,7 +115,7 @@ export default function Header() {
         initial={false}
         animate={isMenuOpen ? "open" : "closed"}
         variants={menuVariants}
-        className="fixed top-0 right-0 h-full w-full max-w-xs bg-gradient-to-b from-[#00031F] via-[rgb(0,20,44)] to-[#21000B] p-8 shadow-xl lg:hidden z-40"
+        className="fixed top-0 right-0 h-full w-70 max-w-xs bg-gradient-to-b from-[#00031F] via-[rgb(0,20,44)] to-[#21000B] p-6 shadow-xl lg:hidden z-40"
       >
         <div className="flex flex-col items-start pt-20 h-full">
           <nav className="w-full">{navLinks}</nav>
