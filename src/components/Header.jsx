@@ -1,25 +1,43 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Shield, Zap } from "lucide-react"; // Imported Shield and Zap for the new logo
 import { motion } from "framer-motion";
+
+// New Logo Component: Shield (for help/protection) + Zap (for speed/AI)
+const HelplyAILogo = ({ className = "w-8 h-8" }) => (
+  <div className={`relative ${className}`}>
+    {/* Shield Icon: Represents help and protection */}
+    <Shield className="w-full h-full text-white" strokeWidth={1.5} />
+    {/* Zap Icon: Represents intelligence and speed */}
+    <Zap
+      className="absolute top-1/2 left-1/2 w-3 h-3 text-fuchsia-400 fill-fuchsia-400 transform -translate-x-1/2 -translate-y-1/2"
+      strokeWidth={0}
+    />
+  </div>
+);
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null); // Reference to the mobile menu
+  const menuRef = useRef(null);
 
   // Handle clicks outside the menu
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Ensure we don't close the menu when clicking the toggle button
+      const toggleButton = document.querySelector(
+        '[aria-label="Open menu"], [aria-label="Close menu"]'
+      );
+      if (toggleButton && toggleButton.contains(event.target)) {
+        return;
+      }
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false); // Close the menu if click is outside
+        setIsMenuOpen(false);
       }
     };
 
-    // Add event listener when menu is open
     if (isMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
-    // Cleanup event listener
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -68,6 +86,7 @@ export default function Header() {
     </div>
   );
 
+  // Framer Motion Variants for the required fade-in and slide-in effect
   const containerVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
@@ -97,16 +116,21 @@ export default function Header() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="flex font-medium justify-between items-center lg:backdrop-blur text-white bg-gradient-to-r from-[#181818] via-[#2e2e2e] to-[#181818] py-1 px-1 lg:py-5 md:px-4 lg:px-10 relative z-50"
+      className="flex font-medium justify-between items-center lg:backdrop-blur text-white bg-gradient-to-br from-[#00031F] to-[#10003B] py-1 px-1 lg:py-5 md:px-4 lg:px-10 relative z-50"
     >
-      {/* Logo (Visible on all screens) */}
+      {/* Logo Area */}
       <div className="flex items-center space-x-2 md:space-x-4 p-4 font-medium">
-        <div>
-          <img src="/favicon.png" alt="Logo" className="lg:w-8" />
-        </div>
-        <h1 className="text-xl sm:text-3xl">
-          H<span className="font-light">el</span>ply
-          <span className="font-bold italic">AI</span>
+        {/* New HelplyAI Logo */}
+        <HelplyAILogo className="w-8 h-8" />
+
+        {/* Gradient Text HelplyAI */}
+        <h1 className="text-xl sm:text-3xl font-extrabold">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">
+            Helply
+          </span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-blue-400 font-bold italic">
+            AI
+          </span>
         </h1>
       </div>
 
@@ -127,11 +151,11 @@ export default function Header() {
 
       {/* Mobile Menu Overlay */}
       <motion.div
-        ref={menuRef} // Attach ref to the mobile menu
+        ref={menuRef}
         initial={false}
         animate={isMenuOpen ? "open" : "closed"}
         variants={menuVariants}
-        className="fixed top-0 right-0 h-full w-70 max-w-xs bg-gradient-to-b from-[#181818] via-[#2e2e2e] to-[#181818] p-6 shadow-xl lg:hidden z-40"
+        className="fixed top-0 right-0 h-full w-75 max-w-xs bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] p-6 shadow-xl lg:hidden z-40"
       >
         <div className="flex flex-col items-start pt-20 h-full">
           <nav className="w-full">{navLinks}</nav>
