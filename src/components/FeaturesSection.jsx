@@ -4,7 +4,7 @@ import {
   Zap, // For speed/instant
   Shield, // For security/protection
   Users, // For team/integration
-  MessageSquareCheck, // For qualification
+  CheckCircle, 
   Database, // For knowledge base
   Clock, // For 24/7
 } from "lucide-react";
@@ -39,7 +39,8 @@ const featureData = [
     color: "text-fuchsia-400",
   },
   {
-    icon: MessageSquareCheck,
+    // 🟢 FIX: Now using CheckCircle, which is guaranteed to be exported.
+    icon: CheckCircle,
     title: "Intelligent Lead Qualification",
     description:
       "Automatically ask critical questions (budget, needs, timeline) and qualify leads before handing them off to your sales team.",
@@ -77,7 +78,7 @@ const featureData = [
 
 export default function FeaturesSection() {
   return (
-    <div className="py-20 bg-[#0A0027]">
+    <section className="py-20 bg-[#0A0027]">
       <motion.div
         className="max-w-7xl mx-auto px-6"
         variants={containerVariants}
@@ -118,6 +119,6 @@ export default function FeaturesSection() {
           ))}
         </motion.div>
       </motion.div>
-    </div>
+    </section>
   );
 }
