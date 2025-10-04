@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Menu, X, Shield, Zap } from "lucide-react"; // Imported Shield and Zap for the new logo
-import { motion } from "framer-motion";
+// Framer Motion removed
 
 // New Logo Component: Shield (for help/protection) + Zap (for speed/AI)
 const HelplyAILogo = ({ className = "w-8 h-8" }) => (
@@ -86,38 +86,11 @@ export default function Header() {
     </div>
   );
 
-  // Framer Motion Variants for the required fade-in and slide-in effect
-  const containerVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
-
-  const menuVariants = {
-    open: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        type: "tween",
-        duration: 0.2,
-      },
-    },
-    closed: {
-      opacity: 0,
-      x: "100%",
-      transition: {
-        type: "tween",
-        duration: 0.2,
-      },
-    },
-  };
+  // Framer Motion variants and logic are now removed.
 
   return (
-    <motion.header
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      className="flex font-medium justify-between items-center lg:backdrop-blur text-white bg-gradient-to-br from-[#00031F] to-[#10003B] py-1 px-1 lg:py-5 md:px-4 lg:px-10 relative z-50"
-    >
+    // 🟢 CHANGE: Replaced motion.header with regular header tag
+    <header className="flex font-medium justify-between items-center lg:backdrop-blur text-white bg-gradient-to-br from-[#00031F] to-[#10003B] py-1 px-1 lg:py-5 md:px-4 lg:px-10 relative z-50">
       {/* Logo Area */}
       <div className="flex items-center space-x-2 md:space-x-4 p-4 font-medium">
         {/* New HelplyAI Logo */}
@@ -150,18 +123,20 @@ export default function Header() {
       </button>
 
       {/* Mobile Menu Overlay */}
-      <motion.div
+      {/* 🟢 CHANGE: Replaced motion.div with regular div and implemented tailwind transitions */}
+      <div
         ref={menuRef}
-        initial={false}
-        animate={isMenuOpen ? "open" : "closed"}
-        variants={menuVariants}
-        className="fixed top-0 right-0 h-full w-75 max-w-xs bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] p-6 shadow-xl lg:hidden z-40"
+        className={`
+          fixed top-0 right-0 h-full w-75 max-w-xs bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] p-6 shadow-xl lg:hidden z-40
+          transition-transform duration-300 ease-in-out
+          ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
+        `}
       >
         <div className="flex flex-col items-start pt-20 h-full">
           <nav className="w-full">{navLinks}</nav>
           <div className="mt-10 w-full">{actionButtons}</div>
         </div>
-      </motion.div>
-    </motion.header>
+      </div>
+    </header>
   );
 }
