@@ -44,7 +44,7 @@ export default function Header() {
   }, [isMenuOpen]);
 
   const navLinks = (
-    <li className="list-none flex flex-col lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
+    <li className="list-none flex  lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
       <a
         href="#features"
         className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
@@ -70,9 +70,9 @@ export default function Header() {
   );
 
   const actionButtons = (
-    <div className="flex flex-col lg:flex-row items-center gap-5 lg:gap-10 mt-6 lg:mt-0 w-full lg:w-auto">
+    <div className="flex lg:flex-row items-center gap-5 lg:gap-10 lg:mt-0 w-full lg:w-auto">
       <button
-        className="cursor-pointer transition-all duration-300 hover:text-gray-300 active:text-gray-400 hover:scale-105 text-lg lg:text-base"
+        className="cursor-pointer transition-all duration-300 hover:text-gray-300 active:text-gray-400 hover:scale-105 text-lg lg:text-base whitespace-nowrap"
         onClick={() => setIsMenuOpen(false)}
       >
         Sign In
@@ -115,7 +115,7 @@ export default function Header() {
 
       {/* Hamburger Icon - Mobile (Visible only on small screens) */}
       <button
-        className="lg:hidden text-white p-2 z-50"
+        className="fixed right-0 lg:hidden text-white p-2 z-50"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
       >
@@ -127,14 +127,14 @@ export default function Header() {
       <div
         ref={menuRef}
         className={`
-          fixed top-0 right-0 h-full w-75 max-w-xs bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] p-6 shadow-xl lg:hidden z-40
-          transition-transform duration-300 ease-in-out
+          fixed top-0 right-0  w-full  bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] px-10 sm:px-30 py-7 shadow-xl lg:hidden z-40
+          transition-transform duration-300 ease-in-out 
           ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
         `}
       >
-        <div className="flex flex-col items-start pt-20 h-full">
-          <nav className="w-full">{navLinks}</nav>
-          <div className="mt-10 w-full">{actionButtons}</div>
+        <div className="w-full flex flex-col gap-7 md:flex-row items-center justify-between">
+          <nav>{navLinks}</nav>
+          <div>{actionButtons}</div>
         </div>
       </div>
     </header>
