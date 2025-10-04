@@ -5,6 +5,7 @@ import FeaturesSection from "./components/FeaturesSection";
 import PricingSection from "./components/PricingSection";
 import FAQSection from "./components/FAQSection";
 import FinalCTASection from "./components/FinalCTASection";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
@@ -14,7 +15,8 @@ export default function App() {
       <FeaturesSection />
       <PricingSection />
       <FAQSection />
-      <FinalCTASection/>
+      <FinalCTASection />
+      <Footer />
     </div>
   );
 }

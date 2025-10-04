@@ -37,7 +37,7 @@ const itemVariants = {
 
 export default function FinalCTASection() {
   return (
-    <div className="py-24 bg-[#0A0027] text-white">
+    <div className="pt-20 md:py-24 bg-[#0A0027] text-white">
       <motion.div
         className="max-w-4xl mx-auto px-6 text-center"
         variants={containerVariants}
