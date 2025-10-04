@@ -78,7 +78,7 @@ const featureData = [
 
 export default function FeaturesSection() {
   return (
-    <section className="py-20 bg-[#0A0027]">
+    <section className="pt-20 pb:10 md:py-20 bg-[#0A0027]">
       <motion.div
         className="max-w-7xl mx-auto px-6"
         variants={containerVariants}

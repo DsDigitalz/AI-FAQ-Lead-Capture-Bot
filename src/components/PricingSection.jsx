@@ -144,7 +144,7 @@ const PricingCard = ({ plan, index }) => (
 
 export default function PricingSection() {
   return (
-    <div className="py-24 bg-[#0A0027] text-white">
+    <section className="py-20 md:py-24 bg-[#0A0027] text-white">
       <motion.div
         className="max-w-7xl mx-auto px-6"
         variants={containerVariants}
@@ -172,6 +172,6 @@ export default function PricingSection() {
           ))}
         </div>
       </motion.div>
-    </div>
+    </section>
   );
 }

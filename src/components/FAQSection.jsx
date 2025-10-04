@@ -85,7 +85,7 @@ const AccordionItem = ({ question, answer }) => {
 
 export default function FAQSection() {
   return (
-    <div className="py-24 bg-[#0A0027] text-white" id="faq">
+    <section className="md:py-24 bg-[#0A0027] text-white" id="faq">
       <motion.div
         className="max-w-7xl mx-auto px-6 lg:flex lg:space-x-12"
         variants={containerVariants}
@@ -120,6 +120,6 @@ export default function FAQSection() {
           ))}
         </div>
       </motion.div>
-    </div>
+    </section>
   );
 }
