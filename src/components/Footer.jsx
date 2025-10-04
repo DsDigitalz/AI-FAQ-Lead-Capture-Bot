@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+// Removed: import { motion } from "framer-motion";
 import { Shield, Zap, Mail, Twitter, Linkedin } from "lucide-react";
 
 // New Logo Component (repeated for self-sufficiency)
@@ -13,45 +13,22 @@ const HelplyAILogo = ({ className = "w-8 h-8" }) => (
   </div>
 );
 
-// --- Framer Motion Animation Setup ---
-const containerVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      delayChildren: 0.2,
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
-// ------------------------------------
+// Removed: Framer Motion Animation Setup and Variants
 
 const currentYear = new Date().getFullYear();
 
 export default function Footer() {
   return (
-    // 🟢 CHANGE: Replaced top <div> with <footer>
+    // 🟢 Semantic Markup: <footer>
     <footer className="bg-[#0A0027] pt-12 pb-6 border-t border-[#1e004a]">
-      <motion.div
-        className="max-w-7xl mx-auto px-6 text-white"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-      >
+      {/* Replaced motion.div with standard div */}
+      <div className="max-w-7xl mx-auto px-6 text-white">
         {/* Top Section: Logo, Mission, and Socials */}
-        {/* 🟢 CHANGE: Used <section> for the major content block within the footer */}
+        {/* 🟢 Semantic Markup: <section> */}
         <section className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-[#210045] pb-10 mb-8">
           {/* Column 1: Brand & Mission */}
-          {/* 🟢 CHANGE: Used <article> for the self-contained branding info */}
-          <motion.article variants={itemVariants} className="md:col-span-2">
+          {/* 🟢 Semantic Markup: <article> */}
+          <article className="md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <HelplyAILogo />
               <h3 className="text-3xl font-extrabold">
@@ -67,11 +44,11 @@ export default function Footer() {
               The fastest way for Nigerian businesses to automate support,
               qualify leads, and scale operations 24/7.
             </p>
-          </motion.article>
+          </article>
 
           {/* Column 2: Product Links */}
-          {/* 🟢 CHANGE: Used <nav> for the navigation link group */}
-          <motion.nav variants={itemVariants}>
+          {/* 🟢 Semantic Markup: <nav> */}
+          <nav>
             <h4 className="text-lg font-bold mb-4 text-fuchsia-400">Product</h4>
             <ul className="space-y-3 text-gray-400">
               <li>
@@ -107,11 +84,11 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
-          </motion.nav>
+          </nav>
 
           {/* Column 3: Legal & Company */}
-          {/* 🟢 CHANGE: Used <nav> for the navigation link group */}
-          <motion.nav variants={itemVariants}>
+          {/* 🟢 Semantic Markup: <nav> */}
+          <nav>
             <h4 className="text-lg font-bold mb-4 text-blue-400">
               Company & Legal
             </h4>
@@ -149,25 +126,20 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
-          </motion.nav>
+          </nav>
         </section>
 
         {/* Bottom Section: Copyright and Contact */}
-        {/* 🟢 CHANGE: Used <section> for the final copyright/social bar */}
+        {/* 🟢 Semantic Markup: <section> */}
         <section className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          {/* 🟢 CHANGE: Used <p> for the copyright text */}
-          <motion.p
-            variants={itemVariants}
-            className="mb-4 md:mb-0 order-2 md:order-1 text-center"
-          >
+          {/* 🟢 Semantic Markup: <p> */}
+          <p className="mb-4 md:mb-0 order-2 md:order-1 te">
             &copy; {currentYear} HelplyAI. All rights reserved. Made with 💜 in
             Lagos, Nigeria.
-          </motion.p>
+          </p>
 
-          <motion.div
-            variants={itemVariants}
-            className="flex space-x-6 order-1 md:order-2 mb-4 md:mb-0"
-          >
+          {/* Replaced motion.div with standard div */}
+          <div className="flex space-x-6 order-1 md:order-2 mb-4 md:mb-0">
             <a
               href="mailto:support@helplyai.com"
               aria-label="Email Support"
@@ -193,9 +165,9 @@ export default function Footer() {
             >
               <Linkedin size={20} />
             </a>
-          </motion.div>
+          </div>
         </section>
-      </motion.div>
+      </div>
     </footer>
   );
 }
