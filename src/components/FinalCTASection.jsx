@@ -37,7 +37,8 @@ const itemVariants = {
 
 export default function FinalCTASection() {
   return (
-    <div className="pt-20 md:py-24 bg-[#0A0027] text-white">
+    // 🟢 Semantic Markup: Used <section> for the main container
+    <section className="py-20 md:py-24 bg-[#0A0027] text-white">
       <motion.div
         className="max-w-4xl mx-auto px-6 text-center"
         variants={containerVariants}
@@ -45,34 +46,46 @@ export default function FinalCTASection() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.5 }}
       >
-        <motion.div variants={itemVariants} className="flex justify-center mb-6">
-          <HelplyAILogo />
-        </motion.div>
+        {/* 🟢 Semantic Markup: Used <header> for the heading and sub-text */}
+        <header>
+          <motion.div
+            variants={itemVariants}
+            className="flex justify-center mb-6"
+          >
+            <HelplyAILogo />
+          </motion.div>
 
-        <motion.h2 
-          variants={itemVariants} 
-          className="text-4xl sm:text-5xl font-extrabold leading-tight mb-4"
-        >
-          Ready to Automate Support and <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">Capture More Leads?</span>
-        </motion.h2>
+          <motion.h2
+            variants={itemVariants}
+            className="text-4xl sm:text-5xl font-extrabold leading-tight mb-4"
+          >
+            Ready to Automate Support and{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">
+              Capture More Leads?
+            </span>
+          </motion.h2>
 
-        <motion.p 
-          variants={itemVariants} 
-          className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto"
-        >
-          Stop waiting. Start converting. Try the full power of HelplyAI free for 7 days—no credit card needed.
-        </motion.p>
+          <motion.p
+            variants={itemVariants}
+            className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto"
+          >
+            Stop waiting. Start converting. Try the full power of HelplyAI free
+            for 7 days—no credit card needed.
+          </motion.p>
+        </header>
 
-        <motion.a 
-          variants={itemVariants}
-          href="#signup"
-          className="inline-flex items-center justify-center py-4 px-12 text-xl font-bold rounded-full bg-fuchsia-600 hover:bg-fuchsia-700 transition-colors shadow-2xl shadow-fuchsia-500/50 transform hover:scale-[1.03]"
-        >
-          Start Your Free 7-Day Trial
-          <ArrowRight size={22} className="ml-3" />
-        </motion.a>
-        
+        {/* 🟢 Semantic Markup: Used <main> for the primary action button */}
+        <main>
+          <motion.a
+            variants={itemVariants}
+            href="#signup"
+            className="inline-flex items-center justify-center py-4 px-12 text-xl font-bold rounded-full bg-fuchsia-600 hover:bg-fuchsia-700 transition-colors shadow-2xl shadow-fuchsia-500/50 transform hover:scale-[1.03]"
+          >
+            Start Your Free 7-Day Trial
+            <ArrowRight size={22} className="ml-3" />
+          </motion.a>
+        </main>
       </motion.div>
-    </div>
+    </section>
   );
 }

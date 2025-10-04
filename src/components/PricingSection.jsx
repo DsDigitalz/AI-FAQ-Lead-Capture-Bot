@@ -74,7 +74,8 @@ const pricingData = [
 ];
 
 const PricingCard = ({ plan, index }) => (
-  <motion.div
+  // 🟢 Semantic Markup: Used <article> for each self-contained pricing card.
+  <motion.article
     variants={itemVariants}
     className={`
       flex flex-col p-8 rounded-xl shadow-2xl transition-all duration-300
@@ -88,17 +89,20 @@ const PricingCard = ({ plan, index }) => (
     whileHover={{ y: -5 }} // subtle lift on hover
   >
     {/* Plan Header */}
-    <h3
-      className={`text-2xl font-bold ${
-        plan.isFeatured ? "text-fuchsia-400" : "text-white"
-      } mb-1`}
-    >
-      {plan.name}
-    </h3>
-    <p className="text-sm text-gray-400 mb-6">{plan.description}</p>
+    <header>
+      <h3
+        className={`text-2xl font-bold ${
+          plan.isFeatured ? "text-fuchsia-400" : "text-white"
+        } mb-1`}
+      >
+        {plan.name}
+      </h3>
+      <p className="text-sm text-gray-400 mb-6">{plan.description}</p>
+    </header>
 
     {/* Price */}
-    <div className="text-white mb-6">
+    {/* 🟢 Semantic Markup: Used <section> to wrap the pricing detail block. */}
+    <section className="text-white mb-6">
       <span className="text-4xl font-extrabold">{plan.price}</span>
       <span className="text-lg text-gray-400 ml-1">
         {plan.name !== "Enterprise AI" && "/mo"}
@@ -106,7 +110,7 @@ const PricingCard = ({ plan, index }) => (
       {plan.name !== "Enterprise AI" && (
         <p className="text-sm text-fuchsia-300 mt-1">{plan.interactions}</p>
       )}
-    </div>
+    </section>
 
     {/* Button */}
     <a
@@ -120,7 +124,7 @@ const PricingCard = ({ plan, index }) => (
       <ArrowRight size={18} className="inline ml-2" />
     </a>
 
-    {/* Feature List */}
+    {/* Feature List - Already uses semantic <ul> and <li> */}
     <ul className="space-y-3 flex-grow">
       {plan.features.map((feature, idx) => (
         <li key={idx} className="flex items-start text-gray-300">
@@ -139,11 +143,12 @@ const PricingCard = ({ plan, index }) => (
         Includes volume discounts for 10,000+ chats.
       </p>
     )}
-  </motion.div>
+  </motion.article>
 );
 
 export default function PricingSection() {
   return (
+    // 🟢 Semantic Markup: Main section is correct
     <section className="py-20 md:py-24 bg-[#0A0027] text-white">
       <motion.div
         className="max-w-7xl mx-auto px-6"
@@ -153,7 +158,8 @@ export default function PricingSection() {
         viewport={{ once: true, amount: 0.3 }}
       >
         {/* Section Heading */}
-        <motion.div variants={itemVariants} className="text-center mb-16">
+        {/* 🟢 Semantic Markup: Used <header> for the section's heading group */}
+        <motion.header variants={itemVariants} className="text-center mb-16">
           <p className="text-fuchsia-400 font-semibold uppercase tracking-widest mb-3">
             Pricing
           </p>
@@ -163,14 +169,15 @@ export default function PricingSection() {
           <p className="text-xl text-gray-400 mt-4">
             Start free, upgrade when you're ready for more automation.
           </p>
-        </motion.div>
+        </motion.header>
 
         {/* Pricing Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-10 lg:gap-x-8">
+        {/* 🟢 Semantic Markup: Used <main> as the primary content container for the pricing articles */}
+        <main className="grid grid-cols-1 lg:grid-cols-3 gap-y-10 lg:gap-x-8">
           {pricingData.map((plan, index) => (
             <PricingCard key={index} plan={plan} index={index} />
           ))}
-        </div>
+        </main>
       </motion.div>
     </section>
   );

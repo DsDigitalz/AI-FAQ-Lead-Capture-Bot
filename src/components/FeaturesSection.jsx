@@ -4,7 +4,7 @@ import {
   Zap, // For speed/instant
   Shield, // For security/protection
   Users, // For team/integration
-  CheckCircle, 
+  CheckCircle,
   Database, // For knowledge base
   Clock, // For 24/7
 } from "lucide-react";
@@ -78,6 +78,7 @@ const featureData = [
 
 export default function FeaturesSection() {
   return (
+    // 🟢 Semantic Markup: Main container uses <section>
     <section className="pt-20 pb:10 md:py-20 bg-[#0A0027]">
       <motion.div
         className="max-w-7xl mx-auto px-6"
@@ -87,22 +88,25 @@ export default function FeaturesSection() {
         viewport={{ once: true, amount: 0.3 }}
       >
         {/* Section Heading */}
-        <motion.div variants={itemVariants} className="text-center mb-16">
+        {/* 🟢 Semantic Markup: Used <header> for the section's heading group */}
+        <motion.header variants={itemVariants} className="text-center mb-16">
           <p className="text-fuchsia-400 font-semibold uppercase tracking-widest mb-3">
             Features
           </p>
           <h2 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
             How HelplyAI Transforms Your Support
           </h2>
-        </motion.div>
+        </motion.header>
 
         {/* Features Grid */}
-        <motion.div
+        {/* 🟢 Semantic Markup: Used <main> as the primary container for the feature articles */}
+        <motion.main
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           variants={containerVariants}
         >
           {featureData.map((feature, index) => (
-            <motion.div
+            // 🟢 Semantic Markup: Used <article> for each self-contained feature item
+            <motion.article
               key={index}
               variants={itemVariants}
               className="bg-[#140036] p-8 rounded-xl border border-[#210045] shadow-2xl hover:shadow-fuchsia-900/50 transition-shadow duration-300"
@@ -115,9 +119,9 @@ export default function FeaturesSection() {
                 {feature.title}
               </h3>
               <p className="text-gray-300">{feature.description}</p>
-            </motion.div>
+            </motion.article>
           ))}
-        </motion.div>
+        </motion.main>
       </motion.div>
     </section>
   );

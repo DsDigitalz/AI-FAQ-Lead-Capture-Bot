@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 // 🟢 NEW LOGO COMPONENT for the chat widget (consistent with Header)
 const HelplyAILogo = ({ className = "w-7 h-7" }) => (
+  // 🟢 Semantic Markup: Keeping <div> as this is purely a visual, non-semantic container for positioning icons
   <div className={`relative ${className}`}>
     {/* Shield Icon: Represents help and protection */}
     <Shield className="w-full h-full text-white" strokeWidth={1.5} />
@@ -36,6 +37,7 @@ export default function HeroSection() {
   };
 
   return (
+    // 🟢 Semantic Markup: Use <section> for the hero block
     <section className="min-h-screen pt-20 pb:10 md:pb-16 lg:pt-32 lg:pb-0 text-white bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B]">
       <motion.div
         className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between px-6 space-y-12 lg:space-y-0"
@@ -44,7 +46,8 @@ export default function HeroSection() {
         animate="visible"
       >
         {/* Left Content Area */}
-        <div className="w-full lg:w-1/2 text-center lg:text-left">
+        {/* 🟢 Semantic Markup: Use <main> or <article> for primary, unique page content */}
+        <main className="w-full lg:w-1/2 text-center lg:text-left">
           <motion.p
             variants={itemVariants}
             className="text-fuchsia-400 font-semibold mb-3 flex items-center justify-center lg:justify-start"
@@ -89,34 +92,32 @@ export default function HeroSection() {
             </a>
           </motion.div>
 
-          {/* 🟢 NEW: Assurance Strip Implementation */}
-          <motion.div
+          {/* 🟢 Semantic Markup: Used <nav> for the Assurance Strip as it's a bar of secondary, trust-based links/information */}
+          <motion.nav
             variants={itemVariants}
             className="mt-12 flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-8"
           >
             {/* Assurance Badge 1: Data Integrity */}
-            <div className="flex items-center text-sm text-gray-300">
+            <p className="flex items-center text-sm text-gray-300">
               <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
               <span className="font-semibold">GDPR Compliant</span>
-            </div>
+            </p>
 
             {/* Assurance Badge 2: Uptime/Reliability */}
-            <div className="flex items-center text-sm text-gray-300">
+            <p className="flex items-center text-sm text-gray-300">
               <ShieldCheck className="w-4 h-4 text-blue-400 mr-2 flex-shrink-0" />
               <span className="font-semibold">99.9% Uptime SLA</span>
-            </div>
-          </motion.div>
-          {/* 🟢 END Assurance Strip */}
-        </div>
+            </p>
+          </motion.nav>
+        </main>
 
         {/* Right Mockup Area (The Bot) */}
         <motion.div
           variants={itemVariants}
           className="w-full max-w-sm sm:max-w-md lg:w-1/2 flex justify-center p-4"
         >
-          {/* Continuous animation was removed here to show the base code, 
-             but if you want it back, ensure you re-add the `pulseAnimation` logic from the previous turn. */}
-          <motion.a
+          {/* 🟢 Semantic Markup: Use <article> for the self-contained chat mockup */}
+          <motion.article
             href="#chat"
             className="bg-white rounded-xl shadow-2xl overflow-hidden p-6 w-full transform transition-transform duration-500 hover:scale-[1.02] cursor-pointer block"
             whileHover={{
@@ -126,7 +127,7 @@ export default function HeroSection() {
             transition={{ type: "spring", stiffness: 300 }}
           >
             {/* Bot Header */}
-            <div className="flex items-center space-x-3 pb-4 border-b border-gray-100">
+            <header className="flex items-center space-x-3 pb-4 border-b border-gray-100">
               <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-fuchsia-500 to-blue-500 flex items-center justify-center">
                 <HelplyAILogo className="w-6 h-6" />
               </div>
@@ -137,27 +138,27 @@ export default function HeroSection() {
                   Online now
                 </p>
               </div>
-            </div>
+            </header>
 
             {/* Conversation Area */}
-            <div className="h-48 overflow-y-scroll space-y-3 pt-4">
+            <section className="h-48 overflow-y-scroll space-y-3 pt-4">
               <p className="text-gray-800">
                 Hi there! I'm here to help answer your questions instantly. What
                 would you like to know?
               </p>
               <div className="flex justify-end">
-                <div className="bg-fuchsia-500 text-white py-2 px-4 rounded-xl rounded-br-none max-w-[70%] text-sm shadow-md">
+                <p className="bg-fuchsia-500 text-white py-2 px-4 rounded-xl rounded-br-none max-w-[70%] text-sm shadow-md">
                   How does your service work?
-                </div>
+                </p>
               </div>
               <p className="text-gray-800">
                 Our service is a B2B SaaS platform that integrates with your
                 website to provide 24/7 support and intelligently qualify leads.
               </p>
-            </div>
+            </section>
 
-            {/* Input Field (Still disabled in the mockup, but the whole container is clickable) */}
-            <div className="pt-4 flex items-center border-t border-gray-100 mt-4">
+            {/* Input Field (Mockup) */}
+            <footer className="pt-4 flex items-center border-t border-gray-100 mt-4">
               <input
                 type="text"
                 placeholder="Type your question here..."
@@ -170,8 +171,8 @@ export default function HeroSection() {
               >
                 <Send size={20} className="text-white" />
               </button>
-            </div>
-          </motion.a>
+            </footer>
+          </motion.article>
         </motion.div>
       </motion.div>
     </section>

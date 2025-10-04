@@ -55,13 +55,18 @@ const AccordionItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <motion.div
+    // 🟢 Semantic Markup: Used <article> for the self-contained FAQ item.
+    <motion.article
       variants={itemVariants}
       className="border-b border-[#210045] py-4"
     >
       <button
+        // 🟢 Semantic Markup: Used <button> correctly for toggling the content.
         className="flex justify-between items-center w-full text-left focus:outline-none"
         onClick={() => setIsOpen(!isOpen)}
+        // Added aria-expanded for accessibility
+        aria-expanded={isOpen}
+        aria-controls={`answer-${question.replace(/\s/g, "-")}`}
       >
         <span className="text-xl font-semibold text-white">{question}</span>
         {isOpen ? (
@@ -72,19 +77,24 @@ const AccordionItem = ({ question, answer }) => {
       </button>
 
       {/* Accordion Content - Uses CSS transition for smooth height change */}
-      <div
+      {/* 🟢 Semantic Markup: Used <section> for the answer/content area. */}
+      <section
+        id={`answer-${question.replace(/\s/g, "-")}`}
         className={`overflow-hidden transition-all duration-300 ease-in-out ${
           isOpen ? "max-h-96 opacity-100 mt-3" : "max-h-0 opacity-0"
         }`}
+        // Added hidden attribute for accessibility when collapsed
+        aria-hidden={!isOpen}
       >
         <p className="text-gray-300 pr-10">{answer}</p>
-      </div>
-    </motion.div>
+      </section>
+    </motion.article>
   );
 };
 
 export default function FAQSection() {
   return (
+    // 🟢 Semantic Markup: Main container uses <section>
     <section className="md:py-24 bg-[#0A0027] text-white" id="faq">
       <motion.div
         className="max-w-7xl mx-auto px-6 lg:flex lg:space-x-12"
@@ -93,8 +103,9 @@ export default function FAQSection() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
       >
-        {/* Left Content */}
-        <div className="lg:w-1/3 mb-10 lg:mb-0">
+        {/* Left Content - Section Header/Intro */}
+        {/* 🟢 Semantic Markup: Used <header> for the section's introductory content. */}
+        <header className="lg:w-1/3 mb-10 lg:mb-0">
           <motion.div variants={itemVariants}>
             <p className="text-fuchsia-400 font-semibold uppercase tracking-widest mb-3">
               FAQs
@@ -107,10 +118,11 @@ export default function FAQSection() {
               compiled the most important ones here.
             </p>
           </motion.div>
-        </div>
+        </header>
 
-        {/* Right Accordion */}
-        <div className="lg:w-2/3">
+        {/* Right Accordion - Main Content */}
+        {/* 🟢 Semantic Markup: Used <main> for the primary content of the section (the list of FAQs). */}
+        <main className="lg:w-2/3">
           {faqData.map((item, index) => (
             <AccordionItem
               key={index}
@@ -118,7 +130,7 @@ export default function FAQSection() {
               answer={item.answer}
             />
           ))}
-        </div>
+        </main>
       </motion.div>
     </section>
   );
