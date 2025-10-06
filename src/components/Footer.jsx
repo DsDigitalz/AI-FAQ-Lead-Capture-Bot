@@ -133,7 +133,7 @@ export default function Footer() {
         {/* 🟢 Semantic Markup: <section> */}
         <section className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
           {/* 🟢 Semantic Markup: <p> */}
-          <p className="mb-4 md:mb-0 order-2 md:order-1 te">
+          <p className="mb-4 md:mb-0 order-2 md:order-1 text-center">
             &copy; {currentYear} HelplyAI. All rights reserved. Made with 💜 in
             Lagos, Nigeria.
           </p>
