@@ -91,9 +91,9 @@ export default function Header() {
   return (
     // 🟢 CHANGE: Replaced motion.header with regular header tag
 <header className="bg-gradient-to-br from-[#00031F] to-[#10003B]">
-    <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white  py-1 px-1 lg:py-5 relative z-50">
+    <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white  py-1 px-1 lg:py-5 md:px-4 lg:px-6 relative z-50">
       {/* Logo Area */}
-      <div className="flex items-center space-x-2 md:space-x-4 p-4 font-medium">
+      <div className="flex items-center space-x-2 md:space-x-4 p-4 md:px-0 font-medium">
         {/* New HelplyAI Logo */}
         <HelplyAILogo className="w-8 h-8" />
 
