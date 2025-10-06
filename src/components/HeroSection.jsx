@@ -38,7 +38,7 @@ export default function HeroSection() {
 
   return (
     // 🟢 Semantic Markup: Use <section> for the hero block
-    <section className="min-h-screen pt-20 pb:10 md:pb-16 lg:pt-32 lg:pb-0 text-white bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B]">
+    <section className="h-screen pt-20 pb:10 md:pb-16 lg:pt-32 lg:pb-0 text-white bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B]">
       <motion.div
         className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between px-6 space-y-12 lg:space-y-0"
         variants={containerVariants}

@@ -47,7 +47,7 @@ export default function Header() {
     <li className="list-none flex  lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
       <a
         href="#features"
-        className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
         onClick={() => setIsMenuOpen(false)}
       >
         Features
