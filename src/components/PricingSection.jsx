@@ -149,7 +149,7 @@ const PricingCard = ({ plan, index }) => (
 export default function PricingSection() {
   return (
     // 🟢 Semantic Markup: Main section is correct
-    <section className="py-20 md:py-24 bg-[#0A0027] text-white">
+    <section className="py-20 md:py-24 bg-[#0A0027] text-white" id="pricing">
       <motion.div
         className="max-w-7xl mx-auto px-6"
         variants={containerVariants}

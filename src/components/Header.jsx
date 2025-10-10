@@ -44,11 +44,12 @@ export default function Header() {
   }, [isMenuOpen]);
 
   const navLinks = (
-    <li className="list-none flex  lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
+    <li className="list-none flex  lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base"  >
       <a
-        href="#features"
+        href="#features" 
         className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
-        onClick={() => setIsMenuOpen(false)}
+        onClick={() => setIsMenuOpen(false)} 
+        behavior:smooth
       >
         Features
       </a>
@@ -56,6 +57,7 @@ export default function Header() {
         href="#pricing"
         className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
         onClick={() => setIsMenuOpen(false)}
+        behavior:smooth
       >
         Pricing
       </a>
