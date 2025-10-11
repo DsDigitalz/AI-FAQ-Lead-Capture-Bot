@@ -1,6 +1,7 @@
 import React from "react";
 // Removed: import { motion } from "framer-motion";
 import { Shield, Zap, Mail, Twitter, Linkedin } from "lucide-react";
+import { Link } from "react-router";
 
 // New Logo Component (repeated for self-sufficiency)
 const HelplyAILogo = ({ className = "w-8 h-8" }) => (
@@ -94,12 +95,12 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3 text-gray-400">
               <li>
-                <a
-                  href="/about"
+                <Link
+                  to="/about"
                   className="hover:text-blue-300 transition-colors"
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
                 <a

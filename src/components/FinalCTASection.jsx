@@ -79,7 +79,7 @@ export default function FinalCTASection() {
           <motion.a
             variants={itemVariants}
             href="#signup"
-            className="inline-flex items-center justify-center py-4 px-12 text-xl font-bold rounded-full bg-fuchsia-600 hover:bg-fuchsia-700 transition-colors shadow-2xl shadow-fuchsia-500/50 transform hover:scale-[1.03]"
+            className="inline-flex items-center justify-center py-4 px-12 text-xl font-bold rounded-full bg-fuchsia-600 hover:bg-fuchsia-700 hover:transition-all duration-300 shadow-2xl shadow-fuchsia-500/50 transform hover:scale-[1.03]"
           >
             Start Your Free 7-Day Trial
             <ArrowRight size={22} className="ml-3" />
