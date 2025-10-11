@@ -12,6 +12,8 @@ import PageNotFound from "./pages/PageNotFound";
 import AboutPage from "./pages/AboutPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import LegalLayout from "./components/layout/LegalLayout";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
+import GDPRCompliancePage from "./pages/GDPRCompliancePage";
 
 // You can add other page imports later like SignIn, GetStarted, etc.
 
@@ -40,7 +42,8 @@ export default function App() {
         <Route element={<LegalLayout />}>
           <Route path="/about" element={<AboutPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-          {/* <Route path="/terms" element={<TermsPage />} /> */}
+          <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/gdpr-compliance" element={<GDPRCompliancePage />} />
           {/* Add /gdpr, etc., here */}
         </Route>
       </Routes>

@@ -114,7 +114,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="/terms"
+                  href="/terms-of-service"
                   className="hover:text-blue-300 transition-colors"
                 >
                   Terms of Service
@@ -122,7 +122,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="/gdpr"
+                  href="/gdpr-compliance"
                   className="hover:text-blue-300 transition-colors"
                 >
                   GDPR Compliance
