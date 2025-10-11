@@ -48,31 +48,31 @@ export default function LegalSubHeader() {
   }, [isMenuOpen]);
 
   const navLinks = (
-    <li className="text-gray-400 list-none flex  lg:flex-row gap-8 lg:gap-10 text-lg lg:text-base">
+    <li className="text-gray-400 list-none grid grid-cols-2 text-[16px]  md:flex md:items-center gap-6 md:gap-8 lg:gap-10 text-lg lg:text-base">
       <Link
         to="/about"
-        className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className="hover:text-gray-300   hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
         onClick={() => setIsMenuOpen(false)}
       >
         About Us
       </Link>
       <Link
         to="/privacy-policy"
-        className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
         onClick={() => setIsMenuOpen(false)}
       >
         Privacy Policy
       </Link>
       <Link
         to="/terms-of-service"
-        className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
         onClick={() => setIsMenuOpen(false)}
       >
         Terms of Service
       </Link>
       <Link
         to="/gdpr-compliance"
-        className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
         onClick={() => setIsMenuOpen(false)}
       >
         GDPR Compliance
@@ -104,7 +104,7 @@ export default function LegalSubHeader() {
 
   return (
     // 🟢 CHANGE: Replaced motion.header with regular header tag
-    <header className="bg-gradient-to-br from-[#00031F] to-[#10003B]">
+    <header className="fixed w-full z-100 bg-gradient-to-br from-[#00031F] to-[#10003B]">
       <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white  py-1 px-1 lg:py-5 md:px-4 lg:px-6 relative z-50">
         {/* Logo Area */}
         <div className="flex items-center space-x-2 md:space-x-4 p-4 md:px-0 font-medium">

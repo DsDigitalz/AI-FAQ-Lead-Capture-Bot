@@ -58,7 +58,7 @@ export default function About() {
 
   return (
     // The <main> tag is STATIC to keep the background fixed.
-    <main className="min-h-screen bg-[#0A0027] text-white pt-24 pb-16 px-4 sm:px-8 lg:px-16">
+    <main className="min-h-screen bg-[#0A0027] text-white pt-30 lg:pt-40 pb-16 px-4 sm:px-8 lg:px-16">
       {/* 🔑 ANIMATED Container for the entire content */}
       <motion.div
         className="max-w-6xl mx-auto"

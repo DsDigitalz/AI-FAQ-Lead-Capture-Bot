@@ -25,7 +25,7 @@ export default function GDPRCompliance() {
   return (
     // 🟢 Semantic Markup: Content block designed to fit within the LegalLayout
     <motion.div
-      className="text-white pt-12 pb-20"
+      className="text-white pt-30 lg:pt-40 pb-20 px-4 sm:px-8 lg:px-16" // Padding for content within the LegalLayout
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -69,7 +69,10 @@ export default function GDPRCompliance() {
       </motion.section>
 
       {/* 2. Data Processing Agreements (DPA) */}
-      <motion.section variants={sectionVariants} className="mb-12">
+      <motion.section
+        variants={sectionVariants}
+        className="mb-12 p-6 bg-[#140036] rounded-xl border border-[#210045]"
+      >
         <h2 className="text-2xl font-bold mb-4 flex items-center space-x-2">
           <Lock size={28} className="text-fuchsia-400" />
           <span>2. Security and Data Protection Measures</span>
@@ -99,7 +102,10 @@ export default function GDPRCompliance() {
       </motion.section>
 
       {/* 3. Data Subject Rights */}
-      <motion.section variants={sectionVariants} className="mb-12">
+      <motion.section
+        variants={sectionVariants}
+        className="mb-12 p-6 bg-[#140036] rounded-xl border border-[#210045]"
+      >
         <h2 className="text-2xl font-bold mb-4 flex items-center space-x-2">
           <Users size={28} className="text-fuchsia-400" />
           <span>3. Supporting Data Subject Rights</span>
@@ -127,7 +133,10 @@ export default function GDPRCompliance() {
       </motion.section>
 
       {/* 4. Data Transfers */}
-      <motion.section variants={sectionVariants} className="mb-12">
+      <motion.section
+        variants={sectionVariants}
+        className="mb-12 p-6 bg-[#140036] rounded-xl border border-[#210045]"
+      >
         <h2 className="text-2xl font-bold mb-4 flex items-center space-x-2">
           <Globe size={28} className="text-fuchsia-400" />
           <span>4. International Data Transfers</span>
@@ -143,7 +152,7 @@ export default function GDPRCompliance() {
       </motion.section>
 
       {/* 5. Contact Information */}
-      <motion.section variants={sectionVariants} className="mb-4">
+      <motion.section variants={sectionVariants} className="mb-12 p-6 bg-[#140036] rounded-xl border border-[#210045]">
         <h2 className="text-2xl font-bold mb-4 flex items-center space-x-2">
           <Mail size={28} className="text-fuchsia-400" />
           <span>5. Contact for Compliance</span>

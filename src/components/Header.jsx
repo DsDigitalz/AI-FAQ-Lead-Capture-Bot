@@ -100,7 +100,7 @@ export default function Header() {
 
   return (
     // 🟢 CHANGE: Replaced motion.header with regular header tag
-    <header className="bg-gradient-to-br from-[#00031F] to-[#10003B]">
+    <header className="z-100 fixed w-full bg-gradient-to-br from-[#00031F] to-[#10003B]">
       <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white  py-1 px-1 lg:py-5 md:px-4 lg:px-6 relative z-50">
         {/* Logo Area */}
         <div className="flex items-center space-x-2 md:space-x-4 p-4 md:px-0 font-medium">
@@ -130,7 +130,7 @@ export default function Header() {
 
         {/* Hamburger Icon - Mobile (Visible only on small screens) */}
         <button
-          className="fixed right-0 lg:hidden text-white p-2 z-50"
+          className=" right-0 lg:hidden text-white p-2 z-50"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
