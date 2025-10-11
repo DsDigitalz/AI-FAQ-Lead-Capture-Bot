@@ -19,7 +19,7 @@ const HelplyAILogo = ({ className = "w-8 h-8" }) => (
   </div>
 );
 
-export default function Header2() {
+export default function LegalSubHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -48,7 +48,7 @@ export default function Header2() {
   }, [isMenuOpen]);
 
   const navLinks = (
-    <li className="list-none flex  lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
+    <li className="text-gray-400 list-none flex  lg:flex-row gap-8 lg:gap-10 text-lg lg:text-base">
       <Link
         to="/about"
         className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
@@ -81,7 +81,7 @@ export default function Header2() {
   );
 
   const actionButtons = (
-    <div className="flex lg:flex-row items-center gap-5 lg:gap-10 lg:mt-0 w-full lg:w-auto">
+    <div className="text-gray-400 flex lg:flex-row items-center gap-5 lg:gap-10 lg:mt-0 w-full lg:w-auto">
       <Link
         to="/signin"
         className="cursor-pointer transition-all duration-300 hover:text-gray-300 active:text-gray-400 hover:scale-105 text-lg lg:text-base whitespace-nowrap"

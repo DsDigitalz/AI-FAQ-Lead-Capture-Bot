@@ -10,6 +10,8 @@ import Getstarted from "./pages/GetStarted";
 import SignInPage from "./pages/SignInPage";
 import PageNotFound from "./pages/PageNotFound";
 import AboutPage from "./pages/AboutPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import LegalLayout from "./components/layout/LegalLayout";
 
 // You can add other page imports later like SignIn, GetStarted, etc.
 
@@ -30,12 +32,17 @@ export default function App() {
             </Home>
           }
         />
-
         {/* Example additional pages */}
-        <Route path="*" element={<PageNotFound />} />
+        <Route path="*" element={<PageNotFound />} /> // Page not found
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<Getstarted />} />
-        <Route path="/about" element={<AboutPage />} />
+        {/* --- B: ROUTES WITH LEGAL SUB-HEADER (LegalLayout) --- */}
+        <Route element={<LegalLayout />}>
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          {/* <Route path="/terms" element={<TermsPage />} /> */}
+          {/* Add /gdpr, etc., here */}
+        </Route>
       </Routes>
     </div>
   );

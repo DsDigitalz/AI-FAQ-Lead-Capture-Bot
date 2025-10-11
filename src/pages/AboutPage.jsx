@@ -6,9 +6,9 @@ import Footer from "../components/Footer";
 export default function AboutPage() {
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <About />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

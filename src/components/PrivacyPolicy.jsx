@@ -15,7 +15,7 @@ const sectionVariants = {
 
 // --- Main Component ---
 
-export default function PrivacyPolicyPage() {
+export default function PrivacyPolicy() {
   
   // 🔑 FIX: Scroll to Top Hook (Ensures the page starts at the top when navigated to)
   useEffect(() => {

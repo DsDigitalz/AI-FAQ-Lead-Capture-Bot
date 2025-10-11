@@ -31,7 +31,9 @@ export default function Footer() {
           {/* 🟢 Semantic Markup: <article> */}
           <article className="md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <HelplyAILogo />
+              <Link to="/">
+                <HelplyAILogo />
+              </Link>
               <h3 className="text-3xl font-extrabold">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">
                   Helply
@@ -103,12 +105,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a
-                  href="/privacy"
+                <Link
+                  to="/privacy-policy"
                   className="hover:text-blue-300 transition-colors"
                 >
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
                 <a

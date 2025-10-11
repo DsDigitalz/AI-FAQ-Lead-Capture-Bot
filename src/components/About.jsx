@@ -2,6 +2,7 @@ import React, { useEffect } from "react"; // 🔑 ADDED: useEffect import
 // 🔑 Framer Motion for fade-in/slide-in animation
 import { motion } from "framer-motion";
 import { Shield, Zap, Target, Users, Globe, Briefcase } from "lucide-react";
+import { Link } from "react-router";
 
 // --- Framer Motion Animation Setup ---
 const containerVariants = {
@@ -67,9 +68,11 @@ export default function About() {
       >
         {/* 🟢 Semantic Markup: Used <header> for the page introduction */}
         <motion.header variants={itemVariants} className="text-center mb-16">
+          <Link to="/"> 
           <div className="flex justify-center mb-4">
             <HelplyAILogo className="w-12 h-12" />
           </div>
+          </Link>
           <p className="text-fuchsia-400 font-semibold mb-2 uppercase tracking-widest">
             Our Story
           </p>

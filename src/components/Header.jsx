@@ -48,7 +48,7 @@ export default function Header() {
   }, [isMenuOpen]);
 
   const navLinks = (
-    <li className="list-none flex  lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
+    <li className="text-gray-400 list-none flex  lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
       <a
         href="#features"
         className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
@@ -77,7 +77,7 @@ export default function Header() {
   );
 
   const actionButtons = (
-    <div className="flex lg:flex-row items-center gap-5 lg:gap-10 lg:mt-0 w-full lg:w-auto">
+    <div className="text-gray-400 flex lg:flex-row items-center gap-5 lg:gap-10 lg:mt-0 w-full lg:w-auto">
       <Link
         to="/signin"
         className="cursor-pointer transition-all duration-300 hover:text-gray-300 active:text-gray-400 hover:scale-105 text-lg lg:text-base whitespace-nowrap"
@@ -105,7 +105,9 @@ export default function Header() {
         {/* Logo Area */}
         <div className="flex items-center space-x-2 md:space-x-4 p-4 md:px-0 font-medium">
           {/* New HelplyAI Logo */}
-          <HelplyAILogo className="w-8 h-8" />
+          <Link to="/">
+            <HelplyAILogo className="w-8 h-8" />
+          </Link>
 
           {/* Gradient Text HelplyAI */}
           <h1 className="text-xl sm:text-3xl font-extrabold">
