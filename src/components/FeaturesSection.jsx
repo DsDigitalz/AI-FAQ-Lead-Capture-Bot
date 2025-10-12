@@ -9,26 +9,44 @@ import {
   Clock, // For 24/7
 } from "lucide-react";
 
-// --- Framer Motion Animation Setup ---
-// Inherits the custom instructions for fade-in and slide-in
+// --- Framer Motion Animation Setup (Performance Optimized) ---
 const containerVariants = {
-  hidden: { opacity: 0, y: 50 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZATION: Use translateY for GPU-acceleration on the container
+    transform: "translateY(20px) translateZ(0)",
+  },
   visible: {
     opacity: 1,
-    y: 0,
+    transform: "translateY(0) translateZ(0)",
     transition: {
-      duration: 0.8,
-      delayChildren: 0.2,
-      staggerChildren: 0.15,
+      // 🔑 OPTIMIZATION: Reduced duration for snappier feel
+      duration: 0.3,
+      ease: "easeOut",
+      // 🔑 OPTIMIZATION: Faster stagger for quick reveal
+      staggerChildren: 0.05,
+      delayChildren: 0.1,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
-  visible: { opacity: 1, y: 0, scale: 1 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZATION: Use translateY and scale in transform for GPU
+    transform: "translateY(15px) scale(0.98) translateZ(0)",
+  },
+  visible: {
+    opacity: 1,
+    transform: "translateY(0) scale(1) translateZ(0)",
+    transition: {
+      // 🔑 OPTIMIZATION: Snappy item duration
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
 };
-// ------------------------------------
+// -----------------------------------------------------------
 
 const featureData = [
   {
@@ -39,7 +57,6 @@ const featureData = [
     color: "text-fuchsia-400",
   },
   {
-    // 🟢 FIX: Now using CheckCircle, which is guaranteed to be exported.
     icon: CheckCircle,
     title: "Intelligent Lead Qualification",
     description:
@@ -84,8 +101,9 @@ export default function FeaturesSection() {
         className="max-w-7xl mx-auto px-6"
         variants={containerVariants}
         initial="hidden"
-        whileInView="visible" // Animate when the user scrolls to the section
-        viewport={{ once: true, amount: 0.3 }}
+        // 🔑 MODIFIED: Increased amount to trigger the animation sooner when scrolling on mobile
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
       >
         {/* Section Heading */}
         {/* 🟢 Semantic Markup: Used <header> for the section's heading group */}
@@ -100,10 +118,8 @@ export default function FeaturesSection() {
 
         {/* Features Grid */}
         {/* 🟢 Semantic Markup: Used <main> as the primary container for the feature articles */}
-        <motion.main
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={containerVariants}
-        >
+        {/* NOTE: We removed variants from the inner <motion.main> tag because it was already set on the parent <motion.div>. Keeping it on the parent is more efficient. */}
+        <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featureData.map((feature, index) => (
             // 🟢 Semantic Markup: Used <article> for each self-contained feature item
             <motion.article
@@ -121,7 +137,7 @@ export default function FeaturesSection() {
               <p className="text-gray-300">{feature.description}</p>
             </motion.article>
           ))}
-        </motion.main>
+        </main>
       </motion.div>
     </section>
   );
