@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react"; // Removed useState and useEffect as they are replaced by useLocation
 // Removed: import { motion } from "framer-motion";
 import { Shield, Zap, Mail, Twitter, Linkedin } from "lucide-react";
-import { Link } from "react-router-dom"; // Changed to react-router-dom for proper SPA routing
+// 🔑 MODIFIED: Import Link and useLocation from 'react-router-dom'
+import { Link, useLocation } from "react-router-dom";
 
 // New Logo Component (repeated for self-sufficiency)
 const HelplyAILogo = ({ className = "w-8 h-8" }) => (
@@ -17,65 +18,35 @@ const HelplyAILogo = ({ className = "w-8 h-8" }) => (
 
 const currentYear = new Date().getFullYear();
 
-export default function Footer() {
-  // 🔑 NEW: State to track the current URL path and hash
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
-  const [currentHash, setCurrentHash] = useState(window.location.hash);
+export default function LegalSubFooter() {
+  // 🔑 NEW/MODIFIED: Get the current path dynamically using useLocation
+  const location = useLocation();
+  const currentPath = location.pathname;
 
-  // 🔑 NEW: Effect to listen for URL changes (both path and hash)
-  useEffect(() => {
-    const handleUrlChange = () => {
-      setCurrentPath(window.location.pathname);
-      setCurrentHash(window.location.hash);
-    };
+  // 🔑 REMOVED: Manual state tracking and useEffect for 'popstate'
 
-    // Listen for both router path changes and hash fragment changes
-    // Note: In a real app with 'react-router-dom', the 'Link' component often handles routing,
-    // but manually listening to 'popstate' and 'hashchange' covers direct URL input/hash clicks.
-    window.addEventListener("popstate", handleUrlChange);
-    window.addEventListener("hashchange", handleUrlChange);
-    handleUrlChange(); // Set initial state
+  // 🔑 MODIFIED: Function to check if a link is active and return the class
+  const getLinkClasses = (hrefOrTo) => {
+    // Compares the link path against the current dynamic path
+    const linkPath = hrefOrTo;
+    const isActive = currentPath === linkPath;
 
-    return () => {
-      window.removeEventListener("popstate", handleUrlChange);
-      window.removeEventListener("hashchange", handleUrlChange);
-    };
-  }, []);
-
-  // 🔑 NEW: Function to check if a link is active and return the class
-  const getLinkClasses = (
-    hrefOrTo,
-    defaultHoverClass = "hover:text-fuchsia-300"
-  ) => {
-    let isActive = false;
-    const path = hrefOrTo.startsWith("/") ? hrefOrTo : "";
-    const hash = hrefOrTo.startsWith("#") ? hrefOrTo : "";
-
-    if (path) {
-      // Logic for /route-links
-      isActive = currentPath === path;
-      defaultHoverClass = "hover:text-blue-300"; // Using blue for legal links
-    } else if (hash) {
-      // Logic for #fragment-links
-      isActive = currentHash === hash;
-      defaultHoverClass = "hover:text-fuchsia-300"; // Using fuchsia for main page links
-    }
-
-    // Return combined classes, applying the distinct color when active
+    // Default: text-gray-400, Hover: hover:text-blue-300
+    // Active: text-white font-semibold
     return `
-      ${defaultHoverClass} transition-colors 
+      hover:text-blue-300 transition-colors
       ${isActive ? "text-white font-semibold" : "text-gray-400"}
     `;
   };
 
   return (
     // 🟢 Semantic Markup: <footer>
-    <footer className="bg-[#0A0027] pt-12 pb-6 border-t border-[#1e004a]">
+    <footer className="bg-[#0A0027] flex justify-center pt-12 pb-6 border-t border-[#1e004a]">
       {/* Replaced motion.div with standard div */}
       <div className="max-w-7xl mx-auto px-6 text-white">
         {/* Top Section: Logo, Mission, and Socials */}
         {/* 🟢 Semantic Markup: <section> */}
-        <section className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-[#210045] pb-10 mb-8">
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-[#210045] pb-10 mb-8">
           {/* Column 1: Brand & Mission */}
           {/* 🟢 Semantic Markup: <article> */}
           <article className="md:col-span-2">
@@ -98,42 +69,13 @@ export default function Footer() {
             </p>
           </article>
 
-          {/* Column 2: Product Links */}
-          {/* 🟢 Semantic Markup: <nav> */}
-          <nav>
-            <h4 className="text-lg font-bold mb-4 text-fuchsia-400">Product</h4>
-            {/* 🔑 MODIFIED: Applied getLinkClasses for active hash links */}
-            <ul className="space-y-3">
-              <li>
-                <a href="#features" className={getLinkClasses("#features")}>
-                  Features
-                </a>
-              </li>
-              <li>
-                <a href="#pricing" className={getLinkClasses("#pricing")}>
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a href="#faq" className={getLinkClasses("#faq")}>
-                  FAQ
-                </a>
-              </li>
-              <li>
-                <a href="#demo" className={getLinkClasses("#demo")}>
-                  Request a Demo
-                </a>
-              </li>
-            </ul>
-          </nav>
-
           {/* Column 3: Legal & Company */}
           {/* 🟢 Semantic Markup: <nav> */}
           <nav>
             <h4 className="text-lg font-bold mb-4 text-blue-400">
               Company & Legal
             </h4>
-            {/* 🔑 MODIFIED: Applied getLinkClasses for active route links */}
+            {/* 🔑 MODIFIED: Applied getLinkClasses to navigation links */}
             <ul className="space-y-3">
               <li>
                 <Link to="/about" className={getLinkClasses("/about")}>

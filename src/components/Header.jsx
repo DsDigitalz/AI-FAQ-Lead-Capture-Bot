@@ -3,9 +3,6 @@ import { Menu, Shield, X, Zap } from "lucide-react";
 import { Link as LinkIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// import { Menu, X, Shield, Zap, Link } from "lucide-react"; // Imported Shield and Zap for the new logo
-// Framer Motion removed
-
 // New Logo Component: Shield (for help/protection) + Zap (for speed/AI)
 const HelplyAILogo = ({ className = "w-8 h-8" }) => (
   <div className={`relative ${className}`}>
@@ -21,7 +18,24 @@ const HelplyAILogo = ({ className = "w-8 h-8" }) => (
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // 🔑 NEW: State to track the current URL hash for active link highlighting
+  const [currentHash, setCurrentHash] = useState(window.location.hash);
   const menuRef = useRef(null);
+
+  // 🔑 NEW: Effect to listen for hash changes (when a user clicks a nav link)
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+
+    // Initial check and event listener setup
+    handleHashChange(); // Set initial hash
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
 
   // Handle clicks outside the menu
   useEffect(() => {
@@ -47,29 +61,46 @@ export default function Header() {
     };
   }, [isMenuOpen]);
 
+  // 🔑 MODIFIED: Function to check if a link is active and return the class
+  const getLinkClasses = (href) => {
+    // 1. Get the hash part of the href (e.g., "#features")
+    const linkHash = href;
+
+    // 2. Check if the link's hash matches the current URL hash
+    const isActive = currentHash === linkHash;
+
+    // 3. Return combined classes, applying the focus style when active
+    return `
+      hover:text-gray-300 hover:scale-105 active:text-gray-400 
+      cursor-pointer transition-all duration-300
+      ${isActive ? "text-white" : "text-gray-400"} 
+    `;
+  };
+
   const navLinks = (
-    <li className="text-gray-400 list-none flex  lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
+    // 🔑 MODIFIED: Removed text-gray-400 here to let the getLinkClasses set the color
+    <li className="list-none flex lg:flex-row gap-8 lg:gap-20 text-lg lg:text-base">
       <a
         href="#features"
-        className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className={getLinkClasses("#features")} // Apply active/focus classes
         onClick={() => setIsMenuOpen(false)}
-        behavior:smooth="true"
+        // behavior:smooth="true" // Removed non-standard attribute
       >
         Features
       </a>
       <a
         href="#pricing"
-        className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className={getLinkClasses("#pricing")} // Apply active/focus classes
         onClick={() => setIsMenuOpen(false)}
-        behavior:smooth="true"
+        // behavior:smooth="true" // Removed non-standard attribute
       >
         Pricing
       </a>
       <a
         href="#faq"
-        className="hover:text-gray-300 hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className={getLinkClasses("#faq")} // Apply active/focus classes
         onClick={() => setIsMenuOpen(false)}
-        behavior:smooth="true"
+        // behavior:smooth="true" // Removed non-standard attribute
       >
         FAQ
       </a>
@@ -77,6 +108,7 @@ export default function Header() {
   );
 
   const actionButtons = (
+    // 🔑 MODIFIED: Ensured text-gray-400 is on the container since Sign In doesn't use the custom function
     <div className="text-gray-400 flex lg:flex-row items-center gap-5 lg:gap-10 lg:mt-0 w-full lg:w-auto">
       <Link
         to="/signin"
@@ -96,12 +128,10 @@ export default function Header() {
     </div>
   );
 
-  // Framer Motion variants and logic are now removed.
-
   return (
-    // 🟢 CHANGE: Replaced motion.header with regular header tag
+    // 🟢 Semantic Markup: Use <header> tag
     <header className="z-100 fixed w-full bg-gradient-to-br from-[#00031F] to-[#10003B]">
-      <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white  py-1 px-1 lg:py-5 md:px-4 lg:px-6 relative z-50">
+      <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white py-1 px-1 lg:py-5 md:px-4 lg:px-6 relative z-50">
         {/* Logo Area */}
         <div className="flex items-center space-x-2 md:space-x-4 p-4 md:px-0 font-medium">
           {/* New HelplyAI Logo */}
@@ -138,11 +168,10 @@ export default function Header() {
         </button>
 
         {/* Mobile Menu Overlay */}
-        {/* 🟢 CHANGE: Replaced motion.div with regular div and implemented tailwind transitions */}
         <div
           ref={menuRef}
           className={`
-          fixed top-0 right-0  w-full  bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] px-10 sm:px-30 py-7 shadow-xl lg:hidden z-40
+          fixed top-0 right-0 w-full bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] px-10 sm:px-30 py-7 shadow-xl lg:hidden z-40
           transition-transform duration-300 ease-in-out 
           ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
         `}

@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Menu, Shield, X, Zap } from "lucide-react";
 import { Link as LinkIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+// 🔑 MODIFIED: Import useLocation from react-router-dom
+import { Link, useLocation } from "react-router-dom";
 
-// import { Menu, X, Shield, Zap, Link } from "lucide-react"; // Imported Shield and Zap for the new logo
 // Framer Motion removed
 
 // New Logo Component: Shield (for help/protection) + Zap (for speed/AI)
 const HelplyAILogo = ({ className = "w-8 h-8" }) => (
+  // 🟢 Semantic Markup: Keeping <div> as this is purely a visual, non-semantic container for positioning icons
   <div className={`relative ${className}`}>
     {/* Shield Icon: Represents help and protection */}
     <Shield className="w-full h-full text-white" strokeWidth={1.5} />
@@ -23,7 +24,13 @@ export default function LegalSubHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // Handle clicks outside the menu
+  // 🔑 NEW/MODIFIED: Use useLocation hook for dynamic route tracking
+  const location = useLocation();
+
+  // 🔑 REMOVED: Manual state tracking and useEffect for 'popstate' are no longer needed.
+  // The component will re-render whenever the location changes, thanks to useLocation().
+
+  // Handle clicks outside the menu (kept this logic as it's separate from routing)
   useEffect(() => {
     const handleClickOutside = (event) => {
       // Ensure we don't close the menu when clicking the toggle button
@@ -47,32 +54,46 @@ export default function LegalSubHeader() {
     };
   }, [isMenuOpen]);
 
+  // 🔑 MODIFIED: Function now uses location.pathname
+  const getLinkClasses = (to) => {
+    // Check if the link's path matches the current path provided by useLocation
+    const isActive = location.pathname === to;
+
+    // Apply blue text color when active
+    return `
+      hover:text-gray-300 hover:scale-105 active:text-gray-400 
+      cursor-pointer transition-all duration-300
+      ${isActive ? "text-white font-semibold" : "text-gray-400"} 
+    `;
+  };
+
   const navLinks = (
-    <li className="text-gray-400 list-none grid grid-cols-2 text-[16px]  md:flex md:items-center gap-6 md:gap-8 lg:gap-10 text-lg lg:text-base">
+    // 🔑 MODIFIED: Removed text-gray-400 here to let the getLinkClasses set the color
+    <li className="list-none grid grid-cols-2 text-[16px] md:flex md:items-center gap-6 md:gap-8 lg:gap-10 text-lg lg:text-base">
       <Link
         to="/about"
-        className="hover:text-gray-300   hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className={getLinkClasses("/about")} // Apply active/focus classes
         onClick={() => setIsMenuOpen(false)}
       >
         About Us
       </Link>
       <Link
         to="/privacy-policy"
-        className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className={getLinkClasses("/privacy-policy")} // Apply active/focus classes
         onClick={() => setIsMenuOpen(false)}
       >
         Privacy Policy
       </Link>
       <Link
         to="/terms-of-service"
-        className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className={getLinkClasses("/terms-of-service")} // Apply active/focus classes
         onClick={() => setIsMenuOpen(false)}
       >
         Terms of Service
       </Link>
       <Link
         to="/gdpr-compliance"
-        className="hover:text-gray-300  hover:scale-105 active:text-gray-400 cursor-pointer transition-all duration-300"
+        className={getLinkClasses("/gdpr-compliance")} // Apply active/focus classes
         onClick={() => setIsMenuOpen(false)}
       >
         GDPR Compliance
@@ -100,16 +121,16 @@ export default function LegalSubHeader() {
     </div>
   );
 
-  // Framer Motion variants and logic are now removed.
-
   return (
-    // 🟢 CHANGE: Replaced motion.header with regular header tag
+    // 🟢 Semantic Markup: Use <header> tag
     <header className="fixed w-full z-100 bg-gradient-to-br from-[#00031F] to-[#10003B]">
-      <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white  py-1 px-1 lg:py-5 md:px-4 lg:px-6 relative z-50">
+      <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white py-1 px-1 lg:py-5 md:px-4 lg:px-6 relative z-50">
         {/* Logo Area */}
         <div className="flex items-center space-x-2 md:space-x-4 p-4 md:px-0 font-medium">
           {/* New HelplyAI Logo */}
-          <HelplyAILogo className="w-8 h-8" />
+          <Link to="/">
+            <HelplyAILogo className="w-8 h-8" />
+          </Link>
 
           {/* Gradient Text HelplyAI */}
           <h1 className="text-xl sm:text-3xl font-extrabold">
@@ -140,11 +161,10 @@ export default function LegalSubHeader() {
         </button>
 
         {/* Mobile Menu Overlay */}
-        {/* 🟢 CHANGE: Replaced motion.div with regular div and implemented tailwind transitions */}
         <div
           ref={menuRef}
           className={`
-          fixed top-0 right-0  w-full  bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] px-10 sm:px-30 py-7 shadow-xl lg:hidden z-40
+          fixed top-0 right-0 w-full bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] px-10 sm:px-30 py-7 shadow-xl lg:hidden z-40
           transition-transform duration-300 ease-in-out 
           ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
         `}

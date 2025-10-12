@@ -32,8 +32,8 @@ export default function GDPRCompliance() {
     >
       <header className="mb-12">
         <div className="flex items-center space-x-3 mb-2">
-          <ShieldCheck className="w-8 h-8 text-green-400" />
-          <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">
+          <ShieldCheck className="w-8 h-8 text-fuchsia-400" />
+          <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">
             GDPR Compliance
           </h1>
         </div>
