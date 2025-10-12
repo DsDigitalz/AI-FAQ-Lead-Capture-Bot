@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // 🔑 ADDED: useState for modal control
+import React, { useState, useEffect } from "react"; // 🔑 MODIFIED: Added useEffect
 import HeroSection from "../components/HeroSection";
 import FeaturesSection from "../components/FeaturesSection";
 import PricingSection from "../components/PricingSection";
@@ -6,12 +6,35 @@ import FAQSection from "../components/FAQSection";
 import FinalCTASection from "../components/FinalCTASection";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
+import { motion } from "framer-motion"; // 🔑 ADDED: Framer Motion for wrapper animation
 // 🔑 ADDED: Import the modal components
 import ChatModal from "../components/Modals/ChatModal";
 import DemoRequestModal from "../components/Modals/DemoRequestModal";
 
+// --- Framer Motion Animation Setup ---
+const pageVariants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      when: "beforeChildren", // Ensures the fade-in starts before individual components
+    },
+  },
+};
+// -------------------------------------
+
 export default function LandingPage() {
+  // 🔑 NEW: ADDED EFFECT HOOK TO SCROLL TO TOP
+  useEffect(() => {
+    // This function runs once after the component mounts
+    // It forces the window to scroll to coordinates (0, 0)
+    window.scrollTo(0, 0);
+
+    // An alternative if the window scroll is unreliable (e.g., in some routers) is:
+    // document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' });
+  }, []); // The empty dependency array [] ensures this only runs on mount
+
   // 🔑 NEW: State to control the visibility of the modals
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isDemoOpen, setIsDemoOpen] = useState(false);
@@ -27,8 +50,13 @@ export default function LandingPage() {
   };
 
   return (
-    // 🟢 Semantic Markup: Keeping <div> wrapper
-    <div>
+    // 🟢 Semantic Markup: Used <motion.div> to apply the requested page-level animation (fade-in)
+    <motion.div
+      id="main-content" // ID added for potential scroll-into-view method
+      variants={pageVariants}
+      initial="hidden"
+      animate="visible"
+    >
       <Header />
 
       {/* 🔑 MODIFIED: Pass the handlers to the HeroSection where the main buttons reside */}
@@ -57,6 +85,6 @@ export default function LandingPage() {
         isOpen={isDemoOpen}
         onClose={() => setIsDemoOpen(false)}
       />
-    </div>
+    </motion.div>
   );
 }

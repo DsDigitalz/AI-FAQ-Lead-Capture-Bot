@@ -39,7 +39,7 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
   return (
     // 🟢 Semantic Markup: Use <section> for the hero block
     <section
-      className=" pt-0 pb:10 md:pb-16 lg:pt-50 lg:pb-50  text-white bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B]"
+      className=" pt-30 pb:10 md:pb-16 lg:pt-50 lg:pb-50  text-white bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B]"
       id="demo"
     >
       <motion.div
