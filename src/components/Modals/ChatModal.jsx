@@ -14,7 +14,7 @@ const modalVariants = {
       type: "spring",
       stiffness: 100,
       damping: 20,
-      duration: 0.5,
+      duration: 0.2,
       delayChildren: 0.3,
     },
   },
