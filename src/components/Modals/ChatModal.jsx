@@ -6,19 +6,31 @@ import { Link } from "react-router";
 
 // Animation Variants (using combination of fade-in and slide-in)
 const modalVariants = {
-  hidden: { opacity: 0, y: "100%" },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZED: Use translateZ(0) for hardware acceleration (force GPU layer)
+    // 🔑 MODIFIED: Use translateY for faster, smoother movement than 'y'
+    transform: "translateY(100%) translateZ(0)",
+  },
   visible: {
     opacity: 1,
-    y: "0%",
+    // 🔑 OPTIMIZED: Target transform directly
+    transform: "translateY(0%) translateZ(0)",
     transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 20,
-      duration: 0.2,
-      delayChildren: 0.3,
+      // 🔑 MODIFIED: Changed from 'spring' to 'tween' for predictable, lightweight motion
+      type: "tween",
+      ease: "easeOut", // Standard smooth easing
+      duration: 0.3, // Slightly increased duration (from 0.2) to feel less jarring, but still fast
+      delayChildren: 0.1, // Reduced delay to feel snappier
     },
   },
-  exit: { opacity: 0, y: "100%" },
+  exit: {
+    opacity: 0,
+    transform: "translateY(100%) translateZ(0)",
+    transition: {
+      duration: 0.2, // Fast exit
+    },
+  },
 };
 
 // Simple Chat Bubble Component

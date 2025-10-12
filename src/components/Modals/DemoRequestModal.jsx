@@ -5,20 +5,32 @@ import { X, User, Mail, Briefcase } from "lucide-react";
 
 // Animation Variants (using combination of fade-in and slide-in)
 const modalVariants = {
-  hidden: { opacity: 0, y: -50, scale: 0.8 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZED: Combine Y and Scale into a single transform,
+    // using translate3d for guaranteed GPU acceleration.
+    transform: "translateY(-5vh) scale(0.9) translateZ(0)",
+  },
   visible: {
     opacity: 1,
-    y: 0,
-    scale: 1,
+    // 🔑 OPTIMIZED: Reset transform
+    transform: "translateY(0) scale(1) translateZ(0)",
     transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 20,
-      duration: 0.5,
-      delayChildren: 0.3,
+      // 🔑 MODIFIED: Use 'tween' for predictable, lightweight motion.
+      type: "tween",
+      ease: "easeOut",
+      duration: 0.25, // Faster duration for a snappier feel.
+      // Removed unnecessary damping/stiffness properties which are specific to 'spring'
     },
   },
-  exit: { opacity: 0, y: -50, scale: 0.8 },
+  exit: {
+    opacity: 0,
+    // 🔑 OPTIMIZED: Ensure exit is also fast and GPU-accelerated
+    transform: "translateY(-5vh) scale(0.9) translateZ(0)",
+    transition: {
+      duration: 0.2,
+    },
+  },
 };
 
 // 🟢 Semantic Markup: <section> is appropriate for a primary content container like a modal
@@ -210,4 +222,3 @@ export default function DemoRequestModal({ isOpen, onClose }) {
     </div>
   );
 }
-    
