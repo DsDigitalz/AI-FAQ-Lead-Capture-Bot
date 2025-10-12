@@ -6,21 +6,38 @@ import { Link } from "react-router";
 
 // --- Framer Motion Animation Setup (Fade-in and Slide-in) ---
 const containerVariants = {
-  hidden: { opacity: 0, scale: 0.95 }, // Slight scale for a subtle pop effect
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZED: Combine scale and add translateZ(0) for GPU acceleration
+    transform: "scale(0.98) translateZ(0)",
+  },
   visible: {
     opacity: 1,
-    scale: 1,
+    transform: "scale(1) translateZ(0)",
     transition: {
-      duration: 0.5,
-      delayChildren: 0.2, // Delay before inner items start
-      staggerChildren: 0.1, // Stagger effect for sequential field appearance
+      // 🔑 MODIFIED: Reduced duration for snappier feel (0.5s -> 0.3s)
+      duration: 0.3,
+      ease: "easeOut", // Use a smooth easing function
+      delayChildren: 0.1, // Reduced delay
+      staggerChildren: 0.05, // 🔑 MODIFIED: Faster stagger for sequential field appearance
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZED: Use translateY for GPU-accelerated slide-in
+    transform: "translateY(10px) translateZ(0)",
+  },
+  visible: {
+    opacity: 1,
+    transform: "translateY(0) translateZ(0)",
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
 };
 // -----------------------------------------------------------
 
@@ -91,12 +108,12 @@ export default function GetStartedPage() {
         <header className="text-center mb-8">
           {/* 🔑 MODIFIED: Logo container wrapped in motion.div */}
           <Link to="/">
-          <motion.div
-            variants={itemVariants}
-            className="flex justify-center mb-4"
-          >
-            <HelplyAILogo className="w-10 h-10" />
-          </motion.div>
+            <motion.div
+              variants={itemVariants}
+              className="flex justify-center mb-4"
+            >
+              <HelplyAILogo className="w-10 h-10" />
+            </motion.div>
           </Link>
           {/* 🔑 MODIFIED: H2 wrapped in motion.h2 */}
           <motion.h2
@@ -109,7 +126,6 @@ export default function GetStartedPage() {
           <motion.p variants={itemVariants} className="text-gray-400">
             Automate support in 5 minutes. No credit card required.
           </motion.p>
-
         </header>
 
         {/* 🟢 Semantic Markup: Used <form> for the submission area */}

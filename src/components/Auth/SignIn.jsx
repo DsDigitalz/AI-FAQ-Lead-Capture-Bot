@@ -6,21 +6,39 @@ import { Link } from "react-router";
 
 // --- Framer Motion Animation Setup (Fade-in and Slide-in) ---
 const containerVariants = {
-  hidden: { opacity: 0, scale: 0.95 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZED: Combine scale and add translateZ(0) for GPU acceleration.
+    transform: "scale(0.98) translateZ(0)",
+  },
   visible: {
     opacity: 1,
-    scale: 1,
+    transform: "scale(1) translateZ(0)",
     transition: {
-      duration: 0.5,
-      delayChildren: 0.2,
-      staggerChildren: 0.1,
+      // 🔑 MODIFIED: Reduced duration from 0.5s to 0.3s for a snappier feel.
+      duration: 0.3,
+      ease: "easeOut", // Use a clean easing function
+      delayChildren: 0.1, // Reduced for faster appearance
+      // 🔑 MODIFIED: Faster stagger for sequential field appearance.
+      staggerChildren: 0.05,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZED: Use translateY for GPU-accelerated slide-in (faster than 'y').
+    transform: "translateY(10px) translateZ(0)",
+  },
+  visible: {
+    opacity: 1,
+    transform: "translateY(0) translateZ(0)",
+    transition: {
+      duration: 0.25, // Quick item slide
+      ease: "easeOut",
+    },
+  },
 };
 // -----------------------------------------------------------
 
@@ -87,7 +105,7 @@ export default function SignIn() {
         animate="visible"
       >
         {/* 🟢 Semantic Markup: Used <header> */}
-        
+
         <header className="text-center mb-8">
           {/* 🔑 MODIFIED: Link added around the Logo */}
           <Link to="/">
@@ -111,7 +129,7 @@ export default function SignIn() {
             Sign in to continue to your HelplyAI dashboard.
           </motion.p>
         </header>
-        
+
         {/* 🟢 Semantic Markup: Used <form> */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <InputField
