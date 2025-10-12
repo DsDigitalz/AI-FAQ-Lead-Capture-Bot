@@ -17,7 +17,7 @@ const HelplyAILogo = ({ className = "w-7 h-7" }) => (
   </div>
 );
 
-export default function HeroSection() {
+export default function HeroSection({ onStartChatting, onRequestDemo }) {
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
@@ -38,7 +38,10 @@ export default function HeroSection() {
 
   return (
     // 🟢 Semantic Markup: Use <section> for the hero block
-    <section className=" pt-30 pb:10 md:pb-16 lg:pt-50 lg:pb-50  text-white bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B]" id="demo">
+    <section
+      className=" pt-0 pb:10 md:pb-16 lg:pt-50 lg:pb-50  text-white bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B]"
+      id="demo"
+    >
       <motion.div
         className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between px-6 space-y-12 lg:space-y-0"
         variants={containerVariants}
@@ -78,18 +81,20 @@ export default function HeroSection() {
             variants={itemVariants}
             className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4"
           >
-            <a
+            <button
+              onClick={onStartChatting}
               href="#chat"
-              className="inline-block py-3 px-8 text-lg font-semibold rounded-full bg-fuchsia-600 hover:bg-fuchsia-700 transition-colors shadow-lg"
+              className="inline-block py-3 px-8  cursor-pointer text-lg font-semibold rounded-full bg-fuchsia-600 hover:bg-fuchsia-700 transition-colors shadow-lg"
             >
               Start Chatting →
-            </a>
-            <a
+            </button>
+            <button
+              onClick={onRequestDemo}
               href="#demo"
-              className="inline-block py-3 px-8 text-lg font-semibold rounded-full border border-gray-500 hover:border-white hover:bg-gray-800 transition-colors"
+              className="inline-block py-3 px-8 cursor-pointer  text-lg font-semibold rounded-full border border-gray-500 hover:border-white hover:bg-gray-800 transition-colors"
             >
               Request a Demo
-            </a>
+            </button>
           </motion.div>
 
           {/* 🟢 Semantic Markup: Used <nav> for the Assurance Strip as it's a bar of secondary, trust-based links/information */}

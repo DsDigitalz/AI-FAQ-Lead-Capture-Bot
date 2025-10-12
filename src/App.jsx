@@ -5,7 +5,7 @@ import FeaturesSection from "./components/FeaturesSection";
 import PricingSection from "./components/PricingSection";
 import FAQSection from "./components/FAQSection";
 import FinalCTASection from "./components/FinalCTASection";
-import Home from "./pages/Home";
+import LandingPage from "./pages/LandingPage";
 import Getstarted from "./pages/GetStarted";
 import SignInPage from "./pages/SignInPage";
 import PageNotFound from "./pages/PageNotFound";
@@ -25,13 +25,13 @@ export default function App() {
         <Route
           path="/"
           element={
-            <Home>
+            <LandingPage>
               <HeroSection />
               <FeaturesSection />
               <PricingSection />
               <FAQSection />
               <FinalCTASection />
-            </Home>
+            </LandingPage>
           }
         />
         {/* Example additional pages */}
