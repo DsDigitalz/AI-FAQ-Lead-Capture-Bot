@@ -2,23 +2,41 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-// --- Framer Motion Animation Setup ---
+// --- Framer Motion Animation Setup (Performance Optimized) ---
 const containerVariants = {
-  hidden: { opacity: 0, y: 50 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZATION: Use translateY for GPU-acceleration
+    transform: "translateY(20px) translateZ(0)",
+  },
   visible: {
     opacity: 1,
-    y: 0,
+    transform: "translateY(0) translateZ(0)",
     transition: {
-      duration: 0.8,
-      delayChildren: 0.2,
-      staggerChildren: 0.1,
+      // 🔑 OPTIMIZATION: Reduced duration for snappier feel
+      duration: 0.3,
+      ease: "easeOut",
+      delayChildren: 0.1,
+      // 🔑 OPTIMIZATION: Faster stagger for quick reveal
+      staggerChildren: 0.05,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZATION: Use translateY for GPU-accelerated slide-in
+    transform: "translateY(15px) translateZ(0)",
+  },
+  visible: {
+    opacity: 1,
+    transform: "translateY(0) translateZ(0)",
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
 };
 // ------------------------------------
 
@@ -101,7 +119,8 @@ export default function FAQSection() {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        // 🔑 OPTIMIZATION: Reduced amount to trigger animation sooner
+        viewport={{ once: true, amount: 0.1 }}
       >
         {/* Left Content - Section Header/Intro */}
         {/* 🟢 Semantic Markup: Used <header> for the section's introductory content. */}

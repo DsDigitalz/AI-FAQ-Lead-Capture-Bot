@@ -16,23 +16,41 @@ const HelplyAILogo = ({ className = "w-10 h-10" }) => (
   </div>
 );
 
-// --- Framer Motion Animation Setup ---
+// --- Framer Motion Animation Setup (Performance Optimized) ---
 const containerVariants = {
-  hidden: { opacity: 0, y: 50 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZATION: Use translateY for GPU-acceleration
+    transform: "translateY(15px) translateZ(0)",
+  },
   visible: {
     opacity: 1,
-    y: 0,
+    transform: "translateY(0) translateZ(0)",
     transition: {
-      duration: 0.8,
-      delayChildren: 0.3,
-      staggerChildren: 0.2,
+      // 🔑 OPTIMIZATION: Reduced duration for snappier feel
+      duration: 0.3,
+      ease: "easeOut",
+      delayChildren: 0.1,
+      // 🔑 OPTIMIZATION: Faster stagger for quick reveal
+      staggerChildren: 0.08,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZATION: Use translateY for GPU-accelerated slide-in
+    transform: "translateY(10px) translateZ(0)",
+  },
+  visible: {
+    opacity: 1,
+    transform: "translateY(0) translateZ(0)",
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
 };
 // ------------------------------------
 
@@ -45,7 +63,8 @@ export default function FinalCTASection() {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.5 }}
+        // 🔑 OPTIMIZATION: Reduced amount to trigger animation sooner
+        viewport={{ once: true, amount: 0.1 }}
       >
         {/* 🟢 Semantic Markup: Used <header> for the heading and sub-text */}
         <header>
@@ -80,7 +99,7 @@ export default function FinalCTASection() {
           <Link to="/signup">
             <motion.div
               variants={itemVariants}
-              href="#signup"
+              // The button element itself needs the motion properties, not the wrapper div
               className="inline-flex items-center justify-center py-4 px-12 text-xl font-bold rounded-full bg-fuchsia-600 hover:bg-fuchsia-700 hover:transition-all duration-300 shadow-2xl shadow-fuchsia-500/50 transform hover:scale-[1.03]"
             >
               Start Your Free 7-Day Trial

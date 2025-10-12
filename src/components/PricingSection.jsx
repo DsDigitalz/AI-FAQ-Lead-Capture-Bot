@@ -3,23 +3,41 @@ import { motion } from "framer-motion";
 import { Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 
-// --- Framer Motion Animation Setup ---
+// --- Framer Motion Animation Setup (Performance Optimized) ---
 const containerVariants = {
-  hidden: { opacity: 0, y: 50 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZATION: Use translateY for GPU-acceleration
+    transform: "translateY(20px) translateZ(0)",
+  },
   visible: {
     opacity: 1,
-    y: 0,
+    transform: "translateY(0) translateZ(0)",
     transition: {
-      duration: 0.8,
-      delayChildren: 0.2,
-      staggerChildren: 0.15,
+      // 🔑 OPTIMIZATION: Reduced duration for snappier feel
+      duration: 0.3,
+      ease: "easeOut",
+      delayChildren: 0.1,
+      // 🔑 OPTIMIZATION: Faster stagger for quick reveal
+      staggerChildren: 0.08,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 },
+  hidden: {
+    opacity: 0,
+    // 🔑 OPTIMIZATION: Use translateY for GPU-accelerated slide-in
+    transform: "translateY(15px) translateZ(0)",
+  },
+  visible: {
+    opacity: 1,
+    transform: "translateY(0) translateZ(0)",
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+    },
+  },
 };
 // ------------------------------------
 
@@ -160,7 +178,8 @@ export default function PricingSection() {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        // 🔑 OPTIMIZATION: Reduced amount to trigger animation sooner on scroll
+        viewport={{ once: true, amount: 0.1 }}
       >
         {/* Section Heading */}
         {/* 🟢 Semantic Markup: Used <header> for the section's heading group */}
