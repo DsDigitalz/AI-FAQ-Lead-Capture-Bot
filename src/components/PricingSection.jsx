@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Check, ArrowRight } from "lucide-react";
+import { Link } from "react-router";
 
 // --- Framer Motion Animation Setup ---
 const containerVariants = {
@@ -113,8 +114,12 @@ const PricingCard = ({ plan, index }) => (
     </section>
 
     {/* Button */}
-    <a
-      href={plan.name === "Enterprise AI" ? "#contact" : "#signup"}
+    <Link
+      to={
+        plan.name === "Enterprise AI"
+          ? "/contact-sales"
+          : "/checkout/starter-bot"
+      }
       className={`
         w-full py-3 rounded-full text-center text-lg font-semibold mb-6 transition-colors
         ${plan.buttonClass}
@@ -122,7 +127,7 @@ const PricingCard = ({ plan, index }) => (
     >
       {plan.name === "Enterprise AI" ? "Contact Sales" : "Get Started Now"}
       <ArrowRight size={18} className="inline ml-2" />
-    </a>
+    </Link>
 
     {/* Feature List - Already uses semantic <ul> and <li> */}
     <ul className="space-y-3 flex-grow">

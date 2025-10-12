@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Shield, Zap } from "lucide-react";
+import { Link } from "react-router";
 
 // 🟢 NEW LOGO COMPONENT (for consistency)
 const HelplyAILogo = ({ className = "w-10 h-10" }) => (
@@ -76,14 +77,16 @@ export default function FinalCTASection() {
 
         {/* 🟢 Semantic Markup: Used <main> for the primary action button */}
         <main>
-          <motion.a
-            variants={itemVariants}
-            href="#signup"
-            className="inline-flex items-center justify-center py-4 px-12 text-xl font-bold rounded-full bg-fuchsia-600 hover:bg-fuchsia-700 hover:transition-all duration-300 shadow-2xl shadow-fuchsia-500/50 transform hover:scale-[1.03]"
-          >
-            Start Your Free 7-Day Trial
-            <ArrowRight size={22} className="ml-3" />
-          </motion.a>
+          <Link to="/signup">
+            <motion.a
+              variants={itemVariants}
+              href="#signup"
+              className="inline-flex items-center justify-center py-4 px-12 text-xl font-bold rounded-full bg-fuchsia-600 hover:bg-fuchsia-700 hover:transition-all duration-300 shadow-2xl shadow-fuchsia-500/50 transform hover:scale-[1.03]"
+            >
+              Start Your Free 7-Day Trial
+              <ArrowRight size={22} className="ml-3" />
+            </motion.a>
+          </Link>
         </main>
       </motion.div>
     </section>

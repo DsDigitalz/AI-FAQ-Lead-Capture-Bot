@@ -14,6 +14,8 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import LegalLayout from "./components/layout/LegalLayout";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import GDPRCompliancePage from "./pages/GDPRCompliancePage";
+import SubscriptionCheckoutPage from "./pages/SubscriptionCheckoutPage";
+import ContactSalesPage from "./pages/ContactSalesPage";
 
 // You can add other page imports later like SignIn, GetStarted, etc.
 
@@ -38,6 +40,11 @@ export default function App() {
         <Route path="*" element={<PageNotFound />} /> // Page not found
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<Getstarted />} />
+        <Route
+          path="/checkout/starter-bot"
+          element={<SubscriptionCheckoutPage />}
+        />
+        <Route path="/contact-sales" element={<ContactSalesPage />} />
         {/* --- B: ROUTES WITH LEGAL SUB-HEADER (LegalLayout) --- */}
         <Route element={<LegalLayout />}>
           <Route path="/about" element={<AboutPage />} />

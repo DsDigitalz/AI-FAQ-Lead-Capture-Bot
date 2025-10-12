@@ -1,5 +1,5 @@
 import React from "react";
-import GetStartedPage from "../components/GetStartedPage";
+import GetStartedPage from "../components/Auth/GetStartedPage";
 
 export default function Getstarted() {
   return (
