@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // 🔑 MODIFIED: ADDED useEffect
 // 🔑 Framer Motion for fade-in/slide-in animation
 import { motion } from "framer-motion";
 import { Shield, Zap, Mail, Lock, LogIn } from "lucide-react";
@@ -83,6 +83,12 @@ const InputField = ({ id, label, type = "text", icon: Icon, placeholder }) => (
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
 
+  // 🔑 NEW: useEffect Hook to force scroll to the top on page load/view.
+  useEffect(() => {
+    // Scrolls the window to the top (0, 0) upon component mount.
+    window.scrollTo(0, 0);
+  }, []); // Empty dependency array ensures it only runs once
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -105,7 +111,6 @@ export default function SignIn() {
         animate="visible"
       >
         {/* 🟢 Semantic Markup: Used <header> */}
-
         <header className="text-center mb-8">
           {/* 🔑 MODIFIED: Link added around the Logo */}
           <Link to="/">
