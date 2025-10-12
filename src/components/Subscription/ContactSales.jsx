@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // 🔑 MODIFIED: ADDED useEffect
 import { motion } from "framer-motion";
 // 🔑 ADDED: Shield, Zap, CheckCircle for logo and submission state
 import {
@@ -26,30 +26,51 @@ const HelplyAILogo = ({ className = "w-8 h-8" }) => (
   </div>
 );
 
-// Animation Variants (fade-in and slide-in)
+// 🔑 OPTIMIZED Animation Variants for Performance (GPU-accelerated)
 const containerVariants = {
-  hidden: { opacity: 0, y: 50 },
+  hidden: {
+    opacity: 0,
+    // OPTIMIZED: Use transform for GPU acceleration
+    transform: "translateY(20px) translateZ(0)",
+  },
   visible: {
     opacity: 1,
-    y: 0,
+    transform: "translateY(0) translateZ(0)",
     transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 20,
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
+      // OPTIMIZED: Switched from 'spring' to 'tween' for speed and reliability
+      type: "tween",
+      ease: "easeOut",
+      duration: 0.3, // Snappy duration
+      delayChildren: 0.1,
+      staggerChildren: 0.05, // Faster stagger
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  hidden: {
+    opacity: 0,
+    // OPTIMIZED: Use translateY for GPU-accelerated slide-in
+    transform: "translateY(10px) translateZ(0)",
+  },
+  visible: {
+    opacity: 1,
+    transform: "translateY(0) translateZ(0)",
+    transition: {
+      duration: 0.25,
+      ease: "easeOut",
+    },
+  },
 };
 
 // 🟢 Semantic Markup: Main page component for sales contact
 export default function ContactSalesPage() {
-  // 🔑 MODIFIED: Consistent name
+  // 🔑 NEW: useEffect Hook to force scroll to the top on page load/view.
+  useEffect(() => {
+    // Scrolls the window to the top (0, 0) upon component mount.
+    window.scrollTo(0, 0);
+  }, []); // Empty dependency array ensures it only runs once
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -81,9 +102,10 @@ export default function ContactSalesPage() {
       <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#00031F] to-[#10003B] p-4 text-white">
         <motion.div
           className="w-full max-w-lg bg-[#140036] p-10 rounded-xl shadow-2xl border border-[#210045] text-center"
+          // MODIFIED: Simplified transition for submission success
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 100 }}
+          transition={{ type: "tween", duration: 0.3 }}
         >
           <CheckCircle className="w-16 h-16 text-fuchsia-400 mx-auto mb-6" />
           <h1 className="text-3xl font-bold mb-3">Request Received!</h1>
@@ -118,7 +140,7 @@ export default function ContactSalesPage() {
         </motion.div>
 
         <header className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold text-white mb-2 bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400 ">
+          <h1 className="text-3xl font-extrabold text-white mb-2 bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400 text-transparent">
             Contact Sales for Enterprise
           </h1>
           <p className="text-gray-400">
@@ -133,7 +155,7 @@ export default function ContactSalesPage() {
           <motion.div variants={itemVariants}>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-400 sr-only" // 🔑 MODIFIED: Added sr-only to labels for better UX but keeping them for screen readers
+              className="block text-sm font-medium text-gray-400 sr-only"
             >
               Your Name
             </label>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // 🔑 MODIFIED: ADDED useEffect
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Shield, Zap, CreditCard, DollarSign, CheckCircle } from "lucide-react";
@@ -14,10 +14,38 @@ const HelplyAILogo = ({ className = "w-8 h-8" }) => (
   </div>
 );
 
-// Animation Variants (fade-in and slide-in)
+// 🔑 OPTIMIZED Variants for smooth, fast animation (GPU-accelerated)
+// Apply the previously agreed-upon performance optimizations here.
+const containerVariants = {
+  hidden: {
+    opacity: 0,
+    transform: "scale(0.98) translateZ(0)",
+  },
+  visible: {
+    opacity: 1,
+    transform: "scale(1) translateZ(0)",
+    transition: {
+      duration: 0.3,
+      ease: "easeOut",
+      delayChildren: 0.1,
+      staggerChildren: 0.05,
+    },
+  },
+};
+
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  hidden: {
+    opacity: 0,
+    transform: "translateY(10px) translateZ(0)",
+  },
+  visible: {
+    opacity: 1,
+    transform: "translateY(0) translateZ(0)",
+    transition: {
+      duration: 0.25,
+      ease: "easeOut",
+    },
+  },
 };
 
 // 🟢 Semantic Markup: Main page component for checkout
@@ -28,6 +56,12 @@ export default function SubscriptionCheckout({ plan = "Pro Automation" }) {
     expiryDate: "",
     cvc: "",
   });
+
+  // 🔑 NEW: useEffect Hook to force scroll to the top on page load/view.
+  useEffect(() => {
+    // Scrolls the window to the top (0, 0) upon component mount.
+    window.scrollTo(0, 0);
+  }, []); // Empty dependency array ensures it only runs once
 
   // Example Plan Data (Ideally pulled from an external source or routing params)
   const planDetails = {
@@ -65,18 +99,21 @@ export default function SubscriptionCheckout({ plan = "Pro Automation" }) {
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#00031F] to-[#10003B] p-4 text-white">
       <motion.section
         className="w-full max-w-2xl bg-[#140036] rounded-xl shadow-2xl p-8 border border-[#210045] grid grid-cols-1 lg:grid-cols-2 gap-8"
+        // 🔑 MODIFIED: Use the optimized containerVariants
+        variants={containerVariants}
         initial="hidden"
         animate="visible"
-        variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
       >
         {/* Column 1: Plan Summary */}
         <motion.div
           variants={itemVariants}
           className="lg:border-r lg:border-[#210045] lg:pr-8"
         >
-          <div className="flex justify-center mb-6">
-            <HelplyAILogo className="w-10 h-10" />
-          </div>
+          <Link to="/">
+            <div className="flex justify-center mb-6">
+              <HelplyAILogo className="w-10 h-10" />
+            </div>
+          </Link>
           <h1 className="text-3xl font-extrabold mb-2 text-center">
             Confirm Your Plan
           </h1>
@@ -108,7 +145,7 @@ export default function SubscriptionCheckout({ plan = "Pro Automation" }) {
         </motion.div>
 
         {/* Column 2: Payment Form */}
-        <motion.div variants={itemVariants} className="space-y-6">
+        <motion.div className="space-y-6">
           <h2 className="text-2xl font-semibold text-white flex items-center">
             <CreditCard size={24} className="text-blue-400 mr-3" />
             Payment Details
