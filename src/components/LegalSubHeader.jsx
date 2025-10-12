@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Menu, Shield, X, Zap } from "lucide-react";
-import { Link as LinkIcon } from "lucide-react";
-// 🔑 MODIFIED: Import useLocation from react-router-dom
 import { Link, useLocation } from "react-router-dom";
-
-// Framer Motion removed
 
 // New Logo Component: Shield (for help/protection) + Zap (for speed/AI)
 const HelplyAILogo = ({ className = "w-8 h-8" }) => (
@@ -23,17 +19,49 @@ const HelplyAILogo = ({ className = "w-8 h-8" }) => (
 export default function LegalSubHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
-
-  // 🔑 NEW/MODIFIED: Use useLocation hook for dynamic route tracking
   const location = useLocation();
 
-  // 🔑 REMOVED: Manual state tracking and useEffect for 'popstate' are no longer needed.
-  // The component will re-render whenever the location changes, thanks to useLocation().
+  // 🔑 NEW: State to track header visibility
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
 
-  // Handle clicks outside the menu (kept this logic as it's separate from routing)
+  // 🔑 NEW: Logic to auto-hide header when a specific content section is visible
+  useEffect(() => {
+    // 🔑 TARGET: Change this ID to the section you want the header to hide for.
+    // E.g., The main content container on the legal pages.
+    const targetElement = document.getElementById("footer-section");
+
+    // If the target element doesn't exist, keep the header visible
+    if (!targetElement) {
+      setIsHeaderVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // The header should be HIDDEN (false) when the main content section
+          // is intersecting the top of the viewport.
+          // We check if the top of the target element is within the viewport.
+          setIsHeaderVisible(!entry.isIntersecting);
+        });
+      },
+      {
+        // Use a rootMargin that matches the height of the fixed header (e.g., -80px)
+        // to check intersection right at the bottom edge of the header.
+        // For simplicity here, we'll rely on the default root margin.
+        rootMargin: "0px", // Checks when content is *above* the viewport
+        threshold: 0.01, // Triggers immediately
+      }
+    );
+
+    observer.observe(targetElement);
+
+    return () => observer.unobserve(targetElement);
+  }, []); // Run only once on mount
+
+  // Handle clicks outside the menu (kept from original)
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Ensure we don't close the menu when clicking the toggle button
       const toggleButton = document.querySelector(
         '[aria-label="Open menu"], [aria-label="Close menu"]'
       );
@@ -54,12 +82,10 @@ export default function LegalSubHeader() {
     };
   }, [isMenuOpen]);
 
-  // 🔑 MODIFIED: Function now uses location.pathname
+  // Function now uses location.pathname (kept from original)
   const getLinkClasses = (to) => {
-    // Check if the link's path matches the current path provided by useLocation
     const isActive = location.pathname === to;
 
-    // Apply blue text color when active
     return `
       hover:text-gray-300 hover:scale-105 active:text-gray-400 
       cursor-pointer transition-all duration-300
@@ -68,32 +94,31 @@ export default function LegalSubHeader() {
   };
 
   const navLinks = (
-    // 🔑 MODIFIED: Removed text-gray-400 here to let the getLinkClasses set the color
     <li className="list-none grid grid-cols-2 text-[16px] md:flex md:items-center gap-6 md:gap-8 lg:gap-10 text-lg lg:text-base">
       <Link
         to="/about"
-        className={getLinkClasses("/about")} // Apply active/focus classes
+        className={getLinkClasses("/about")}
         onClick={() => setIsMenuOpen(false)}
       >
         About Us
       </Link>
       <Link
         to="/privacy-policy"
-        className={getLinkClasses("/privacy-policy")} // Apply active/focus classes
+        className={getLinkClasses("/privacy-policy")}
         onClick={() => setIsMenuOpen(false)}
       >
         Privacy Policy
       </Link>
       <Link
         to="/terms-of-service"
-        className={getLinkClasses("/terms-of-service")} // Apply active/focus classes
+        className={getLinkClasses("/terms-of-service")}
         onClick={() => setIsMenuOpen(false)}
       >
         Terms of Service
       </Link>
       <Link
         to="/gdpr-compliance"
-        className={getLinkClasses("/gdpr-compliance")} // Apply active/focus classes
+        className={getLinkClasses("/gdpr-compliance")}
         onClick={() => setIsMenuOpen(false)}
       >
         GDPR Compliance
@@ -123,7 +148,13 @@ export default function LegalSubHeader() {
 
   return (
     // 🟢 Semantic Markup: Use <header> tag
-    <header className="fixed w-full z-100 bg-gradient-to-br from-[#00031F] to-[#10003B]">
+    <header
+      // 🔑 MODIFIED: Apply visibility transition based on isHeaderVisible
+      className={`fixed w-full z-100 bg-gradient-to-br from-[#00031F] to-[#10003B]
+        transition-transform duration-300 ease-in-out
+        ${isHeaderVisible ? "translate-y-0" : "-translate-y-full"}
+      `}
+    >
       <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white py-1 px-1 lg:py-5 md:px-4 lg:px-6 relative z-50">
         {/* Logo Area */}
         <div className="flex items-center space-x-2 md:space-x-4 p-4 md:px-0 font-medium">
@@ -164,10 +195,10 @@ export default function LegalSubHeader() {
         <div
           ref={menuRef}
           className={`
-          fixed top-0 right-0 w-full bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] px-10 sm:px-30 py-7 shadow-xl lg:hidden z-40
-          transition-transform duration-300 ease-in-out 
-          ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
-        `}
+            fixed top-0 right-0 w-full bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B] px-10 sm:px-30 py-7 shadow-xl lg:hidden z-40
+            transition-transform duration-300 ease-in-out 
+            ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
+          `}
         >
           <div className="w-full flex flex-col gap-7 md:flex-row items-center justify-between">
             <nav>{navLinks}</nav>

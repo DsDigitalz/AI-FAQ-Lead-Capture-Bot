@@ -16,7 +16,7 @@ export default function LegalLayout() {
       <LegalSubHeader />
 
       {/* 🟢 Semantic Markup: Main content wrapper */}
-      <main className="flex-grow max-w-6xl mx-auto w-full">
+      <main className="flex-grow max-w-6xl mx-auto w-full" >
         <Outlet />
       </main>
 

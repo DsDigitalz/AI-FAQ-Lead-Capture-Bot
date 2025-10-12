@@ -41,7 +41,7 @@ export default function LegalSubFooter() {
 
   return (
     // 🟢 Semantic Markup: <footer>
-    <footer className="bg-[#0A0027] flex justify-center pt-12 pb-6 border-t border-[#1e004a]">
+    <footer className="bg-[#0A0027] flex justify-center pt-12 pb-6 border-t border-[#1e004a]" id="footer-section">
       {/* Replaced motion.div with standard div */}
       <div className="max-w-7xl mx-auto px-6 text-white">
         {/* Top Section: Logo, Mission, and Socials */}

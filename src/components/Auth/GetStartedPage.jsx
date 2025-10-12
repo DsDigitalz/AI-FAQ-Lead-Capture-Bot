@@ -223,19 +223,19 @@ export default function GetStartedPage() {
           </p>
           <p className="mt-4">
             By signing up, you agree to our{" "}
-            <a
-              href="/terms"
+            <Link
+              to="/terms-of-service"
               className="font-medium text-blue-400 hover:text-blue-300 transition-colors"
             >
               Terms of Service
-            </a>{" "}
+            </Link>{" "}
             and{" "}
-            <a
-              href="/privacy"
+            <Link
+              to="/privacy-policy"
               className="font-medium text-blue-400 hover:text-blue-300 transition-colors"
             >
               Privacy Policy
-            </a>
+            </Link>
           </p>
         </motion.nav>
       </motion.section>
