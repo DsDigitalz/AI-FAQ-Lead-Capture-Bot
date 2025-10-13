@@ -91,20 +91,20 @@ export default function LegalSubFooter() {
                 </Link>
               </li>
               <li>
-                <a
-                  href="/terms-of-service"
+                <Link to="/terms-of-service"
+                 
                   className={getLinkClasses("/terms-of-service")}
                 >
                   Terms of Service
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link to="/gdpr-compliance"
                   href="/gdpr-compliance"
                   className={getLinkClasses("/gdpr-compliance")}
                 >
                   GDPR Compliance
-                </a>
+                </Link>
               </li>
             </ul>
           </nav>
