@@ -165,7 +165,7 @@ export default function GetStartedPage() {
             disabled={loading}
             className={`
               w-full py-3 mt-8 rounded-full text-lg font-semibold transition-all duration-300
-              flex items-center justify-center space-x-2
+              flex items-center justify-center space-x-2 cursor-pointer
               ${
                 loading
                   ? "bg-gray-600 cursor-not-allowed"

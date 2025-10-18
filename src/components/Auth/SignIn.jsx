@@ -172,7 +172,7 @@ export default function SignIn() {
             disabled={loading}
             className={`
               w-full py-3 rounded-full text-lg font-semibold transition-all duration-300
-              flex items-center justify-center space-x-2
+              flex items-center justify-center space-x-2 cursor-pointer
               ${
                 loading
                   ? "bg-gray-600 cursor-not-allowed"

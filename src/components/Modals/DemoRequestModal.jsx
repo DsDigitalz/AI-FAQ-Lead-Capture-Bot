@@ -78,7 +78,7 @@ export default function DemoRequestModal({ isOpen, onClose }) {
         exit="exit"
       >
         <header className="flex justify-between items-start mb-6">
-          <h2 className="text-3xl font-bold text-white bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400 text-transparent">
+          <h2 className="text-3xl font-bold text-white bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400 ">
             Request a Demo
           </h2>
           <button
@@ -124,7 +124,7 @@ export default function DemoRequestModal({ isOpen, onClose }) {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full bg-transparent text-white placeholder-gray-500 focus:ring-0 border-none outline-none"
+                  className="w-full px-2 bg-transparent text-white placeholder-gray-500 focus:ring-0 border-none outline-none"
                 />
               </div>
             </motion.div>
@@ -151,7 +151,7 @@ export default function DemoRequestModal({ isOpen, onClose }) {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full bg-transparent text-white placeholder-gray-500 focus:ring-0 border-none outline-none"
+                  className="w-full bg-transparent px-2 text-white placeholder-gray-500 focus:ring-0 border-none outline-none"
                 />
               </div>
             </motion.div>
@@ -178,7 +178,7 @@ export default function DemoRequestModal({ isOpen, onClose }) {
                   value={formData.company}
                   onChange={handleChange}
                   required
-                  className="w-full bg-transparent text-white placeholder-gray-500 focus:ring-0 border-none outline-none"
+                  className="w-full bg-transparent px-2 text-white placeholder-gray-500 focus:ring-0 border-none outline-none"
                 />
               </div>
             </motion.div>
