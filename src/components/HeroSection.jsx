@@ -13,27 +13,29 @@ const HelplyAILogo = ({ className = "w-7 h-7" }) => (
 );
 
 export default function HeroSection({ onStartChatting, onRequestDemo }) {
-  const messages = [
+  // The first AI message, user message, then second AI message
+  const botMessages = [
     "Hi there! I'm here to help answer your questions instantly. What would you like to know?",
     "Our service is a B2B SaaS platform that integrates with your website to provide 24/7 support and intelligently qualify leads.",
   ];
 
   const [displayText, setDisplayText] = useState("");
+  const [cursorVisible, setCursorVisible] = useState(true);
+  const [phase, setPhase] = useState("intro"); // intro → user → answer → loop
   const [messageIndex, setMessageIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [cursorVisible, setCursorVisible] = useState(true);
 
-  // Blinking cursor
+  // Blinking cursor effect
   useEffect(() => {
-    const blink = setInterval(() => setCursorVisible((prev) => !prev), 500);
+    const blink = setInterval(() => setCursorVisible((v) => !v), 500);
     return () => clearInterval(blink);
   }, []);
 
-  // Typewriter logic
+  // Typewriter animation
   useEffect(() => {
-    const currentMessage = messages[messageIndex];
-    let typingSpeed = isDeleting ? 25 : 45;
+    const currentMessage = botMessages[messageIndex];
+    let speed = isDeleting ? 25 : 45;
 
     const timeout = setTimeout(() => {
       if (!isDeleting && charIndex < currentMessage.length) {
@@ -43,16 +45,39 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
         setDisplayText(currentMessage.slice(0, charIndex - 1));
         setCharIndex((prev) => prev - 1);
       } else if (!isDeleting && charIndex === currentMessage.length) {
-        // Pause at end before deleting
-        setTimeout(() => setIsDeleting(true), 1500);
+        // After finishing typing a message
+        if (phase === "intro") {
+          // Pause, then move to user question
+          setTimeout(() => setPhase("user"), 1200);
+        } else if (phase === "answer") {
+          // Pause before restarting loop
+          setTimeout(() => {
+            setIsDeleting(true);
+          }, 2000);
+        }
       } else if (isDeleting && charIndex === 0) {
+        // After deleting everything, go back to intro
         setIsDeleting(false);
-        setMessageIndex((prev) => (prev + 1) % messages.length);
+        setMessageIndex(0);
+        setPhase("intro");
       }
-    }, typingSpeed);
+    }, speed);
 
     return () => clearTimeout(timeout);
-  }, [charIndex, isDeleting, messageIndex]);
+  }, [charIndex, isDeleting, messageIndex, phase]);
+
+  // Manage transitions between message phases
+  useEffect(() => {
+    if (phase === "user") {
+      // Show user question, then start typing answer
+      setTimeout(() => {
+        setPhase("answer");
+        setMessageIndex(1);
+        setCharIndex(0);
+        setDisplayText("");
+      }, 1500);
+    }
+  }, [phase]);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -62,11 +87,14 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
       transition: { duration: 0.8, delayChildren: 0.3, staggerChildren: 0.2 },
     },
   };
-  const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
     <section
-      className="pt-30 pb:10 md:pb-16 lg:pt-50 lg:pb-50 text-white bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B]"
+      className="pt-30 pb:10 md:pb-16 lg:pt-60 lg:pb-50 text-white bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B]"
       id="demo"
     >
       <motion.div
@@ -98,8 +126,9 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
             variants={itemVariants}
             className="text-lg text-gray-300 mb-10 max-w-lg mx-auto lg:mx-0"
           >
-            Stop waiting on hold. Get <strong>lightning-fast, 24/7 support</strong> and
-            automatically capture leads the moment they need help.
+            Stop waiting on hold. Get{" "}
+            <strong>lightning-fast, 24/7 support</strong> and automatically
+            capture leads the moment they need help.
           </motion.p>
 
           <motion.div
@@ -148,6 +177,7 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
             }}
             transition={{ type: "spring", stiffness: 300 }}
           >
+            {/* Header */}
             <header className="flex items-center space-x-3 pb-4 border-b border-gray-100">
               <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-fuchsia-500 to-blue-500 flex items-center justify-center">
                 <HelplyAILogo className="w-6 h-6" />
@@ -161,23 +191,52 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
               </div>
             </header>
 
-            {/* Conversation */}
+            {/* Chat */}
             <section className="h-48 overflow-y-scroll space-y-3 pt-4">
-              <p className="text-gray-800 text-sm leading-relaxed">
-                {displayText}
-                <span
-                  className={`inline-block w-1 ${
-                    cursorVisible ? "bg-gray-800" : "bg-transparent"
-                  } ml-0.5 align-bottom`}
-                  style={{ height: "1em" }}
-                ></span>
-              </p>
-
-              <div className="flex justify-end">
-                <p className="bg-fuchsia-500 text-white py-2 px-4 rounded-xl rounded-br-none max-w-[70%] text-sm shadow-md">
-                  How does your service work?
+              {/* AI intro message */}
+              {(phase === "intro" ||
+                phase === "user" ||
+                phase === "answer") && (
+                <p className="text-gray-800 text-sm leading-relaxed">
+                  {messageIndex === 0 && (
+                    <>
+                      {displayText}
+                      <span
+                        className={`inline-block w-1 ${
+                          cursorVisible ? "bg-gray-800" : "bg-transparent"
+                        } ml-0.5 align-bottom`}
+                        style={{ height: "1em" }}
+                      ></span>
+                    </>
+                  )}
                 </p>
-              </div>
+              )}
+
+              {/* User question appears after intro */}
+              {(phase === "user" || phase === "answer") && (
+                <div className="flex justify-end">
+                  <p className="bg-fuchsia-500 text-white py-2 px-4 rounded-xl rounded-br-none max-w-[70%] text-sm shadow-md">
+                    How does your service work?
+                  </p>
+                </div>
+              )}
+
+              {/* AI answer starts typing next */}
+              {phase === "answer" && (
+                <p className="text-gray-800 text-sm leading-relaxed">
+                  {messageIndex === 1 && (
+                    <>
+                      {displayText}
+                      <span
+                        className={`inline-block w-1 ${
+                          cursorVisible ? "bg-gray-800" : "bg-transparent"
+                        } ml-0.5 align-bottom`}
+                        style={{ height: "1em" }}
+                      ></span>
+                    </>
+                  )}
+                </p>
+              )}
             </section>
 
             <footer className="pt-4 flex items-center border-t border-gray-100 mt-4">
