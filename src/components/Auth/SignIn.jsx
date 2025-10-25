@@ -1,50 +1,42 @@
-import React, { useState, useEffect } from "react"; // 🔑 MODIFIED: ADDED useEffect
-// 🔑 Framer Motion for fade-in/slide-in animation
+import React, { useState, useEffect } from "react";
+import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { motion } from "framer-motion";
-import { Shield, Zap, Mail, Lock, LogIn } from "lucide-react";
-import { Link } from "react-router";
+import { Shield, Zap, Mail, Lock, LogIn, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import ReCAPTCHABox from "../ReCAPTCHABox";
+// import ReCAPTCHABox from "../components/ReCAPTCHABox"; // ✅ Use the same ReCAPTCHABox
 
-// --- Framer Motion Animation Setup (Fade-in and Slide-in) ---
+// --- Zod Validation Schema ---
+const SignInSchema = z.object({
+  workEmail: z
+    .string()
+    .email("Invalid email address.")
+    .min(1, "Email is required."),
+  password: z
+    .string()
+    .min(1, "Password is required.")
+    .min(8, "Password must be at least 8 characters."),
+});
+
+// --- Framer Motion Variants ---
 const containerVariants = {
-  hidden: {
-    opacity: 0,
-    // 🔑 OPTIMIZED: Combine scale and add translateZ(0) for GPU acceleration.
-    transform: "scale(0.98) translateZ(0)",
-  },
+  hidden: { opacity: 0, scale: 0.98 },
   visible: {
     opacity: 1,
-    transform: "scale(1) translateZ(0)",
-    transition: {
-      // 🔑 MODIFIED: Reduced duration from 0.5s to 0.3s for a snappier feel.
-      duration: 0.3,
-      ease: "easeOut", // Use a clean easing function
-      delayChildren: 0.1, // Reduced for faster appearance
-      // 🔑 MODIFIED: Faster stagger for sequential field appearance.
-      staggerChildren: 0.05,
-    },
+    scale: 1,
+    transition: { duration: 0.3, ease: "easeOut", staggerChildren: 0.05 },
   },
 };
 
 const itemVariants = {
-  hidden: {
-    opacity: 0,
-    // 🔑 OPTIMIZED: Use translateY for GPU-accelerated slide-in (faster than 'y').
-    transform: "translateY(10px) translateZ(0)",
-  },
-  visible: {
-    opacity: 1,
-    transform: "translateY(0) translateZ(0)",
-    transition: {
-      duration: 0.25, // Quick item slide
-      ease: "easeOut",
-    },
-  },
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
 };
-// -----------------------------------------------------------
 
-// --- Utility Components ---
-
-// Logo Component
+// --- Logo Component ---
 const HelplyAILogo = ({ className = "w-8 h-8" }) => (
   <div className={`relative ${className}`}>
     <Shield className="w-full h-full text-white" strokeWidth={1.5} />
@@ -55,75 +47,166 @@ const HelplyAILogo = ({ className = "w-8 h-8" }) => (
   </div>
 );
 
-// 🔑 ANIMATED Input Field Component
-const InputField = ({ id, label, type = "text", icon: Icon, placeholder }) => (
-  <motion.div variants={itemVariants} className="space-y-2">
-    <label htmlFor={id} className="text-sm font-medium text-gray-400">
-      {label}
-    </label>
-    <div className="relative">
-      {Icon && (
+// --- Input Fields ---
+const InputField = ({
+  name,
+  label,
+  type = "text",
+  icon: Icon,
+  placeholder,
+}) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+  const error = errors[name];
+
+  return (
+    <motion.div variants={itemVariants} className="space-y-2">
+      <label htmlFor={name} className="text-sm font-medium text-gray-400">
+        {label}
+      </label>
+      <div className="relative">
+        {Icon && (
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <Icon className="w-5 h-5 text-gray-500" />
+          </div>
+        )}
+        <input
+          type={type}
+          id={name}
+          placeholder={placeholder}
+          {...register(name)}
+          className={`w-full pl-10 pr-4 py-3 bg-[#1e004a] border rounded-lg text-white placeholder-gray-500 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-colors ${
+            error ? "border-red-500" : "border-[#210045]"
+          }`}
+        />
+      </div>
+      {error && <p className="text-red-400 text-sm mt-1">{error.message}</p>}
+    </motion.div>
+  );
+};
+
+const PasswordField = ({ name, label, placeholder }) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+  const [showPassword, setShowPassword] = useState(false);
+  const error = errors[name];
+
+  return (
+    <motion.div variants={itemVariants} className="space-y-2">
+      <label htmlFor={name} className="text-sm font-medium text-gray-400">
+        {label}
+      </label>
+      <div className="relative">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <Icon className="w-5 h-5 text-gray-500" />
+          <Lock className="w-5 h-5 text-gray-500" />
         </div>
-      )}
-      <input
-        type={type}
-        id={id}
-        placeholder={placeholder}
-        required
-        className="w-full pl-10 pr-4 py-3 bg-[#1e004a] border border-[#210045] rounded-lg text-white placeholder-gray-500 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-colors"
-      />
-    </div>
-  </motion.div>
-);
+        <input
+          type={showPassword ? "text" : "password"}
+          id={name}
+          placeholder={placeholder}
+          {...register(name)}
+          className={`w-full pl-10 pr-10 py-3 bg-[#1e004a] border rounded-lg text-white placeholder-gray-500 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-colors ${
+            error ? "border-red-500" : "border-[#210045]"
+          }`}
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword((prev) => !prev)}
+          className="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none"
+        >
+          {showPassword ? (
+            <EyeOff className="w-5 h-5 text-gray-500 hover:text-fuchsia-400" />
+          ) : (
+            <Eye className="w-5 h-5 text-gray-500 hover:text-fuchsia-400" />
+          )}
+        </button>
+      </div>
+      {error && <p className="text-red-400 text-sm mt-1">{error.message}</p>}
+    </motion.div>
+  );
+};
 
 // --- Main Component ---
-
 export default function SignIn() {
+  const methods = useForm({
+    resolver: zodResolver(SignInSchema),
+    defaultValues: { workEmail: "", password: "" },
+  });
+
   const [loading, setLoading] = useState(false);
+  const [captchaValue, setCaptchaValue] = useState(null);
+  const navigate = useNavigate();
+  const { handleSubmit } = methods;
 
-  // 🔑 NEW: useEffect Hook to force scroll to the top on page load/view.
-  useEffect(() => {
-    // Scrolls the window to the top (0, 0) upon component mount.
-    window.scrollTo(0, 0);
-  }, []); // Empty dependency array ensures it only runs once
+  useEffect(() => window.scrollTo(0, 0), []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleCaptcha = (value) => setCaptchaValue(value);
+
+  const onSubmit = async (data) => {
+    if (!captchaValue) {
+      toast.error("Please verify that you’re not a robot 🤖");
+      return;
+    }
+
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    const loadingToast = toast.loading("Signing you in...");
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1200)); // simulate API
+      toast.dismiss(loadingToast);
+
+      const validEmail = "admin@example.com";
+      const validPassword = "password123";
+
+      if (data.workEmail === validEmail && data.password === validPassword) {
+        toast.success("Welcome back 👋 Successfully signed in!");
+        navigate("/");
+      } else {
+        toast.error("Invalid email or password. Please try again.");
+      }
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error("Sign in failed. Please try again later.");
+    } finally {
       setLoading(false);
-      alert("Welcome back! Redirecting to dashboard...");
-      // In a real app, you would handle token and redirect here
-    }, 1500);
+    }
   };
 
   return (
-    // 🟢 Semantic Markup: Used <main>
     <main className="min-h-screen flex flex-col items-center justify-center bg-[#0A0027] p-4 sm:p-6 lg:p-8 text-white">
-      {/* 🔑 ANIMATED Container for the login card */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#1e004a",
+            color: "#fff",
+            border: "1px solid #4b0082",
+            borderRadius: "10px",
+            fontSize: "0.9rem",
+            padding: "10px 15px",
+          },
+        }}
+      />
+
       <motion.section
         className="w-full max-w-xl bg-[#140036] rounded-xl shadow-2xl p-8 sm:p-10 border border-[#210045]"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* 🟢 Semantic Markup: Used <header> */}
         <header className="text-center mb-8">
-          {/* 🔑 MODIFIED: Link added around the Logo */}
           <Link to="/">
-            {/* 🔑 MODIFIED: Wrapping the logo in a link */}
             <motion.div
               variants={itemVariants}
               className="flex justify-center mb-4"
             >
-              <HelplyAILogo />
+              <HelplyAILogo className="w-10 h-10" />
             </motion.div>
           </Link>
-
-          {/* ... rest of the header content ... */}
           <motion.h2
             variants={itemVariants}
             className="text-3xl font-extrabold text-white mb-2"
@@ -135,91 +218,95 @@ export default function SignIn() {
           </motion.p>
         </header>
 
-        {/* 🟢 Semantic Markup: Used <form> */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <InputField
-            id="work-email"
-            label="Work Email"
-            type="email"
-            icon={Mail}
-            placeholder="adaobi@yourcompany.com"
-          />
-          <InputField
-            id="password"
-            label="Password"
-            type="password"
-            icon={Lock}
-            placeholder="••••••••"
-          />
-
-          {/* Forgot Password Link */}
-          <motion.div
-            variants={itemVariants}
-            className="flex justify-end text-sm"
+        <FormProvider {...methods}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-6"
+            noValidate
           >
-            <a
-              href="/forgot-password"
-              className="font-medium text-fuchsia-400 hover:text-fuchsia-300 transition-colors"
-            >
-              Forgot Password?
-            </a>
-          </motion.div>
+            <InputField
+              name="workEmail"
+              label="Work Email"
+              type="email"
+              icon={Mail}
+              placeholder="adaobi@yourcompany.com"
+            />
+            <PasswordField
+              name="password"
+              label="Password"
+              placeholder="••••••••"
+            />
 
-          {/* 🔑 ANIMATED Action Button */}
-          <motion.button
-            variants={itemVariants}
-            type="submit"
-            disabled={loading}
-            className={`
-              w-full py-3 rounded-full text-lg font-semibold transition-all duration-300
-              flex items-center justify-center space-x-2 cursor-pointer
-              ${
+            {/* ✅ Google reCAPTCHA */}
+            <motion.div
+              variants={itemVariants}
+              className="pt-2 flex justify-center"
+            >
+              <ReCAPTCHABox onChange={handleCaptcha} />
+            </motion.div>
+
+            <motion.div
+              variants={itemVariants}
+              className="flex justify-end text-sm"
+            >
+              <Link
+                to="/forgot-password"
+                className="font-medium text-fuchsia-400 hover:text-fuchsia-300 transition-colors"
+              >
+                Forgot Password?
+              </Link>
+            </motion.div>
+
+            <motion.button
+              variants={itemVariants}
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 mt-6 rounded-full text-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${
                 loading
                   ? "bg-gray-600 cursor-not-allowed"
-                  : "bg-fuchsia-600 hover:bg-fuchsia-700 shadow-lg shadow-fuchsia-500/50 mt-8"
-              }
-            `}
-          >
-            {loading ? (
-              <>
-                {/* Simple loading spinner */}
-                <svg
-                  className="animate-spin h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                <span>Signing In...</span>
-              </>
-            ) : (
-              <>
-                <span>Sign In</span>
-                <LogIn size={20} />
-              </>
-            )}
-          </motion.button>
-        </form>
-        {/* 🟢 Semantic Markup: Used <nav> for links related to authentication */}
+                  : "bg-fuchsia-600 hover:bg-fuchsia-700 shadow-lg shadow-fuchsia-500/50"
+              }`}
+            >
+              {loading ? (
+                <>
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  <span>Signing In...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <LogIn size={20} />
+                </>
+              )}
+            </motion.button>
+          </form>
+        </FormProvider>
+
         <motion.nav
           variants={itemVariants}
           className="mt-8 text-center text-sm text-gray-500"
         >
           <p>
-            Don't have an account yet?{" "}
+            Don’t have an account yet?{" "}
             <Link
               to="/signup"
               className="font-medium text-fuchsia-400 hover:text-fuchsia-300 transition-colors"
@@ -229,11 +316,6 @@ export default function SignIn() {
           </p>
         </motion.nav>
       </motion.section>
-
-      {/* 🟢 Semantic Markup: Used <footer> */}
-      <footer className="mt-8 text-center text-sm text-gray-600">
-        <p>&copy; {new Date().getFullYear()} HelplyAI. All rights reserved.</p>
-      </footer>
     </main>
   );
 }
