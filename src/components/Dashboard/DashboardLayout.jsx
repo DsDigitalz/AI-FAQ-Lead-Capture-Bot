@@ -6,16 +6,21 @@ import {
   Zap,
   Home,
   MessageSquare,
-  Plug,
   Users,
   DollarSign,
-  Calendar,
-  FileText,
+  Send,
+  Key,
   Settings,
   LogOut,
   Menu,
   X,
   Bell,
+  Share2,
+  Cpu,
+  Cloud,
+  Database,
+  Layers,
+  Calendar,
 } from "lucide-react";
 
 // --- HelplyAI Logo Component ---
@@ -29,7 +34,7 @@ const HelplyAILogo = ({ className = "w-8 h-8" }) => (
   </div>
 );
 
-// --- Framer Motion Variants ---
+// --- Motion Variants ---
 const pageTransition = {
   initial: { opacity: 0, x: 20 },
   animate: { opacity: 1, x: 0, transition: { duration: 0.5 } },
@@ -42,25 +47,48 @@ const itemVariants = {
     transition: { duration: 0.3, ease: "easeOut", delay: custom },
   }),
 };
-const containerVariants = {
-  hidden: {},
-  visible: {},
-};
+const containerVariants = { hidden: {}, visible: {} };
 
 // --- Navigation Items ---
 const navItems = [
-  { name: "Overview", icon: Home, path: "/dashboard" },
-  { name: "Team Inbox", icon: MessageSquare, path: "/dashboard/inbox" },
-  { name: "Channels", icon: Plug, path: "/dashboard/channels" },
-  { name: "AI Settings", icon: FileText, path: "/dashboard/ai-rag" },
-  { name: "Follow-up Engine", icon: Calendar, path: "/dashboard/followup" },
   {
-    name: "Integrations (CRM/Cal)",
-    icon: Users,
-    path: "/dashboard/integrations",
+    heading: null,
+    links: [
+      { name: "Dashboard Overview", icon: Home, path: "/dashboard" },
+      { name: "Team Inbox", icon: MessageSquare, path: "/dashboard/inbox" },
+    ],
   },
-  { name: "Payments", icon: DollarSign, path: "/dashboard/payments" },
-  { name: "Security & Roles", icon: Settings, path: "/dashboard/security" },
+  {
+    heading: "Bot Configuration",
+    links: [
+      { name: "AI Knowledge Base", icon: Cpu, path: "/dashboard/ai-rag" },
+      { name: "Channels & Widgets", icon: Share2, path: "/dashboard/channels" },
+      { name: "Follow-up Engine", icon: Send, path: "/dashboard/followup" },
+    ],
+  },
+  {
+    heading: "Business & Integrations",
+    links: [
+      {
+        name: "CRM & Scheduling",
+        icon: Cloud,
+        path: "/dashboard/integrations",
+      },
+      {
+        name: "Payments & Revenue",
+        icon: DollarSign,
+        path: "/dashboard/payments",
+      },
+    ],
+  },
+  {
+    heading: "Admin & Security",
+    links: [
+      { name: "Team & Roles", icon: Users, path: "/dashboard/team" },
+      { name: "API Keys", icon: Key, path: "/dashboard/api-keys" },
+      { name: "General Settings", icon: Settings, path: "/dashboard/settings" },
+    ],
+  },
 ];
 
 // --- Sidebar Component ---
@@ -77,7 +105,7 @@ const Sidebar = ({ isOpen, closeSidebar, isCollapsed, toggleCollapse }) => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
     >
-      {/* Logo & Collapse Button */}
+      {/* Logo & Collapse */}
       <div className="flex items-center justify-between pl-4 pr-2 py-6">
         <div className="flex items-center space-x-2">
           <HelplyAILogo className="w-7 h-7" />
@@ -101,42 +129,56 @@ const Sidebar = ({ isOpen, closeSidebar, isCollapsed, toggleCollapse }) => {
       </div>
 
       {/* Navigation */}
-      <ul className="space-y-2 mt-4 pl-2 flex flex-col">
-        {navItems.map((item, index) => (
-          <motion.li
-            key={item.name}
-            variants={itemVariants}
-            initial="hidden"
-            animate="visible"
-            custom={index * 0.05}
-          >
-            <Link
-              to={item.path}
-              onClick={closeSidebar}
-              className={`flex items-center p-3 rounded-lg transition-colors duration-200 
-                text-gray-400 hover:bg-[#1e004a] hover:text-fuchsia-400
-                ${
-                  location.pathname === item.path
-                    ? "bg-[#1e004a] text-fuchsia-400 font-medium"
-                    : ""
-                }`}
-            >
-              <item.icon size={20} />
-              {!isCollapsed && <span className="ml-3">{item.name}</span>}
-            </Link>
-          </motion.li>
+      <div className="flex flex-col flex-grow overflow-y-auto pb-4">
+        {navItems.map((group, groupIndex) => (
+          <motion.ul key={groupIndex} className="space-y-1 mt-4 pl-2">
+            {!isCollapsed && group.heading && (
+              <li className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                {group.heading}
+              </li>
+            )}
+            {group.links.map((item, itemIndex) => (
+              <motion.li
+                key={item.name}
+                variants={itemVariants}
+                initial="hidden"
+                animate="visible"
+                custom={groupIndex * 0.1 + itemIndex * 0.05}
+              >
+                <Link
+                  to={item.path}
+                  onClick={closeSidebar}
+                  className={`flex items-center p-3 mx-2 rounded-lg transition-colors duration-200 
+                    text-gray-400 hover:bg-[#1e004a] hover:text-fuchsia-400
+                    ${
+                      location.pathname === item.path ||
+                      location.pathname.startsWith(item.path + "/")
+                        ? "bg-[#1e004a] text-fuchsia-400 font-medium"
+                        : ""
+                    }`}
+                >
+                  <item.icon
+                    size={20}
+                    className={isCollapsed ? "mx-auto" : ""}
+                  />
+                  {!isCollapsed && <span className="ml-3">{item.name}</span>}
+                </Link>
+              </motion.li>
+            ))}
+          </motion.ul>
         ))}
-      </ul>
+      </div>
 
       {/* Logout */}
       <motion.div
         variants={itemVariants}
         initial="hidden"
         animate="visible"
-        className="mt-auto pt-4 border-t border-[#210045]"
+        custom={navItems.length * 0.1}
+        className="mt-auto pt-4 border-t border-[#210045] p-2"
       >
         <button className="flex items-center p-3 rounded-lg w-full text-gray-400 hover:bg-red-900/40 hover:text-red-400 transition-colors">
-          <LogOut size={20} />
+          <LogOut size={20} className={isCollapsed ? "mx-auto" : ""} />
           {!isCollapsed && <span className="ml-3">Logout</span>}
         </button>
       </motion.div>
@@ -205,7 +247,7 @@ export default function DashboardLayout() {
           initial="initial"
           animate="animate"
         >
-          <Outlet /> {/* Renders the specific dashboard page content */}
+          <Outlet />
         </motion.main>
       </div>
     </motion.section>

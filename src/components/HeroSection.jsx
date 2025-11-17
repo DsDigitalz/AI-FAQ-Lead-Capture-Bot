@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Send, Shield, Zap, CheckCircle, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
+// --- HelplyAI Logo ---
 const HelplyAILogo = ({ className = "w-7 h-7" }) => (
   <div className={`relative ${className}`}>
     <Shield className="w-full h-full text-white" strokeWidth={1.5} />
@@ -13,7 +14,16 @@ const HelplyAILogo = ({ className = "w-7 h-7" }) => (
 );
 
 export default function HeroSection({ onStartChatting, onRequestDemo }) {
-  // The first AI message, user message, then second AI message
+  // --- Infinite Light/Dark Theme ---
+  const [theme, setTheme] = useState("light"); // "light" or "dark"
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    }, 10000); // change every 3 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  // --- Typewriter / Chat State ---
   const botMessages = [
     "Hi there! I'm here to help answer your questions instantly. What would you like to know?",
     "Our service is a B2B SaaS platform that integrates with your website to provide 24/7 support and intelligently qualify leads.",
@@ -26,13 +36,13 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Blinking cursor effect
+  // Blinking cursor
   useEffect(() => {
     const blink = setInterval(() => setCursorVisible((v) => !v), 500);
     return () => clearInterval(blink);
   }, []);
 
-  // Typewriter animation
+  // Typewriter effect
   useEffect(() => {
     const currentMessage = botMessages[messageIndex];
     let speed = isDeleting ? 25 : 45;
@@ -45,18 +55,10 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
         setDisplayText(currentMessage.slice(0, charIndex - 1));
         setCharIndex((prev) => prev - 1);
       } else if (!isDeleting && charIndex === currentMessage.length) {
-        // After finishing typing a message
-        if (phase === "intro") {
-          // Pause, then move to user question
-          setTimeout(() => setPhase("user"), 1200);
-        } else if (phase === "answer") {
-          // Pause before restarting loop
-          setTimeout(() => {
-            setIsDeleting(true);
-          }, 2000);
-        }
+        if (phase === "intro") setTimeout(() => setPhase("user"), 1200);
+        else if (phase === "answer")
+          setTimeout(() => setIsDeleting(true), 2000);
       } else if (isDeleting && charIndex === 0) {
-        // After deleting everything, go back to intro
         setIsDeleting(false);
         setMessageIndex(0);
         setPhase("intro");
@@ -66,10 +68,9 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
     return () => clearTimeout(timeout);
   }, [charIndex, isDeleting, messageIndex, phase]);
 
-  // Manage transitions between message phases
+  // Transition from user question to AI answer
   useEffect(() => {
     if (phase === "user") {
-      // Show user question, then start typing answer
       setTimeout(() => {
         setPhase("answer");
         setMessageIndex(1);
@@ -79,6 +80,7 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
     }
   }, [phase]);
 
+  // --- Framer Motion Variants ---
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
@@ -165,27 +167,31 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
         </main>
 
         {/* RIGHT CHAT MOCKUP */}
-        <motion.div
-          variants={itemVariants}
-          className="w-full max-w-sm sm:max-w-md lg:w-1/2 flex justify-center p-4"
-        >
+        <motion.div className="w-full max-w-sm sm:max-w-md lg:w-1/2 flex justify-center p-4">
           <motion.article
-            className="bg-white rounded-xl shadow-2xl overflow-hidden p-6 w-full transform transition-transform duration-500 hover:scale-[1.02] cursor-pointer block"
-            whileHover={{
-              scale: 1.03,
-              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.4)",
+            className="rounded-xl shadow-2xl overflow-hidden p-6 w-full transform transition-transform duration-500 scrollbar-hide"
+            animate={{
+              backgroundColor: theme === "light" ? "#ffffff" : "#111827",
             }}
-            transition={{ type: "spring", stiffness: 300 }}
+            transition={{ duration: 2 }}
           >
             {/* Header */}
-            <header className="flex items-center space-x-3 pb-4 border-b border-gray-100">
+            <header className="flex items-center space-x-3 pb-4 border-b border-[#ffffff1e]">
               <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-fuchsia-500 to-blue-500 flex items-center justify-center">
                 <HelplyAILogo className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-gray-800 font-semibold">AI Assistant</p>
+                <p
+                  className={
+                    theme === "light"
+                      ? "text-gray-800 font-semibold"
+                      : "text-gray-200 font-semibold"
+                  }
+                >
+                  AI Assistant
+                </p>
                 <p className="text-green-500 text-xs flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-green-500 mr-1"></span>
+                  <span className="w-2 h-2 rounded-full bg-green-500 mr-1 flex-shrink-0"></span>
                   Online now
                 </p>
               </div>
@@ -193,17 +199,26 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
 
             {/* Chat */}
             <section className="h-48 overflow-y-scroll space-y-3 pt-4">
-              {/* AI intro message */}
               {(phase === "intro" ||
                 phase === "user" ||
                 phase === "answer") && (
-                <p className="text-gray-800 text-sm leading-relaxed">
+                <p
+                  className={
+                    theme === "light"
+                      ? "text-gray-800 text-sm leading-relaxed"
+                      : "text-gray-200 text-sm leading-relaxed"
+                  }
+                >
                   {messageIndex === 0 && (
                     <>
                       {displayText}
                       <span
                         className={`inline-block w-1 ${
-                          cursorVisible ? "bg-gray-800" : "bg-transparent"
+                          cursorVisible
+                            ? theme === "light"
+                              ? "bg-gray-800"
+                              : "bg-gray-200"
+                            : "bg-transparent"
                         } ml-0.5 align-bottom`}
                         style={{ height: "1em" }}
                       ></span>
@@ -212,7 +227,6 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
                 </p>
               )}
 
-              {/* User question appears after intro */}
               {(phase === "user" || phase === "answer") && (
                 <div className="flex justify-end">
                   <p className="bg-fuchsia-500 text-white py-2 px-4 rounded-xl rounded-br-none max-w-[70%] text-sm shadow-md">
@@ -221,15 +235,24 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
                 </div>
               )}
 
-              {/* AI answer starts typing next */}
               {phase === "answer" && (
-                <p className="text-gray-800 text-sm leading-relaxed">
+                <p
+                  className={
+                    theme === "light"
+                      ? "text-gray-800 text-sm leading-relaxed"
+                      : "text-gray-200 text-sm leading-relaxed"
+                  }
+                >
                   {messageIndex === 1 && (
                     <>
                       {displayText}
                       <span
                         className={`inline-block w-1 ${
-                          cursorVisible ? "bg-gray-800" : "bg-transparent"
+                          cursorVisible
+                            ? theme === "light"
+                              ? "bg-gray-800"
+                              : "bg-gray-200"
+                            : "bg-transparent"
                         } ml-0.5 align-bottom`}
                         style={{ height: "1em" }}
                       ></span>
@@ -239,11 +262,16 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
               )}
             </section>
 
-            <footer className="pt-4 flex items-center border-t border-gray-100 mt-4">
+            {/* Footer */}
+            <footer className="pt-4 flex items-center border-t border-[#ffffff1e] mt-4">
               <input
                 type="text"
                 placeholder="Type your question here..."
-                className="flex-grow p-3 border border-gray-200 rounded-full focus:outline-none text-gray-700"
+                className={`flex-grow p-3 rounded-full focus:outline-none ${
+                  theme === "light"
+                    ? "bg-gray-100 text-gray-700"
+                    : "bg-gray-800 text-gray-200"
+                }`}
                 disabled
               />
               <button

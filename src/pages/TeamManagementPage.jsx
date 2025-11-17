@@ -1,7 +1,10 @@
-import React from 'react'
+import React from "react";
+import TeamManagement from "../components/Dashboard/TeamManagement";
 
 export default function TeamManagementPage() {
   return (
-    <main>TeamManagementPage</main>
-  )
+    <main>
+      <TeamManagement />
+    </main>
+  );
 }

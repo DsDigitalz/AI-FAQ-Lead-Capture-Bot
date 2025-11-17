@@ -26,6 +26,12 @@ import DashboardLayoutPage from "./pages/DashboardLayoutPage";
 import DashboardOverviewPage from "./pages/DashboardOverviewPage";
 import ChannelsPage from "./pages/ChannelsPage";
 import AiRagPage from "./pages/AiRagPage";
+import TeamManagementPage from "./pages/TeamManagementPage";
+import FollowUpEnginePage from "./pages/FollowUpEnginePage";
+import IntegrationsPage from "./pages/IntegrationsPage";
+import PaymentIntegrationPage from "./pages/PaymentIntegrationPage";
+import ApiKeysPage from "./pages/ApiKeysPage";
+import GeneralSettingsPage from "./pages/GeneralSettingsPage";
 
 export default function App() {
   return (
@@ -107,8 +113,27 @@ export default function App() {
 
           {/* CHILD ROUTE 3: Renders ChannelsPage when navigating to /dashboard/channels */}
           <Route path="channels" element={<ChannelsPage />} />
-          {/* CHILD ROUTE 3: Renders AIRagPage when navigating to /dashboard/ai */}
+
+          {/* CHILD ROUTE 4: Renders AIRagPage when navigating to /dashboard/ai-rag */}
           <Route path="ai-rag" element={<AiRagPage />} />
+
+          {/* CHILD ROUTE 5: Renders TeamManagementPage  when navigating to /dashboard/team-management */}
+          <Route path="team" element={<TeamManagementPage />} />
+
+          {/* CHILD ROUTE 6: Renders FollowUpEnginePage  when navigating to /dashboard/followup */}
+          <Route path="followup" element={<FollowUpEnginePage />} />
+
+          {/* CHILD ROUTE 7: Renders IntegrationsPage when navigating to /dashboard/integrations*/}
+          <Route path="integrations" element={<IntegrationsPage />} />
+
+          {/* CHILD ROUTE 8: Renders PaymentIntegrationsPage when navigating to /dashboard/payments*/}
+          <Route path="payments" element={<PaymentIntegrationPage />} />
+
+          {/* CHILD ROUTE 9: Renders ApiKeysPage  when navigating to /dashboard/api-keys*/}
+          <Route path="api-keys" element={<ApiKeysPage />} />
+
+          {/* CHILD ROUTE 10: Renders GeneralSettingsPage when navigating to /dashboard/settings*/}
+          <Route path="settings" element={<GeneralSettingsPage />} />
 
           {/* ... and so on for all dashboard pages ... */}
         </Route>

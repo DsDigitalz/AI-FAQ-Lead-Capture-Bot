@@ -2,3 +2,12 @@
 body {
   font-family: DM Sans;
 }
+
+/* Tailwind-friendly solution */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
