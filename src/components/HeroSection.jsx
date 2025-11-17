@@ -19,7 +19,7 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setTheme((prev) => (prev === "light" ? "dark" : "light"));
-    }, 10000); // change every 3 seconds
+    }, 7000); // change every 3 seconds
     return () => clearInterval(interval);
   }, []);
 
