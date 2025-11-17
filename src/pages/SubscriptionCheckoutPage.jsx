@@ -3,8 +3,8 @@ import SubscriptionCheckout from "../components/Subscription/Checkout/Subscripti
 
 export default function SubscriptionCheckoutPage() {
   return (
-    <div>
+    <main>
       <SubscriptionCheckout />
-    </div>
+    </main>
   );
 }

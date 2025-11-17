@@ -3,8 +3,8 @@ import GetStartedPage from "../components/Auth/GetStartedPage";
 
 export default function Getstarted() {
   return (
-    <div>
+    <main>
       <GetStartedPage />
-    </div>
+    </main>
   );
 }

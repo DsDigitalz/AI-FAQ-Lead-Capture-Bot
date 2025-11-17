@@ -1,19 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Menu, Shield, X, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
+import Logo from "./Logo";
 
 // New Logo Component: Shield (for help/protection) + Zap (for speed/AI)
-const HelplyAILogo = ({ className = "w-8 h-8" }) => (
-  <div className={`relative ${className}`}>
-    {/* Shield Icon: Represents help and protection */}
-    <Shield className="w-full h-full text-white" strokeWidth={1.5} />
-    {/* Zap Icon: Represents intelligence and speed */}
-    <Zap
-      className="absolute top-1/2 left-1/2 w-3 h-3 text-fuchsia-400 fill-fuchsia-400 transform -translate-x-1/2 -translate-y-1/2"
-      strokeWidth={0}
-    />
-  </div>
-);
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -160,21 +150,8 @@ export default function Header() {
       `}
     >
       <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white py-1 px-1 lg:py-5 md:px-4 lg:px-6 relative z-50">
-        {/* Logo Area (No changes here) */}
-        <div className="flex items-center space-x-2 md:space-x-4 p-4 md:px-0 font-medium">
-          <Link to="/">
-            <HelplyAILogo className="w-8 h-8" />
-          </Link>
-
-          <h1 className="text-xl sm:text-3xl font-extrabold">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">
-              Helply
-            </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-blue-400 font-bold italic">
-              AI
-            </span>
-          </h1>
-        </div>
+        {/* Logo Area */}
+        <Logo />
 
         {/* Navlinks - Desktop */}
         <nav className="hidden lg:block">{navLinks}</nav>

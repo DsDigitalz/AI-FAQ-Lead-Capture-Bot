@@ -3,8 +3,8 @@ import PrivacyPolicy from "../components/PrivacyPolicy";
 
 export default function PrivacyPolicyPage() {
   return (
-    <div>
+    <main>
       <PrivacyPolicy />
-    </div>
+    </main>
   );
 }

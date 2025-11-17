@@ -3,8 +3,8 @@ import ForgotPassword from "../components/Auth/ForgotPassword";
 
 export default function ForgotPasswordPage() {
   return (
-    <div>
+    <main>
       <ForgotPassword />
-    </div>
+    </main>
   );
 }

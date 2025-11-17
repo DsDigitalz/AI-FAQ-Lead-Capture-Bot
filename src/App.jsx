@@ -18,6 +18,14 @@ import SubscriptionCheckoutPage from "./pages/SubscriptionCheckoutPage";
 import ContactSalesPage from "./pages/ContactSalesPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import { Toaster } from "react-hot-toast";
+import DashboardLayout from "./components/Dashboard/DashboardLayout";
+import DashboardOverview from "./components/Dashboard/DashboardOverview";
+import TeamInboxPage from "./pages/TeamInboxPage";
+import GetStartedPage from "./components/Auth/GetStartedPage";
+import DashboardLayoutPage from "./pages/DashboardLayoutPage";
+import DashboardOverviewPage from "./pages/DashboardOverviewPage";
+import ChannelsPage from "./pages/ChannelsPage";
+import AiRagPage from "./pages/AiRagPage";
 
 export default function App() {
   return (
@@ -86,10 +94,25 @@ export default function App() {
 
         {/* Auth Pages */}
         <Route path="/signin" element={<SignInPage />} />
-        <Route path="/signup" element={<Getstarted />} />
+        <Route path="/signup" element={<GetStartedPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-        {/* Other Pages */}
+        {/* PARENT ROUTE: Renders the persistent UI (Sidebar & Header) */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          {/* CHILD ROUTE 1: Renders the default content when navigating to /dashboard */}
+          <Route index element={<DashboardOverviewPage />} />
+
+          {/* CHILD ROUTE 2: Renders TeamInboxPage when navigating to /dashboard/inbox */}
+          <Route path="inbox" element={<TeamInboxPage />} />
+
+          {/* CHILD ROUTE 3: Renders ChannelsPage when navigating to /dashboard/channels */}
+          <Route path="channels" element={<ChannelsPage />} />
+          {/* CHILD ROUTE 3: Renders AIRagPage when navigating to /dashboard/ai */}
+          <Route path="ai-rag" element={<AiRagPage />} />
+
+          {/* ... and so on for all dashboard pages ... */}
+        </Route>
+
         <Route
           path="/checkout/starter-bot"
           element={<SubscriptionCheckoutPage />}
