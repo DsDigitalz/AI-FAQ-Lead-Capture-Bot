@@ -200,7 +200,7 @@ export default function GetStartedPage() {
       />
 
       <motion.section
-        className="w-full max-w-xl bg-[#140036] rounded-xl shadow-2xl p-8 sm:p-10 border border-[#210045]"
+        className="w-full max-w-xl bg-[#140036] rounded-xl shadow-2xl  p-8 sm:p-10 border border-[#210045]"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
