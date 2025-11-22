@@ -111,7 +111,7 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
             variants={itemVariants}
             className="text-fuchsia-400 font-semibold mb-3 flex items-center justify-center lg:justify-start"
           >
-            <span className="text-sm mr-2">✨</span>AI-Powered Support
+            <span className="text-sm mr-2 animate-spin">✨</span>AI-Powered Support
           </motion.p>
 
           <motion.h1
@@ -169,7 +169,7 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
         {/* RIGHT CHAT MOCKUP */}
         <motion.div className="w-full max-w-sm sm:max-w-md lg:w-1/2 flex justify-center p-4">
           <motion.article
-            className="rounded-xl shadow-2xl overflow-hidden p-6 w-full transform transition-transform duration-500 scrollbar-hide"
+            className="rounded-xl shadow-2xl overflow-hidden p-6 w-full transform transition-transform duration-500 scrollbar-hide animate-pulse"
             animate={{
               backgroundColor: theme === "light" ? "#ffffff" : "#111827",
             }}

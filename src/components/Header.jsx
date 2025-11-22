@@ -149,7 +149,7 @@ export default function Header() {
         bg-gradient-to-br from-[#00031F] to-[#10003B]
       `}
     >
-      <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white py-1 px-1 lg:py-5 md:px-4 lg:px-6 relative z-50">
+      <div className="max-w-7xl mx-auto flex font-medium justify-between items-center lg:backdrop-blur text-white py-3 px-4 lg:py-5 md:px-4 lg:px-6 relative z-50">
         {/* Logo Area */}
         <Logo />
 

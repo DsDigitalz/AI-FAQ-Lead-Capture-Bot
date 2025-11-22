@@ -96,7 +96,7 @@ const featureData = [
 export default function FeaturesSection() {
   return (
     // 🟢 Semantic Markup: Main container uses <section>
-    <section className="pt-20 pb:10 md:py-20 bg-[#0A0027]" id="features">
+    <section className="pt-20 pb:10 md:py-30 bg-[#0A0027]" id="features">
       <motion.div
         className="max-w-7xl mx-auto px-6"
         variants={containerVariants}

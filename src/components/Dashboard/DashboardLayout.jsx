@@ -129,7 +129,7 @@ const Sidebar = ({ isOpen, closeSidebar, isCollapsed, toggleCollapse }) => {
       </div>
 
       {/* Navigation */}
-      <div className="flex flex-col flex-grow overflow-y-auto pb-4">
+      <div className="flex flex-col flex-grow overflow-y-auto pb-4 scrollbar-hide">
         {navItems.map((group, groupIndex) => (
           <motion.ul key={groupIndex} className="space-y-1 mt-4 pl-2">
             {!isCollapsed && group.heading && (
@@ -148,14 +148,12 @@ const Sidebar = ({ isOpen, closeSidebar, isCollapsed, toggleCollapse }) => {
                 <Link
                   to={item.path}
                   onClick={closeSidebar}
-                  className={`flex items-center p-3 mx-2 rounded-lg transition-colors duration-200 
-                    text-gray-400 hover:bg-[#1e004a] hover:text-fuchsia-400
-                    ${
-                      location.pathname === item.path ||
-                      location.pathname.startsWith(item.path + "/")
-                        ? "bg-[#1e004a] text-fuchsia-400 font-medium"
-                        : ""
-                    }`}
+                  className={`flex items-center p-3 mx-2 rounded-lg transition-colors duration-300 
+                  ${
+                    location.pathname === item.path
+                      ? "bg-[#1e004a] text-fuchsia-400 font-medium"
+                      : "text-gray-400 hover:bg-[#1e004a] hover:text-fuchsia-400"
+                  }`}
                 >
                   <item.icon
                     size={20}
