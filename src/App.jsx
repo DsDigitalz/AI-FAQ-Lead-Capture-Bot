@@ -33,9 +33,21 @@ import PaymentIntegrationPage from "./pages/PaymentIntegrationPage";
 import ApiKeysPage from "./pages/ApiKeysPage";
 import GeneralSettingsPage from "./pages/GeneralSettingsPage";
 
-export default function App() {
+// --- NEW LOADER IMPORTS ---
+import { LoaderProvider, useLoader } from "./components/Loader/LoaderContext";
+import GlobalLoader from "./components/Loader/GlobalLoader";
+
+// --------------------------
+
+// Wrapper component to consume the LoaderContext
+function AppContent() {
+  const { isLoading } = useLoader();
+
   return (
-    <div>
+    <div className="min-h-screen">
+      {/* Renders the global loader over the entire screen */}
+      <GlobalLoader isLoading={isLoading} />
+
       {/* ✅ Global styled & animated toaster */}
       <Toaster
         position="top-right"
@@ -117,10 +129,10 @@ export default function App() {
           {/* CHILD ROUTE 4: Renders AIRagPage when navigating to /dashboard/ai-rag */}
           <Route path="ai-rag" element={<AiRagPage />} />
 
-          {/* CHILD ROUTE 5: Renders TeamManagementPage  when navigating to /dashboard/team-management */}
+          {/* CHILD ROUTE 5: Renders TeamManagementPage  when navigating to /dashboard/team-management */}
           <Route path="team" element={<TeamManagementPage />} />
 
-          {/* CHILD ROUTE 6: Renders FollowUpEnginePage  when navigating to /dashboard/followup */}
+          {/* CHILD ROUTE 6: Renders FollowUpEnginePage  when navigating to /dashboard/followup */}
           <Route path="followup" element={<FollowUpEnginePage />} />
 
           {/* CHILD ROUTE 7: Renders IntegrationsPage when navigating to /dashboard/integrations*/}
@@ -129,7 +141,7 @@ export default function App() {
           {/* CHILD ROUTE 8: Renders PaymentIntegrationsPage when navigating to /dashboard/payments*/}
           <Route path="payments" element={<PaymentIntegrationPage />} />
 
-          {/* CHILD ROUTE 9: Renders ApiKeysPage  when navigating to /dashboard/api-keys*/}
+          {/* CHILD ROUTE 9: Renders ApiKeysPage  when navigating to /dashboard/api-keys*/}
           <Route path="api-keys" element={<ApiKeysPage />} />
 
           {/* CHILD ROUTE 10: Renders GeneralSettingsPage when navigating to /dashboard/settings*/}
@@ -156,5 +168,14 @@ export default function App() {
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
+  );
+}
+
+// Main App component exports the LoaderProvider wrapping the content
+export default function App() {
+  return (
+    <LoaderProvider>
+      <AppContent />
+    </LoaderProvider>
   );
 }
