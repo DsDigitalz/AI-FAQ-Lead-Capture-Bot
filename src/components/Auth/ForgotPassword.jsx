@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast, { Toaster } from "react-hot-toast";
-import ReCAPTCHABox from "../ReCAPTCHABox";
+import { useAuth } from "../../contexts/AuthContext";
 
 // --- Validation Schema ---
 const ForgotPasswordSchema = z.object({
@@ -16,92 +16,47 @@ const ForgotPasswordSchema = z.object({
     .min(1, "Email is required."),
 });
 
-// --- Framer Motion Variants ---
-const containerVariants = {
-  hidden: { opacity: 0, scale: 0.98 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.3, ease: "easeOut", staggerChildren: 0.05 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 10 },
+// --- Animation Variants ---
+const scrollFadeVariants = {
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.25, ease: "easeOut" },
+    transition: { duration: 0.6, ease: "easeOut" },
   },
 };
 
-// --- Logo ---
-const HelplyAILogo = ({ className = "w-8 h-8" }) => (
-  <div className={`relative ${className}`}>
-    <Shield className="w-full h-full text-white" strokeWidth={1.5} />
-    <Zap
-      className="absolute top-1/2 left-1/2 w-3 h-3 text-fuchsia-400 fill-fuchsia-400 transform -translate-x-1/2 -translate-y-1/2"
-      strokeWidth={0}
-    />
-  </div>
-);
-
-// --- Input Field ---
-const InputField = ({
-  id,
-  label,
-  icon: Icon,
-  placeholder,
-  register,
-  errors,
-}) => {
+// --- Reusable Input Field ---
+const InputField = ({ id, label, placeholder, register, errors }) => {
   const error = errors[id];
   return (
-    <motion.div variants={itemVariants} className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium text-gray-400">
+    <div className="space-y-1.5 w-full">
+      <label
+        htmlFor={id}
+        className="text-xs font-medium text-gray-400 uppercase tracking-wider"
+      >
         {label}
       </label>
       <div className="relative">
-        {Icon && (
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Icon className="w-5 h-5 text-gray-500" />
-          </div>
-        )}
         <input
           type="email"
           id={id}
           placeholder={placeholder}
           {...register(id)}
-          aria-invalid={!!error}
-          aria-describedby={`${id}-error`}
-          className={`w-full pl-10 pr-4 py-3 bg-[#1e004a] border ${
+          className={`w-full px-4 py-2.5 bg-[#140036] border rounded-md text-white placeholder-gray-600 focus:ring-1 focus:ring-fuchsia-500 focus:border-fuchsia-500 outline-none transition-all ${
             error ? "border-red-500" : "border-[#210045]"
-          } rounded-lg text-white placeholder-gray-500 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-colors`}
+          }`}
         />
       </div>
-      {error && (
-        <p id={`${id}-error`} className="text-sm text-red-400 mt-1">
-          {error.message}
-        </p>
-      )}
-    </motion.div>
+      {error && <p className="text-red-400 text-xs mt-1">{error.message}</p>}
+    </div>
   );
 };
-
-// --- Mock API ---
-const mockPasswordReset = (email) =>
-  new Promise((resolve, reject) =>
-    setTimeout(() => {
-      email.includes("@example.com")
-        ? resolve()
-        : reject(new Error("We couldn’t find that email. Please try again."));
-    }, 1500)
-  );
 
 // --- Main Component ---
 export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
-  const [captchaValue, setCaptchaValue] = useState(null);
+  const { resetPassword } = useAuth();
 
   const {
     register,
@@ -116,122 +71,125 @@ export default function ForgotPassword() {
   useEffect(() => window.scrollTo(0, 0), []);
 
   const onSubmit = async (data) => {
-    if (!captchaValue) {
-      toast.error("Please verify that you’re not a robot 🤖");
-      return;
-    }
-
-    if (loading) return;
     setLoading(true);
+    const loadingToast = toast.loading("Sending reset link...");
 
     try {
-      await mockPasswordReset(data.email);
-      toast.success(`Password reset link sent to ${data.email}`, {
-        icon: "📩",
-      });
-      reset({ email: "" });
-      setCaptchaValue(null);
-    } catch (error) {
-      toast.error(error.message, { icon: "⚠️" });
+      const { error } = await resetPassword(data.email);
+      toast.dismiss(loadingToast);
+      if (error) {
+        toast.error(error.message, { icon: "⚠️" });
+      } else {
+        toast.success(`Password reset link sent to ${data.email}`, {
+          icon: "📩",
+        });
+        reset({ email: "" });
+      }
+    } catch {
+      toast.dismiss(loadingToast);
+      toast.error("Failed to send reset link.", { icon: "⚠️" });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-[#0A0027] p-4 sm:p-6 lg:p-8 text-white">
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: "#1e004a",
-            color: "#fff",
-            border: "1px solid #4b0082",
-            borderRadius: "10px",
-            fontSize: "0.9rem",
-            padding: "10px 15px",
-          },
-        }}
-      />
+    <main className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-[#0A0027] text-white">
+      <Toaster position="top-right" />
 
-      <motion.section
-        className="w-full max-w-xl bg-[#140036] rounded-xl shadow-2xl p-8 sm:p-10 border border-[#210045]"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <header className="text-center mb-8">
-          <Link to="/signin">
-            <motion.div
-              variants={itemVariants}
-              className="flex justify-center mb-4"
-            >
-              <HelplyAILogo />
+      {/* LEFT COLUMN: Reset Form */}
+      <section className="flex items-center justify-center p-6 sm:p-12 lg:p-20">
+        <motion.div
+          className="w-full max-w-sm space-y-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={scrollFadeVariants}
+        >
+          <header className="space-y-2">
+            <h1 className="text-2xl font-bold tracking-tight">
+              Reset password
+            </h1>
+            <p className="text-gray-400 text-sm">
+              Enter your email and we'll send you a link to reset your password.
+            </p>
+          </header>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <motion.div variants={scrollFadeVariants}>
+              <InputField
+                id="email"
+                label="Email Address"
+                placeholder="you@yourcompany.com"
+                register={register}
+                errors={errors}
+              />
             </motion.div>
-          </Link>
-          <motion.h2
-            variants={itemVariants}
-            className="text-3xl font-extrabold text-white mb-2"
-          >
-            Reset Your Password
-          </motion.h2>
-          <motion.p variants={itemVariants} className="text-gray-400">
-            Enter your registered email, and we’ll send you a password reset
-            link.
-          </motion.p>
-        </header>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <InputField
-            id="email"
-            label="Email Address"
-            icon={Mail}
-            placeholder="you@yourcompany.com"
-            register={register}
-            errors={errors}
-          />
+            <motion.button
+              variants={scrollFadeVariants}
+              type="submit"
+              disabled={loading}
+              className={`w-full py-2.5 rounded-md font-semibold transition-all flex items-center justify-center gap-2 ${
+                loading
+                  ? "bg-gray-700"
+                  : "bg-fuchsia-600 hover:bg-fuchsia-500 shadow-lg shadow-fuchsia-500/20"
+              }`}
+            >
+              {loading ? (
+                <>
+                  <RefreshCw className="animate-spin h-4 w-4" />
+                  <span>Sending Link...</span>
+                </>
+              ) : (
+                <span>Send reset link</span>
+              )}
+            </motion.button>
+          </form>
 
-          <motion.div
-            variants={itemVariants}
-            className="pt-2 flex justify-center"
-          >
-            <ReCAPTCHABox onChange={setCaptchaValue} />
-          </motion.div>
-
-          <motion.button
-            variants={itemVariants}
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 mt-4 rounded-full text-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${
-              loading
-                ? "bg-gray-600 cursor-not-allowed"
-                : "bg-fuchsia-600 hover:bg-fuchsia-700 shadow-lg shadow-fuchsia-500/50"
-            }`}
-          >
-            {loading ? (
-              <>
-                <RefreshCw className="animate-spin h-5 w-5 text-white" />
-                <span>Sending Link...</span>
-              </>
-            ) : (
-              <>
-                <span>Send Reset Link</span>
-                <Mail size={20} />
-              </>
-            )}
-          </motion.button>
-        </form>
-
-        <motion.div variants={itemVariants} className="mt-8 text-center">
-          <Link
-            to="/signin"
-            className="inline-flex items-center space-x-2 text-sm font-medium text-gray-400 hover:text-fuchsia-400 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Sign In</span>
-          </Link>
+          <footer className="text-center">
+            <Link
+              to="/signin"
+              className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-fuchsia-400 transition-colors"
+            >
+              <ArrowLeft size={16} />
+              <span>Back to Sign In</span>
+            </Link>
+          </footer>
         </motion.div>
-      </motion.section>
+      </section>
+
+      {/* RIGHT COLUMN: Branding/Testimonial Section */}
+      <section className="hidden lg:flex flex-col items-center justify-center bg-[#050015] p-20 border-l border-[#210045]">
+        <motion.article
+          className="max-w-lg space-y-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={scrollFadeVariants}
+        >
+          <div className="text-fuchsia-500 opacity-20">
+            <svg width="45" height="36" viewBox="0 0 45 36" fill="currentColor">
+              <path d="M13.415 35.5L0 22.085V0H19.297V22.085H9.648L13.415 35.5ZM38.415 35.5L25 22.085V0H44.297V22.085H34.648L38.415 35.5Z" />
+            </svg>
+          </div>
+
+          <blockquote className="text-2xl font-medium leading-relaxed text-gray-200">
+            "The password recovery process was seamless. I was back into my
+            dashboard in less than two minutes."
+          </blockquote>
+
+          <footer className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-fuchsia-600 to-purple-600 flex items-center justify-center font-bold text-white">
+              H
+            </div>
+            <cite className="not-italic">
+              <p className="font-semibold text-gray-200">HelplyAI Team</p>
+              <p className="text-sm text-gray-500">Support Operations</p>
+            </cite>
+          </footer>
+        </motion.article>
+      </section>
     </main>
   );
 }

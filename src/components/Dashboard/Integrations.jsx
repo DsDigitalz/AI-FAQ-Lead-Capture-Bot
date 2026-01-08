@@ -160,7 +160,7 @@ const IntegrationCard = ({ integration, type, index }) => {
 export default function Integrations() {
   return (
     <motion.section
-      className="space-y-10 p-4 md:p-0"
+      className="mt-18 lg:mt-0 space-y-10 p-4 md:p-0"
       variants={containerVariants}
       initial="hidden"
       animate="visible"

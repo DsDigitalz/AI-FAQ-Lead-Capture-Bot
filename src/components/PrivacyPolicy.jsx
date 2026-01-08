@@ -1,186 +1,145 @@
 import React, { useEffect } from "react";
-// 🔑 Framer Motion for fade-in animation
 import { motion } from "framer-motion";
+import { Shield, Lock, Eye, FileText, Mail } from "lucide-react";
 
 // --- Framer Motion Animation Setup ---
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
 };
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
+  },
 };
 
-// --- Main Component ---
-
 export default function PrivacyPolicy() {
-  // 🔑 FIX: Scroll to Top Hook (Ensures the page starts at the top when navigated to)
+  // 🔑 Scroll to Top on Mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    // 🟢 Semantic Markup: The <main> tag should be provided by the LegalLayout,
-    // but here we ensure the content block is ready for that layout.
+    // 🟢 Semantic Markup: Wrapped in a motion.div for page-wide animation
     <motion.div
-      className="text-white pt-30 px lg:pt-40 pb-20 px-4 sm:px-8 lg:px-16" // Padding for content within the LegalLayout
+      className="text-white pt-32 lg:pt-48 pb-24 px-6 max-w-5xl mx-auto"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
-      <header className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">
-          Privacy Policy
-        </h1>
-        <p className="mt-2 text-gray-400 text-lg">
-          Last Updated: October 10, 2025
-        </p>
+      <header className="mb-20 text-center lg:text-left">
+        <motion.div variants={sectionVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-xs font-bold uppercase tracking-widest mb-6">
+          <Shield size={14} />
+          Compliance & Trust
+        </motion.div>
+        <motion.h1 
+          variants={sectionVariants}
+          className="text-5xl md:text-6xl font-black mb-6 tracking-tighter"
+        >
+          Privacy <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">Policy</span>
+        </motion.h1>
+        <motion.p variants={sectionVariants} className="text-gray-400 text-lg">
+          Version 1.2 • Last Updated: <span className="text-white">October 10, 2025</span>
+        </motion.p>
       </header>
 
-      {/* 1. Introduction Section */}
-      <motion.section
-        variants={sectionVariants}
-        className="mb-12 p-6 bg-[#140036] rounded-xl border border-[#210045]"
-      >
-        <h2 className="text-2xl font-bold mb-4">1. Introduction</h2>
-        <p className="text-gray-300 leading-relaxed">
-          HelplyAI ("we," "our," or "us") is committed to protecting your
-          privacy. This Privacy Policy explains how your personal information is
-          collected, used, and disclosed by HelplyAI, particularly in relation
-          to our B2B SaaS platform that automates customer support and lead
-          qualification. By accessing or using our service, you signify that you
-          have read, understood, and agree to our collection, storage, use, and
-          disclosure of your personal information as described in this Privacy
-          Policy.
-        </p>
-      </motion.section>
+      <div className="space-y-8">
+        {/* 1. Introduction Section */}
+        <motion.section
+          variants={sectionVariants}
+          className="group p-8 bg-[#140036]/50 backdrop-blur-xl rounded-[2rem] border border-white/5 hover:border-fuchsia-500/30 transition-colors duration-500"
+        >
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-3 bg-fuchsia-500/10 rounded-xl text-fuchsia-400">
+              <Eye size={24} />
+            </div>
+            <h2 className="text-2xl font-bold">1. Introduction</h2>
+          </div>
+          <p className="text-gray-300 leading-relaxed text-lg">
+            HelplyAI ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how your personal information is collected, used, and disclosed by our B2B SaaS platform. By using our service, you agree to the collection and use of information in accordance with this policy.
+          </p>
+        </motion.section>
 
-      {/* 2. Information We Collect */}
-      <motion.section
-        variants={sectionVariants}
-        className="mb-12 p-6 bg-[#140036] rounded-xl border border-[#210045]"
-      >
-        <h2 className="text-2xl font-bold mb-4">2. Information We Collect</h2>
-        <p className="text-gray-300 mb-4">
-          We collect various types of information when you use our services:
-        </p>
-        <ul className="list-disc list-inside space-y-2 pl-4 text-gray-400">
-          <li>
-            **Account Data:** Name, email address, company name, password
-            (encrypted), and billing information provided during the sign-up or
-            trial process.
-          </li>
-          <li>
-            **Bot Interaction Data:** Content of conversations between your
-            customers and the HelplyAI bot, including customer queries, bot
-            responses, and lead qualification data. This data is processed on
-            your behalf.
-          </li>
-          <li>
-            **Usage Data:** Information about how you access and use the
-            service, such as IP address, browser type, pages viewed, and time
-            spent on the service.
-          </li>
-          <li>
-            **Cookies and Tracking:** We use cookies and similar tracking
-            technologies (like web beacons) to track activity on our service and
-            hold certain information.
-          </li>
-        </ul>
-      </motion.section>
+        {/* 2. Information We Collect */}
+        <motion.section
+          variants={sectionVariants}
+          className="group p-8 bg-[#140036]/50 backdrop-blur-xl rounded-[2rem] border border-white/5 hover:border-fuchsia-500/30 transition-colors duration-500"
+        >
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-3 bg-blue-500/10 rounded-xl text-blue-400">
+              <FileText size={24} />
+            </div>
+            <h2 className="text-2xl font-bold">2. Information Collection</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8 text-gray-400">
+            <div>
+              <h4 className="text-white font-bold mb-3 uppercase text-xs tracking-widest">Account Data</h4>
+              <p className="mb-4">Standard identification data including name, company email, and encrypted billing details.</p>
+            </div>
+            <div>
+              <h4 className="text-white font-bold mb-3 uppercase text-xs tracking-widest">Bot Interaction</h4>
+              <p className="mb-4">Content of conversations processed on your behalf to facilitate support automation.</p>
+            </div>
+          </div>
+        </motion.section>
 
-      {/* 3. How We Use Your Information */}
-      <motion.section
-        variants={sectionVariants}
-        className="mb-12 p-6 bg-[#140036] rounded-xl border border-[#210045]"
-      >
-        <h2 className="text-2xl font-bold mb-4">
-          3. How We Use Your Information
-        </h2>
-        <p className="text-gray-300 mb-4">
-          We use the information we collect primarily for the following
-          purposes:
-        </p>
-        <ul className="list-disc list-inside space-y-2 pl-4 text-gray-400">
-          <li>
-            To **Provide and Maintain** the Service, including processing
-            transactions and managing your account.
-          </li>
-          <li>
-            To **Improve, Personalize, and Expand** our Service (e.g., training
-            the core AI models to better serve you).
-          </li>
-          <li>
-            To **Communicate** with you regarding service updates, security
-            alerts, and support messages.
-          </li>
-          <li>
-            For **Security** purposes, such as preventing fraud and protecting
-            the integrity of our platform.
-          </li>
-        </ul>
-      </motion.section>
+        {/* 3. Data Protection */}
+        <motion.section
+          variants={sectionVariants}
+          className="group p-8 bg-[#140036]/50 backdrop-blur-xl rounded-[2rem] border border-white/5 hover:border-fuchsia-500/30 transition-colors duration-500"
+        >
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-3 bg-green-500/10 rounded-xl text-green-400">
+              <Lock size={24} />
+            </div>
+            <h2 className="text-2xl font-bold">3. Security Standards</h2>
+          </div>
+          <p className="text-gray-300 leading-relaxed mb-6">
+            We utilize industry-leading security protocols to ensure your data is safe.
+          </p>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {['AES-256 Encryption', 'TLS 1.3 in Transit', 'SOC2 Compliant Centers', 'Weekly Security Audits'].map((item) => (
+              <li key={item} className="flex items-center gap-2 text-sm text-gray-400 bg-white/5 p-3 rounded-lg border border-white/5">
+                <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </motion.section>
 
-      {/* 4. Data Protection and Security */}
-      <motion.section
-        variants={sectionVariants}
-        className="mb-12 p-6 bg-[#140036] rounded-xl border border-[#210045]"
-      >
-        <h2 className="text-2xl font-bold mb-4">
-          4. Data Protection and Security
-        </h2>
-        <p className="text-gray-300 leading-relaxed">
-          We take reasonable measures to protect the information collected
-          through the Service from loss, theft, misuse, and unauthorized access.
-          We use **industry-standard encryption (SSL/TLS)**, access controls,
-          and secure data centers. However, no internet transmission is 100%
-          secure, and we cannot guarantee the absolute security of your
-          information.
-        </p>
-      </motion.section>
-
-      {/* 5. Your Rights (GDPR/Local Compliance) */}
-      <motion.section
-        variants={sectionVariants}
-        className="mb-12 p-6 bg-[#140036] rounded-xl border border-[#210045]"
-      >
-        <h2 className="text-2xl font-bold mb-4">5. Your Data Rights</h2>
-        <p className="text-gray-300 mb-4">
-          Depending on your location, you may have the following rights
-          regarding your personal data:
-        </p>
-        <ul className="list-disc list-inside space-y-2 pl-4 text-gray-400">
-          <li>**Right of Access:** Request copies of your personal data.</li>
-          <li>
-            **Right to Rectification:** Request that we correct any information
-            you believe is inaccurate.
-          </li>
-          <li>
-            **Right to Erasure:** Request that we erase your personal data under
-            certain conditions.
-          </li>
-        </ul>
-      </motion.section>
-
-      {/* 6. Contact Information */}
-      <motion.section
-        variants={sectionVariants}
-        className="mb-12 p-6 bg-[#140036] rounded-xl border border-[#210045]"
-      >
-        <h2 className="text-2xl font-bold mb-4">6. Contact Us</h2>
-        <p className="text-gray-300">
-          If you have any questions about this Privacy Policy, please contact us
-          at:
-        </p>
-        <p className="mt-2 text-lg text-fuchsia-400 font-medium">
-          Email: privacy@helplyai.com
-        </p>
-        <p className="text-gray-400">
-          Address: [Your Company's Physical Address in Lagos, Nigeria]
-        </p>
-      </motion.section>
+        {/* 4. Rights & Contact */}
+        <motion.section
+          variants={sectionVariants}
+          className="relative group p-12 bg-gradient-to-br from-fuchsia-600 to-blue-700 rounded-[2.5rem] overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-[#0A0027]/80 backdrop-blur-sm" />
+          <div className="relative z-10 text-center">
+            <h2 className="text-3xl font-black mb-4">Have questions about your data?</h2>
+            <p className="text-gray-300 mb-8 max-w-xl mx-auto">
+              Our Data Protection Officer is available to help you understand your rights under GDPR and local regulations.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <a 
+                href="mailto:privacy@helplyai.com" 
+                className="flex items-center gap-2 bg-white text-black font-bold px-8 py-4 rounded-2xl hover:bg-gray-200 transition-colors"
+              >
+                <Mail size={18} />
+                Contact Privacy Team
+              </a>
+            </div>
+          </div>
+        </motion.section>
+      </div>
     </motion.div>
   );
 }

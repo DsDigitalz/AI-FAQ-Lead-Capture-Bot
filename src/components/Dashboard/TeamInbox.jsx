@@ -177,7 +177,7 @@ export default function TeamInbox() {
 
   return (
     <motion.section
-      className="h-[calc(100vh-6rem)] grid grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)_300px] gap-4 text-white"
+      className="mt-18 lg:mt-0 h-[calc(100vh-6rem)] grid grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)_300px] gap-4 text-white"
       variants={containerVariants}
       initial="hidden"
       animate="visible"

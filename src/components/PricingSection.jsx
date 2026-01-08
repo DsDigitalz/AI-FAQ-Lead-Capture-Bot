@@ -1,45 +1,17 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Check, ArrowRight } from "lucide-react";
-import { Link } from "react-router";
+import { Check, ArrowRight, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
-// --- Framer Motion Animation Setup (Performance Optimized) ---
-const containerVariants = {
-  hidden: {
-    opacity: 0,
-    // 🔑 OPTIMIZATION: Use translateY for GPU-acceleration
-    transform: "translateY(20px) translateZ(0)",
-  },
+// --- Animation Variants ---
+const scrollFadeVariants = {
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
-    transform: "translateY(0) translateZ(0)",
-    transition: {
-      // 🔑 OPTIMIZATION: Reduced duration for snappier feel
-      duration: 0.3,
-      ease: "easeOut",
-      delayChildren: 0.1,
-      // 🔑 OPTIMIZATION: Faster stagger for quick reveal
-      staggerChildren: 0.08,
-    },
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
   },
 };
-
-const itemVariants = {
-  hidden: {
-    opacity: 0,
-    // 🔑 OPTIMIZATION: Use translateY for GPU-accelerated slide-in
-    transform: "translateY(15px) translateZ(0)",
-  },
-  visible: {
-    opacity: 1,
-    transform: "translateY(0) translateZ(0)",
-    transition: {
-      duration: 0.3,
-      ease: "easeOut",
-    },
-  },
-};
-// ------------------------------------
 
 const pricingData = [
   {
@@ -55,7 +27,7 @@ const pricingData = [
     ],
     isFeatured: false,
     buttonClass:
-      "bg-gray-700 hover:bg-gray-600 border border-gray-600 text-white",
+      "bg-white/5 hover:bg-white/10 text-white border border-white/10",
   },
   {
     name: "Pro Automation",
@@ -71,7 +43,7 @@ const pricingData = [
     ],
     isFeatured: true,
     buttonClass:
-      "bg-fuchsia-600 hover:bg-fuchsia-700 shadow-lg shadow-fuchsia-500/50 text-white",
+      "bg-fuchsia-600 hover:bg-fuchsia-500 shadow-lg shadow-fuchsia-500/20 text-white",
   },
   {
     name: "Enterprise AI",
@@ -87,119 +59,140 @@ const pricingData = [
       "Custom Security & Compliance",
     ],
     isFeatured: false,
-    buttonClass:
-      "bg-blue-600 hover:bg-blue-700 border border-blue-600 text-white",
+    buttonClass: "bg-blue-600 hover:bg-blue-500 text-white",
   },
 ];
 
-const PricingCard = ({ plan, index }) => (
-  // 🟢 Semantic Markup: Used <article> for each self-contained pricing card.
+const PricingCard = ({ plan }) => (
   <motion.article
-    variants={itemVariants}
-    className={`
-      flex flex-col p-8 rounded-xl shadow-2xl transition-all duration-300
-      ${
-        plan.isFeatured
-          ? "bg-[#1e004a] border-2 border-fuchsia-500 transform scale-105"
-          : "bg-[#140036] border border-[#210045]"
-      }
-      hover:shadow-fuchsia-900/50 hover:scale-[1.03]
-    `}
-    whileHover={{ y: -5 }} // subtle lift on hover
+    variants={scrollFadeVariants}
+    whileHover={{ y: -8 }}
+    className={`relative flex flex-col p-8 rounded-3xl transition-all duration-500 overflow-hidden h-full ${
+      plan.isFeatured
+        ? "bg-[#1e004a]/80 border-2 border-fuchsia-500 shadow-[0_0_40px_-15px_rgba(192,38,211,0.3)]"
+        : "bg-[#140036]/50 border border-[#210045] hover:border-white/20"
+    } backdrop-blur-xl`}
   >
-    {/* Plan Header */}
-    <header>
+    {/* Featured Badge */}
+    {plan.isFeatured && (
+      <div className="absolute top-0 right-0">
+        <div className="bg-fuchsia-500 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-bl-xl flex items-center gap-1">
+          <Sparkles size={10} />
+          Most Popular
+        </div>
+      </div>
+    )}
+
+    <header className="mb-8">
       <h3
-        className={`text-2xl font-bold ${
+        className={`text-xl font-bold mb-2 ${
           plan.isFeatured ? "text-fuchsia-400" : "text-white"
-        } mb-1`}
+        }`}
       >
         {plan.name}
       </h3>
-      <p className="text-sm text-gray-400 mb-6">{plan.description}</p>
+      <p className="text-sm text-gray-400 leading-relaxed">
+        {plan.description}
+      </p>
     </header>
 
-    {/* Price */}
-    {/* 🟢 Semantic Markup: Used <section> to wrap the pricing detail block. */}
-    <section className="text-white mb-6">
-      <span className="text-4xl font-extrabold">{plan.price}</span>
-      <span className="text-lg text-gray-400 ml-1">
-        {plan.name !== "Enterprise AI" && "/mo"}
-      </span>
+    <section className="mb-8">
+      <div className="flex items-baseline gap-1">
+        <span className="text-4xl font-black text-white">{plan.price}</span>
+        {plan.name !== "Enterprise AI" && (
+          <span className="text-gray-500 font-medium">/mo</span>
+        )}
+      </div>
       {plan.name !== "Enterprise AI" && (
-        <p className="text-sm text-fuchsia-300 mt-1">{plan.interactions}</p>
+        <p className="text-xs font-bold text-fuchsia-400/80 uppercase tracking-tighter mt-2 bg-fuchsia-400/10 inline-block px-2 py-0.5 rounded">
+          {plan.interactions}
+        </p>
       )}
     </section>
 
-    {/* Button */}
-    <Link
-      to={
-        plan.name === "Enterprise AI"
-          ? "/contact-sales"
-          : "/checkout/starter-bot"
-      }
-      className={`
-        w-full py-3 rounded-full text-center text-lg font-semibold mb-6 transition-colors
-        ${plan.buttonClass}
-      `}
-    >
-      {plan.name === "Enterprise AI" ? "Contact Sales" : "Get Started Now"}
-      <ArrowRight size={18} className="inline ml-2" />
-    </Link>
+    <div className="mb-8">
+      <Link
+        to={plan.name === "Enterprise AI" ? "/contact-sales" : "/checkout"}
+        className={`group flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-bold transition-all ${plan.buttonClass}`}
+      >
+        {plan.name === "Enterprise AI" ? "Contact Sales" : "Get Started Now"}
+        <ArrowRight
+          size={18}
+          className="group-hover:translate-x-1 transition-transform"
+        />
+      </Link>
+    </div>
 
-    {/* Feature List - Already uses semantic <ul> and <li> */}
-    <ul className="space-y-3 flex-grow">
+    <ul className="space-y-4 flex-grow">
       {plan.features.map((feature, idx) => (
-        <li key={idx} className="flex items-start text-gray-300">
-          <Check
-            size={18}
-            className="text-green-400 mt-0.5 mr-2 flex-shrink-0"
-          />
-          <span className="text-base">{feature}</span>
+        <li key={idx} className="flex items-start gap-3">
+          <div
+            className={`mt-1 p-0.5 rounded-full ${
+              plan.isFeatured ? "bg-fuchsia-500" : "bg-green-500"
+            }`}
+          >
+            <Check size={12} className="text-[#0A0027]" strokeWidth={4} />
+          </div>
+          <span className="text-sm text-gray-300 leading-snug">{feature}</span>
         </li>
       ))}
     </ul>
 
-    {/* Optional: Add a call for the Custom tier */}
     {plan.name === "Enterprise AI" && (
-      <p className="text-sm text-gray-400 mt-4 pt-4 border-t border-gray-700">
-        Includes volume discounts for 10,000+ chats.
-      </p>
+      <footer className="mt-8 pt-6 border-t border-white/5">
+        <p className="text-[11px] text-center text-gray-500 font-medium italic">
+          Includes volume discounts for 10,000+ chats.
+        </p>
+      </footer>
     )}
   </motion.article>
 );
 
 export default function PricingSection() {
   return (
-    // 🟢 Semantic Markup: Main section is correct
-    <section className="py-20 md:py-24 bg-[#0A0027] text-white" id="pricing">
+    <section
+      className="relative py-24 bg-[#0A0027] overflow-hidden"
+      id="pricing"
+    >
+      {/* Background Orbs */}
+      <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-fuchsia-600/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none" />
+
       <motion.div
-        className="max-w-7xl mx-auto px-6"
-        variants={containerVariants}
+        className="max-w-7xl mx-auto px-6 relative z-10"
         initial="hidden"
         whileInView="visible"
-        // 🔑 OPTIMIZATION: Reduced amount to trigger animation sooner on scroll
         viewport={{ once: true, amount: 0.1 }}
       >
-        {/* Section Heading */}
-        {/* 🟢 Semantic Markup: Used <header> for the section's heading group */}
-        <motion.header variants={itemVariants} className="text-center mb-16">
-          <p className="text-fuchsia-400 font-semibold uppercase tracking-widest mb-3">
-            Pricing
-          </p>
-          <h2 className="text-4xl sm:text-5xl font-extrabold leading-tight">
-            Simple, Scalable Plans
-          </h2>
-          <p className="text-xl text-gray-400 mt-4">
-            Start free, upgrade when you're ready for more automation.
-          </p>
-        </motion.header>
+        <header className="text-center mb-20 space-y-4">
+          <motion.div
+            variants={scrollFadeVariants}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400 text-xs font-bold uppercase tracking-widest"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
+            Pricing Plans
+          </motion.div>
+          <motion.h2
+            variants={scrollFadeVariants}
+            className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight"
+          >
+            Simple, Scalable{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-blue-400">
+              Intelligence.
+            </span>
+          </motion.h2>
+          <motion.p
+            variants={scrollFadeVariants}
+            className="text-gray-400 text-lg max-w-2xl mx-auto"
+          >
+            Choose a plan that fits your current volume. Scale up instantly as
+            your support needs grow.
+          </motion.p>
+        </header>
 
-        {/* Pricing Grid */}
-        {/* 🟢 Semantic Markup: Used <main> as the primary content container for the pricing articles */}
-        <main className="grid grid-cols-1 lg:grid-cols-3 gap-y-10 lg:gap-x-8">
+        <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
           {pricingData.map((plan, index) => (
-            <PricingCard key={index} plan={plan} index={index} />
+            <PricingCard key={index} plan={plan} />
           ))}
         </main>
       </motion.div>

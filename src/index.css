@@ -1,6 +1,70 @@
 @import "tailwindcss";
+
 body {
   font-family: DM Sans;
+}
+
+:root {
+  /* Default mode colors */
+  /* Background */
+  --bg-start: #00031f;
+  --bg-middle: #10003b;
+  --bg-end: #21000b;
+  --text-white: #ffffff;
+}
+
+/* styles/globals.css */
+
+/* --- 1. System/Light Mode (Applied to :root) --- */
+:root {
+  --color-background-primary: #ffffff; /* White */
+  --color-background-secondary: #f7f9fb; /* Light Gray for sidebars/cards */
+  --color-text-primary: #1c2030;
+  --color-text-secondary: #6b7280;
+  --color-primary-brand: #f472b6;
+  --color-border: #e5e7eb;
+}
+
+/* --- 2. Dark Mode Overrides (Applied via data-theme='dark') --- */
+[data-theme="dark"] {
+  --color-background-primary: #1f2937;
+  --color-background-secondary: #374151;
+  --color-text-primary: #f3f4f6;
+  --color-text-secondary: #9ca3af;
+  --color-primary-brand: #ec4899;
+  --color-border: #4b5563;
+}
+
+/* --- 3. System Preference (The "Default" Mode) --- */
+/* If data-theme is NOT present (i.e., 'system' mode is active),
+   we use a media query to apply the dark variables based on the OS setting.
+   NOTE: This relies on the browser applying dark variables if the system prefers dark.
+   If you must force it, you can apply [data-theme='light'] when theme is 'system' and
+   the system prefers light, and [data-theme='dark'] when theme is 'system' and system prefers dark.
+   However, modern browsers typically handle this by default with the CSS below: */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Apply dark variables when the OS preference is dark */
+    --color-background-primary: #1f2937;
+    --color-background-secondary: #374151;
+    --color-text-primary: #f3f4f6;
+    --color-text-secondary: #9ca3af;
+    --color-primary-brand: #ec4899;
+    --color-border: #4b5563;
+  }
+}
+
+/* This overrides the system preference when the user has forced 'light' or 'dark' */
+[data-theme="light"] {
+  /* This ensures the forced light mode ALWAYS uses the :root light variables */
+  /* Remove the dark overrides that might be applied by the media query above */
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f7f9fb;
+  --color-text-primary: #1c2030;
+  --color-text-secondary: #6b7280;
+  --color-primary-brand: #f472b6;
+  --color-border: #e5e7eb;
 }
 
 /* Tailwind-friendly solution */

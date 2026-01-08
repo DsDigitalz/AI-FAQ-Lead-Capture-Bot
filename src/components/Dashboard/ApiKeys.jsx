@@ -126,7 +126,7 @@ const KeyRow = ({ apiKey, index }) => {
 export default function ApiKeys() {
   return (
     <motion.section
-      className="space-y-8 p-4 md:p-0"
+      className="mt-18 lg:mt-0 space-y-8 p-4 md:p-0"
       variants={containerVariants}
       initial="hidden"
       animate="visible"

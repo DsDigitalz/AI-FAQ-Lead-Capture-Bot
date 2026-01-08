@@ -27,7 +27,7 @@ export default function DashboardOverview() {
       {/* 🟢 Semantic Markup: <header> */}
       <motion.header
         variants={itemVariants}
-        className="pb-4 border-b border-[#210045]"
+        className="mt-18 lg:mt-0 b-4 border-b border-[#210045]"
       >
         <h2 className="text-3xl font-extrabold text-white flex items-center space-x-3">
           <LayoutDashboard size={30} className="text-fuchsia-400" />

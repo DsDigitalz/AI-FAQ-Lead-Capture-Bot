@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Send, Shield, Zap, CheckCircle, ShieldCheck } from "lucide-react";
-import { motion } from "framer-motion";
+import {
+  Send,
+  Shield,
+  Zap,
+  CheckCircle,
+  ShieldCheck,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+// Assuming BotAnimation is a separate component as per your code
+import BotAnimation from "./BotAnimation";
 
 // --- HelplyAI Logo ---
 const HelplyAILogo = ({ className = "w-7 h-7" }) => (
@@ -13,39 +23,49 @@ const HelplyAILogo = ({ className = "w-7 h-7" }) => (
   </div>
 );
 
-export default function HeroSection({ onStartChatting, onRequestDemo }) {
-  // --- Infinite Light/Dark Theme ---
-  const [theme, setTheme] = useState("light"); // "light" or "dark"
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTheme((prev) => (prev === "light" ? "dark" : "light"));
-    }, 7000); // change every 3 seconds
-    return () => clearInterval(interval);
-  }, []);
+// --- Animation Variants ---
+const scrollFadeVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
-  // --- Typewriter / Chat State ---
+export default function HeroSection({ onStartChatting, onRequestDemo }) {
+  // --- Theme & Chat State ---
+  const [theme, setTheme] = useState("dark");
   const botMessages = [
     "Hi there! I'm here to help answer your questions instantly. What would you like to know?",
-    "Our service is a B2B SaaS platform that integrates with your website to provide 24/7 support and intelligently qualify leads.",
+    "Our service is a B2B SaaS platform that integrates with your website to provide 24/7 support and qualify leads.",
   ];
 
   const [displayText, setDisplayText] = useState("");
   const [cursorVisible, setCursorVisible] = useState(true);
-  const [phase, setPhase] = useState("intro"); // intro → user → answer → loop
+  const [phase, setPhase] = useState("intro");
   const [messageIndex, setMessageIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Blinking cursor
+  // Auto-theme switcher (Refined to 10s for better UX)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Blinking cursor logic
   useEffect(() => {
     const blink = setInterval(() => setCursorVisible((v) => !v), 500);
     return () => clearInterval(blink);
   }, []);
 
-  // Typewriter effect
+  // Typewriter effect logic
   useEffect(() => {
     const currentMessage = botMessages[messageIndex];
-    let speed = isDeleting ? 25 : 45;
+    let speed = isDeleting ? 30 : 50;
 
     const timeout = setTimeout(() => {
       if (!isDeleting && charIndex < currentMessage.length) {
@@ -55,9 +75,9 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
         setDisplayText(currentMessage.slice(0, charIndex - 1));
         setCharIndex((prev) => prev - 1);
       } else if (!isDeleting && charIndex === currentMessage.length) {
-        if (phase === "intro") setTimeout(() => setPhase("user"), 1200);
+        if (phase === "intro") setTimeout(() => setPhase("user"), 1500);
         else if (phase === "answer")
-          setTimeout(() => setIsDeleting(true), 2000);
+          setTimeout(() => setIsDeleting(true), 3000);
       } else if (isDeleting && charIndex === 0) {
         setIsDeleting(false);
         setMessageIndex(0);
@@ -68,7 +88,6 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
     return () => clearTimeout(timeout);
   }, [charIndex, isDeleting, messageIndex, phase]);
 
-  // Transition from user question to AI answer
   useEffect(() => {
     if (phase === "user") {
       setTimeout(() => {
@@ -80,210 +99,226 @@ export default function HeroSection({ onStartChatting, onRequestDemo }) {
     }
   }, [phase]);
 
-  // --- Framer Motion Variants ---
-  const containerVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, delayChildren: 0.3, staggerChildren: 0.2 },
-    },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
     <section
-      className="pt-30 pb:10 md:pb-16 lg:pt-60 lg:pb-50 text-white bg-gradient-to-br from-[#00031F] via-[#10003B] to-[#21000B]"
-      id="demo"
+      className="relative min-h-screen flex items-center overflow-hidden bg-[#0A0027] pt-25 md:pt-30 pb-12"
+      id="hero"
     >
-      <motion.div
-        className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between px-6 space-y-12 lg:space-y-0"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {/* LEFT SIDE */}
-        <main className="w-full lg:w-1/2 text-center lg:text-left">
-          <motion.p
-            variants={itemVariants}
-            className="text-fuchsia-400 font-semibold mb-3 flex items-center justify-center lg:justify-start"
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-fuchsia-600/20 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full" />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        {/* LEFT SIDE: Content */}
+        <main className="text-center lg:text-left space-y-8">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scrollFadeVariants}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-sm font-medium"
           >
-            <span className="text-sm mr-2 animate-spin">✨</span>AI-Powered Support
-          </motion.p>
+            <Sparkles size={14} className="animate-pulse" />
+            <span>Next-Gen AI Support</span>
+          </motion.div>
 
           <motion.h1
-            variants={itemVariants}
-            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scrollFadeVariants}
+            className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1]"
           >
-            Get Instant Answers with Our <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">
+            Get Instant Answers with Our <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-purple-400 to-blue-400">
               Smart AI Bot
             </span>
           </motion.h1>
 
           <motion.p
-            variants={itemVariants}
-            className="text-lg text-gray-300 mb-10 max-w-lg mx-auto lg:mx-0"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scrollFadeVariants}
+            className="text-lg md:text-xl text-gray-400 max-w-xl mx-auto lg:mx-0 leading-relaxed"
           >
-            Stop waiting on hold. Get{" "}
-            <strong>lightning-fast, 24/7 support</strong> and automatically
-            capture leads the moment they need help.
+            Stop losing leads to slow response times. HelplyAI automates your
+            customer support and sales qualification with{" "}
+            <strong>99% accuracy</strong>.
           </motion.p>
 
           <motion.div
-            variants={itemVariants}
-            className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scrollFadeVariants}
+            className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
           >
             <button
               onClick={onStartChatting}
-              className="inline-block py-3 px-8 cursor-pointer text-lg font-semibold rounded-full bg-fuchsia-600 hover:bg-fuchsia-700 transition-colors shadow-lg"
+              className="group relative px-8 py-4 bg-fuchsia-600 hover:bg-fuchsia-500 text-white rounded-full font-bold text-lg transition-all shadow-xl shadow-fuchsia-600/20 flex items-center gap-2"
             >
-              Start Chatting →
+              Start Chatting
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </button>
             <button
               onClick={onRequestDemo}
-              className="inline-block py-3 px-8 cursor-pointer text-lg font-semibold rounded-full border border-gray-500 hover:border-white hover:bg-gray-800 transition-colors"
+              className="px-8 py-4 border border-gray-700 hover:border-gray-500 text-white rounded-full font-bold text-lg transition-all bg-white/5 backdrop-blur-sm"
             >
               Request a Demo
             </button>
           </motion.div>
 
-          <motion.nav
-            variants={itemVariants}
-            className="mt-12 flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-8"
-          >
-            <p className="flex items-center text-sm text-gray-300">
-              <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
-              <span className="font-semibold">GDPR Compliant</span>
-            </p>
-            <p className="flex items-center text-sm text-gray-300">
-              <ShieldCheck className="w-4 h-4 text-blue-400 mr-2 flex-shrink-0" />
-              <span className="font-semibold">99.9% Uptime SLA</span>
-            </p>
-          </motion.nav>
+          {/* Social Proof / Badges */}
+          <nav className="flex flex-wrap items-center justify-center lg:justify-start gap-8 pt-4">
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <CheckCircle size={18} className="text-green-500" />
+              <span className="font-medium">Enterprise Security</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <ShieldCheck size={18} className="text-blue-500" />
+              <span className="font-medium">GDPR & CCPA Ready</span>
+            </div>
+          </nav>
         </main>
 
-        {/* RIGHT CHAT MOCKUP */}
-        <motion.div className="w-full max-w-sm sm:max-w-md lg:w-1/2 flex justify-center p-4">
+        {/* RIGHT SIDE: Chat Mockup */}
+        <aside className="relative flex justify-center">
+          {/* Decorative Glow behind the card */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-500/30 to-blue-500/30 blur-[80px] rounded-full opacity-50" />
+
           <motion.article
-            className="rounded-xl shadow-2xl overflow-hidden p-6 w-full transform transition-transform duration-500 scrollbar-hide animate-pulse"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scrollFadeVariants}
             animate={{
-              backgroundColor: theme === "light" ? "#ffffff" : "#111827",
+              backgroundColor:
+                theme === "light"
+                  ? "rgba(255, 255, 255, 0.95)"
+                  : "rgba(20, 0, 54, 0.8)",
+              borderColor:
+                theme === "light"
+                  ? "rgba(229, 231, 235, 1)"
+                  : "rgba(75, 0, 130, 0.3)",
             }}
-            transition={{ duration: 2 }}
+            className="relative w-full max-w-[420px] rounded-3xl border backdrop-blur-xl shadow-2xl overflow-hidden flex flex-col h-[520px]"
           >
             {/* Header */}
-            <header className="flex items-center space-x-3 pb-4 border-b border-[#ffffff1e]">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-fuchsia-500 to-blue-500 flex items-center justify-center">
-                <HelplyAILogo className="w-6 h-6" />
-              </div>
-              <div>
-                <p
-                  className={
-                    theme === "light"
-                      ? "text-gray-800 font-semibold"
-                      : "text-gray-200 font-semibold"
-                  }
-                >
-                  AI Assistant
-                </p>
-                <p className="text-green-500 text-xs flex items-center">
-                  <span className="w-2 h-2 rounded-full bg-green-500 mr-1 flex-shrink-0"></span>
-                  Online now
-                </p>
+            <header className="p-5 border-b border-white/10 flex items-center justify-between bg-white/5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 to-purple-600 flex items-center justify-center shadow-lg">
+                  <HelplyAILogo className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3
+                    className={`font-bold text-sm ${
+                      theme === "light" ? "text-gray-900" : "text-white"
+                    }`}
+                  >
+                    Helply Assistant
+                  </h3>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <span className="text-[10px] text-green-500 font-bold uppercase tracking-widest">
+                      Active
+                    </span>
+                  </div>
+                </div>
               </div>
             </header>
 
-            {/* Chat */}
-            <section className="h-48 overflow-y-scroll space-y-3 pt-4">
-              {(phase === "intro" ||
-                phase === "user" ||
-                phase === "answer") && (
-                <p
-                  className={
-                    theme === "light"
-                      ? "text-gray-800 text-sm leading-relaxed"
-                      : "text-gray-200 text-sm leading-relaxed"
-                  }
-                >
-                  {messageIndex === 0 && (
-                    <>
-                      {displayText}
-                      <span
-                        className={`inline-block w-1 ${
-                          cursorVisible
-                            ? theme === "light"
-                              ? "bg-gray-800"
-                              : "bg-gray-200"
-                            : "bg-transparent"
-                        } ml-0.5 align-bottom`}
-                        style={{ height: "1em" }}
-                      ></span>
-                    </>
-                  )}
-                </p>
-              )}
+            {/* Chat Area */}
+            <section className="flex-grow p-6 overflow-y-auto space-y-4 scrollbar-hide">
+              <AnimatePresence mode="popLayout">
+                {/* Bot Message */}
+                {(phase === "intro" ||
+                  phase === "user" ||
+                  phase === "answer") && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className={`p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm ${
+                      theme === "light"
+                        ? "bg-gray-100 text-gray-800"
+                        : "bg-white/5 text-gray-200"
+                    }`}
+                  >
+                    {messageIndex === 0 && (
+                      <p>
+                        {displayText}
+                        {cursorVisible && (
+                          <span className="inline-block w-1.5 h-4 ml-1 bg-fuchsia-500 align-middle" />
+                        )}
+                      </p>
+                    )}
+                  </motion.div>
+                )}
 
-              {(phase === "user" || phase === "answer") && (
-                <div className="flex justify-end">
-                  <p className="bg-fuchsia-500 text-white py-2 px-4 rounded-xl rounded-br-none max-w-[70%] text-sm shadow-md">
-                    How does your service work?
-                  </p>
-                </div>
-              )}
+                {/* User Message Bubble */}
+                {(phase === "user" || phase === "answer") && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    className="flex justify-end"
+                  >
+                    <p className="bg-fuchsia-600 text-white p-4 rounded-2xl rounded-br-none text-sm font-medium shadow-lg max-w-[85%]">
+                      How does your service work?
+                    </p>
+                  </motion.div>
+                )}
 
-              {phase === "answer" && (
-                <p
-                  className={
-                    theme === "light"
-                      ? "text-gray-800 text-sm leading-relaxed"
-                      : "text-gray-200 text-sm leading-relaxed"
-                  }
-                >
-                  {messageIndex === 1 && (
-                    <>
-                      {displayText}
-                      <span
-                        className={`inline-block w-1 ${
-                          cursorVisible
-                            ? theme === "light"
-                              ? "bg-gray-800"
-                              : "bg-gray-200"
-                            : "bg-transparent"
-                        } ml-0.5 align-bottom`}
-                        style={{ height: "1em" }}
-                      ></span>
-                    </>
-                  )}
-                </p>
-              )}
+                {/* Bot Answer */}
+                {phase === "answer" && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className={`p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm ${
+                      theme === "light"
+                        ? "bg-gray-100 text-gray-800"
+                        : "bg-white/5 text-gray-200"
+                    }`}
+                  >
+                    {messageIndex === 1 && (
+                      <p>
+                        {displayText}
+                        {cursorVisible && (
+                          <span className="inline-block w-1.5 h-4 ml-1 bg-fuchsia-500 align-middle" />
+                        )}
+                      </p>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </section>
 
-            {/* Footer */}
-            <footer className="pt-4 flex items-center border-t border-[#ffffff1e] mt-4">
-              <input
-                type="text"
-                placeholder="Type your question here..."
-                className={`flex-grow p-3 rounded-full focus:outline-none ${
+            {/* Mock Input Footer */}
+            <footer className="p-5 bg-white/5 border-t border-white/10">
+              <div
+                className={`flex items-center gap-2 p-2 rounded-xl border ${
                   theme === "light"
-                    ? "bg-gray-100 text-gray-700"
-                    : "bg-gray-800 text-gray-200"
+                    ? "bg-white border-gray-200"
+                    : "bg-[#0A0027] border-white/10"
                 }`}
-                disabled
-              />
-              <button
-                className="ml-2 bg-fuchsia-600 p-3 rounded-full pointer-events-none"
-                disabled
               >
-                <Send size={20} className="text-white" />
-              </button>
+                <div className="flex-grow text-xs text-gray-500 px-2 italic">
+                  Ask me anything...
+                </div>
+                <div className="p-2 bg-fuchsia-600 rounded-lg text-white">
+                  <Send size={16} />
+                </div>
+              </div>
             </footer>
           </motion.article>
-        </motion.div>
-      </motion.div>
+        </aside>
+      </div>
+
+      {/* <BotAnimation /> */}
     </section>
   );
 }

@@ -123,7 +123,7 @@ const MemberRow = ({ member, index }) => {
 export default function TeamManagement() {
   return (
     <motion.section
-      className="space-y-8 p-4 md:p-0"
+      className="mt-18 lg:mt-0 space-y-8 p-4 md:p-0"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -141,8 +141,8 @@ export default function TeamManagement() {
           className="flex items-center space-x-2 bg-fuchsia-600 px-4 py-2 rounded-lg font-medium hover:bg-fuchsia-700 transition-colors"
           whileHover={{ scale: 1.05 }}
         >
-          <UserPlus size={20} />
-          <span>Invite New Member</span>
+          <UserPlus size={20} className="text-[#fafafa]" />
+          <span className="text-[#fafafa]">Invite New Member</span>
         </motion.button>
       </motion.header>
 

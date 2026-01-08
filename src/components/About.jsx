@@ -1,8 +1,7 @@
-import React, { useEffect } from "react"; // 🔑 ADDED: useEffect import
-// 🔑 Framer Motion for fade-in/slide-in animation
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Shield, Zap, Target, Users, Globe, Briefcase } from "lucide-react";
-import { Link } from "react-router";
+import { Shield, Zap, Target, Users, Globe, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 // --- Framer Motion Animation Setup ---
 const containerVariants = {
@@ -10,19 +9,21 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      delayChildren: 0.1,
-      staggerChildren: 0.15, // Stagger for sections
+      staggerChildren: 0.2,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 40 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
+  },
 };
 
-// Logo Component (reused for branding)
-const HelplyAILogo = ({ className = "w-10 h-10" }) => (
+const HelplyAILogo = ({ className = "w-12 h-12" }) => (
   <div className={`relative ${className}`}>
     <Shield className="w-full h-full text-white" strokeWidth={1.5} />
     <Zap
@@ -32,123 +33,116 @@ const HelplyAILogo = ({ className = "w-10 h-10" }) => (
   </div>
 );
 
-// Value Card Component
-const ValueCard = ({ icon: Icon, title, description, delay }) => (
-  <motion.div
-    className="bg-[#140036] p-6 rounded-xl border border-[#210045] shadow-lg flex flex-col items-start h-full"
+const ValueCard = ({ icon: Icon, title, description }) => (
+  <motion.article
     variants={itemVariants}
-    initial="hidden"
-    animate="visible"
-    custom={delay}
+    className="group bg-[#140036]/40 p-8 rounded-2xl border border-white/5 hover:border-fuchsia-500/30 transition-all duration-500 flex flex-col items-start h-full relative overflow-hidden"
   >
-    <Icon className="w-8 h-8 text-fuchsia-400 mb-4" />
-    <h3 className="text-xl font-bold mb-2">{title}</h3>
-    <p className="text-gray-400">{description}</p>
-  </motion.div>
+    <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    <div className="p-3 rounded-xl bg-white/5 text-fuchsia-400 mb-6 group-hover:bg-fuchsia-500 group-hover:text-white transition-all duration-300">
+      <Icon size={24} />
+    </div>
+    <h3 className="text-xl font-bold mb-3 text-white">{title}</h3>
+    <p className="text-gray-400 leading-relaxed">{description}</p>
+  </motion.article>
 );
 
-// --- Main Component ---
-
 export default function About() {
-  // 🔑 FIX: Scroll to Top Hook
   useEffect(() => {
-    // This runs after the component mounts, ensuring the page starts at the top.
     window.scrollTo(0, 0);
-  }, []); // Empty dependency array ensures it runs only once on mount
+  }, []);
 
   return (
-    // The <main> tag is STATIC to keep the background fixed.
-    <main className="min-h-screen bg-[#0A0027] text-white pt-30 lg:pt-40 pb-16 px-4 sm:px-8 lg:px-16">
-      {/* 🔑 ANIMATED Container for the entire content */}
+    <main className="min-h-screen bg-[#0A0027] text-white pt-32 pb-24 overflow-hidden">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-fuchsia-600/10 blur-[120px] rounded-full pointer-events-none" />
+
       <motion.div
-        className="max-w-6xl mx-auto"
+        className="max-w-6xl mx-auto px-6 relative z-10"
         variants={containerVariants}
         initial="hidden"
-        animate="visible"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
       >
-        {/* 🟢 Semantic Markup: Used <header> for the page introduction */}
-        <motion.header variants={itemVariants} className="text-center mb-16">
-          <Link to="/"> 
-          <div className="flex justify-center mb-4">
-            <HelplyAILogo className="w-12 h-12" />
-          </div>
-          </Link>
-          <p className="text-fuchsia-400 font-semibold mb-2 uppercase tracking-widest">
-            Our Story
-          </p>
-          <h1 className="text-5xl md:text-6xl font-extrabold leading-tight">
-            Building the Future of Customer Support
-          </h1>
-        </motion.header>
+        {/* 🟢 Semantic Markup: Page Header */}
+        <header className="text-center mb-24">
+          <motion.div variants={itemVariants} className="flex justify-center mb-8">
+            <Link to="/" className="hover:scale-110 transition-transform">
+              <HelplyAILogo />
+            </Link>
+          </motion.div>
+          <motion.p variants={itemVariants} className="text-fuchsia-400 font-bold uppercase tracking-[0.2em] text-xs mb-4">
+            Our Mission & DNA
+          </motion.p>
+          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-8">
+            Building the Future of <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">Customer Support.</span>
+          </motion.h1>
+        </header>
 
         {/* 1. Mission Section */}
-        {/* 🟢 Semantic Markup: Used <section> */}
         <motion.section
           variants={itemVariants}
-          className="bg-[#140036] p-8 md:p-12 rounded-3xl mb-16 border border-[#210045]"
+          className="relative bg-white/5 p-8 md:p-16 rounded-[2.5rem] border border-white/10 mb-24 overflow-hidden"
         >
-          <div className="flex items-center space-x-4 mb-4">
-            <Target className="w-8 h-8 text-fuchsia-500" />
-            <h2 className="text-3xl font-bold">Our Mission</h2>
+          <div className="absolute top-0 right-0 p-10 opacity-10">
+            <Target size={200} className="text-white" />
           </div>
-          <p className="text-xl text-gray-300 leading-relaxed">
-            HelplyAI was founded on the belief that **Nigerian businesses**
-            deserve world-class tools to scale their operations without
-            compromising customer experience. Our mission is to provide an
-            **AI-Powered SaaS platform** that automates lead qualification and
-            delivers **lightning-fast, 24/7 support** to help companies grow
-            efficiently and sustainably.
-          </p>
-          <p className="mt-4 text-lg text-gray-400">
-            We are committed to transforming hold times into conversion
-            opportunities, one smart bot at a time.
-          </p>
+          <div className="relative z-10 max-w-3xl">
+            <div className="flex items-center gap-3 mb-6 text-fuchsia-400">
+              <Target size={28} />
+              <h2 className="text-2xl font-bold uppercase tracking-widest">The Mission</h2>
+            </div>
+            <p className="text-2xl md:text-3xl text-gray-200 leading-snug font-medium mb-6">
+              HelplyAI was founded on the belief that <span className="text-white">Nigerian businesses</span> deserve world-class tools to scale without compromising human connection.
+            </p>
+            <p className="text-lg text-gray-400 leading-relaxed">
+              We provide an AI-Powered SaaS platform that transforms traditional support into 24/7 revenue-generating engines. By automating lead qualification and delivering lightning-fast resolutions, we empower companies to grow efficiently and sustainably.
+            </p>
+          </div>
         </motion.section>
 
         {/* 2. Values Section */}
-        {/* 🟢 Semantic Markup: Used <section> */}
-        <motion.section variants={itemVariants} className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-10">
+        <section className="mb-32">
+          <motion.h2 variants={itemVariants} className="text-3xl font-bold text-center mb-16 tracking-tight">
             Our Core Values
-          </h2>
-
+          </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <ValueCard
               icon={Zap}
               title="Speed & Efficiency"
-              description="We build tools that minimize wait times and maximize operational efficiency, making speed a core component of our solution."
+              description="Wait times are the enemy of growth. We build tools that ensure your customers get answers in seconds, not hours."
             />
             <ValueCard
               icon={Users}
               title="Customer Focus"
-              description="Every feature is designed to elevate the user experience—both for our clients and their customers."
+              description="Technology should be invisible. Every feature we build aims to make the end-user experience feel personal and intuitive."
             />
             <ValueCard
               icon={Globe}
               title="Local Impact"
-              description="Based in Lagos, we are dedicated to building global-standard software tailored for the unique challenges of the African market."
+              description="Proudly based in Lagos. We tailor global AI standards to solve the unique logistical and operational hurdles of the African market."
             />
           </div>
-        </motion.section>
+        </section>
 
-        {/* 3. The Founding Story Section */}
-        {/* 🟢 Semantic Markup: Used <section> */}
-        <motion.section variants={itemVariants} className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">The HelplyAI Journey</h2>
-          <p className="max-w-4xl mx-auto text-lg text-gray-400">
-            HelplyAI was conceptualized after realizing the gap between
-            ambitious local businesses and the slow, outdated support systems
-            they were forced to use. Frustrated with endless hold music and
-            missed lead opportunities, our founders decided to build an
-            intelligent, integrated solution from the ground up right here in
-            Lagos. Since our start on September 30, 2025, we’ve been driven by
-            the idea that automation should be smart, seamless, and always
-            available.
+        {/* 3. The Journey Section */}
+        <motion.section 
+          variants={itemVariants} 
+          className="text-center max-w-4xl mx-auto py-16 border-t border-white/5"
+        >
+          <h2 className="text-4xl font-black mb-8 text-white">The HelplyAI Journey</h2>
+          <p className="text-xl text-gray-400 leading-relaxed mb-10">
+            HelplyAI was born from the gap between ambitious local businesses and outdated support infrastructure. We saw too many missed leads and too much hold music. Since <span className="text-white font-semibold">September 30, 2025</span>, we've been on a mission in Lagos to prove that automation can be both smart and seamless.
           </p>
+          <Link 
+            to="/signup" 
+            className="inline-flex items-center gap-2 text-fuchsia-400 font-bold text-lg group"
+          >
+            Join our journey 
+            <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+          </Link>
         </motion.section>
-
-       
-       
       </motion.div>
     </main>
   );

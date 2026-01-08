@@ -129,10 +129,10 @@ function AppContent() {
           {/* CHILD ROUTE 4: Renders AIRagPage when navigating to /dashboard/ai-rag */}
           <Route path="ai-rag" element={<AiRagPage />} />
 
-          {/* CHILD ROUTE 5: Renders TeamManagementPage  when navigating to /dashboard/team-management */}
+          {/* CHILD ROUTE 5: Renders TeamManagementPage when navigating to /dashboard/team-management */}
           <Route path="team" element={<TeamManagementPage />} />
 
-          {/* CHILD ROUTE 6: Renders FollowUpEnginePage  when navigating to /dashboard/followup */}
+          {/* CHILD ROUTE 6: Renders FollowUpEnginePage when navigating to /dashboard/followup */}
           <Route path="followup" element={<FollowUpEnginePage />} />
 
           {/* CHILD ROUTE 7: Renders IntegrationsPage when navigating to /dashboard/integrations*/}
@@ -141,7 +141,7 @@ function AppContent() {
           {/* CHILD ROUTE 8: Renders PaymentIntegrationsPage when navigating to /dashboard/payments*/}
           <Route path="payments" element={<PaymentIntegrationPage />} />
 
-          {/* CHILD ROUTE 9: Renders ApiKeysPage  when navigating to /dashboard/api-keys*/}
+          {/* CHILD ROUTE 9: Renders ApiKeysPage when navigating to /dashboard/api-keys*/}
           <Route path="api-keys" element={<ApiKeysPage />} />
 
           {/* CHILD ROUTE 10: Renders GeneralSettingsPage when navigating to /dashboard/settings*/}
