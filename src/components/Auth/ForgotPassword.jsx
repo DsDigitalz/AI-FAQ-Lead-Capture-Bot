@@ -95,7 +95,7 @@ export default function ForgotPassword() {
 
   return (
     <main className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-[#0A0027] text-white">
-      <Toaster position="top-right" />
+      {/* <Toaster position="top-right" /> */}
 
       {/* LEFT COLUMN: Reset Form */}
       <section className="flex items-center justify-center p-6 sm:p-12 lg:p-20">
@@ -108,7 +108,7 @@ export default function ForgotPassword() {
         >
           <header className="space-y-2">
             <h1 className="text-2xl font-bold tracking-tight">
-              Reset password
+              Forgot password
             </h1>
             <p className="text-gray-400 text-sm">
               Enter your email and we'll send you a link to reset your password.

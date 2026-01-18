@@ -3,6 +3,7 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
+import { getAuthErrorMessage } from "../../utils/authErrorHandler";
 import {
   Shield,
   Zap,
@@ -14,8 +15,9 @@ import {
   Github,
   Chrome,
   KeyRound,
+  RefreshCw,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -93,25 +95,30 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { handleSubmit } = methods;
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle, loading: authLoading } = useAuth();
 
   useEffect(() => window.scrollTo(0, 0), []);
 
   const onSubmit = async (data) => {
     setLoading(true);
-    const loadingToast = toast.loading("Signing you in...");
+    const loadingToast = toast.loading("Signing in...");
     try {
       const { error } = await signIn(data.workEmail, data.password);
       toast.dismiss(loadingToast);
-      if (error) toast.error(error.message);
-      else {
-        toast.success("Welcome back 👋");
-        navigate("/dashboard");
+      if (error) {
+        toast.error(getAuthErrorMessage(error));
+        return;
+      } else {
+        toast.success("Welcome back!");
+        // Redirect to intended location or dashboard
+        const from = location.state?.from?.pathname || "/dashboard";
+        navigate(from, { replace: true });
       }
     } catch {
       toast.dismiss(loadingToast);
-      toast.error("Sign in failed.");
+      toast.error("Sign in failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -122,13 +129,13 @@ export default function SignIn() {
     try {
       await signInWithGoogle();
     } catch {
-      toast.error("Google sign in failed.");
+      toast.error("Google sign in failed. Please try again.");
     }
   };
 
   return (
     <main className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-[#0A0027] text-white">
-      <Toaster position="top-right" />
+      {/* <Toaster position="top-right" /> */}
 
       {/* LEFT COLUMN: Authentication Form */}
       <section className="flex items-center justify-center p-6 sm:p-12 lg:p-20">
@@ -211,7 +218,14 @@ export default function SignIn() {
                     : "bg-fuchsia-600 hover:bg-fuchsia-500"
                 }`}
               >
-                {loading ? "Signing in..." : "Sign in"}
+                {loading ? (
+                  <>
+                    <RefreshCw className="animate-spin h-4 w-4" />
+                    <span>Signing in...</span>
+                  </>
+                ) : (
+                  <span>Sign In</span>
+                )}
               </motion.button>
             </form>
           </FormProvider>

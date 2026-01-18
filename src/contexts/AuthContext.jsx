@@ -1,248 +1,176 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 
-/**
- * AuthContext
- * Centralized authentication & tenant state
- */
-const AuthContext = createContext({});
+const AuthContext = createContext();
 
-/**
- * AuthProvider
- * Wraps the app and provides auth state
- */
 export const AuthProvider = ({ children }) => {
-  // Logged-in Supabase user
   const [user, setUser] = useState(null);
-
-  // Active tenant (organization)
-  const [tenant, setTenant] = useState(null);
-
-  // Global loading state (IMPORTANT for route guards)
+  // const [tenant, setTenant] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /**
-   * Initial session restore + auth change listener
-   */
+  // Initialize auth state
   useEffect(() => {
-    /**
-     * Restore user session on page refresh
-     */
-    const getInitialSession = async () => {
-      setLoading(true);
-
+    const initAuth = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
-      setUser(session?.user ?? null);
-
-      // Fetch profile & tenant only if user exists
       if (session?.user) {
-        await fetchUserProfile(session.user.id);
+        setUser(session.user);
       } else {
-        setTenant(null);
+        setUser(null);
       }
 
       setLoading(false);
     };
 
-    getInitialSession();
+    initAuth();
 
-    /**
-     * Listen to auth events (login, logout, token refresh)
-     */
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setLoading(true);
-
-      setUser(session?.user ?? null);
-
-      if (session?.user) {
-        // Check if user has a profile, if not, set them up
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("user_id")
-          .eq("user_id", session.user.id)
-          .single();
-
-        if (!profile) {
-          // New user - set up their profile and tenant
-          try {
-            await supabase.rpc("handle_new_user_setup", {
-              user_id: session.user.id,
-              user_email: session.user.email,
-              user_metadata: session.user.user_metadata,
-            });
-          } catch (setupError) {
-            console.error("Error setting up user profile:", setupError);
-          }
+    // Listen for auth changes
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (session?.user) {
+          setUser(session.user);
+        } else {
+          setUser(null);
         }
+      },
+    );
 
-        await fetchUserProfile(session.user.id);
-      } else {
-        setTenant(null);
-      }
-
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      listener.subscription.unsubscribe();
+    };
   }, []);
 
-  /**
-   * Fetch user's profile and tenant info
-   * This respects RLS automatically
-   */
-  const fetchUserProfile = async (userId) => {
-    try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select(
-          `
-          id,
-          user_id,
-          full_name,
-          avatar_url,
-          tenant_users (
-            role,
-            tenants (
-              id,
-              name,
-              domain,
-              subdomain
-            )
-          )
-        `
-        )
-        .eq("user_id", userId)
-        .single();
+  // SIGN IN (ONLY existing users)
 
-      if (error) {
-        console.error("Failed to fetch profile:", error);
-        setTenant(null);
-        return;
-      }
+  const signIn = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      /**
-       * Resolve tenant
-       * (Currently first tenant only — scalable later)
-       */
-      if (data?.tenant_users?.length > 0) {
-        setTenant(data.tenant_users[0].tenants);
-      } else {
-        console.warn("User has no tenant assigned yet");
-        setTenant(null);
-      }
-    } catch (err) {
-      console.error("Unexpected profile fetch error:", err);
-      setTenant(null);
+    // ❌ Invalid credentials / user not found
+    if (error) {
+      return {
+        data: null,
+        error: {
+          code: error.status,
+          message: error.message,
+        },
+      };
     }
+
+    // ❌ Email not confirmed
+    if (!data.user.email_confirmed_at) {
+      await supabase.auth.signOut();
+      return {
+        data: null,
+        error: {
+          code: "EMAIL_NOT_CONFIRMED",
+          message: "Please confirm your email before signing in.",
+        },
+      };
+    }
+
+    setUser(data.user);
+    return { data, error: null };
   };
 
-  /**
-   * Email + password signup
-   */
+  // SIGN UP
   const signUp = async (email, password, fullName) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: {
-          full_name: fullName,
-        },
+        data: { full_name: fullName },
       },
     });
 
-    // If signup successful and user exists, set up their profile/tenant
-    if (!error && data.user) {
-      try {
-        await supabase.rpc("handle_new_user_setup", {
-          user_id: data.user.id,
-          user_email: data.user.email,
-          user_metadata: data.user.user_metadata,
-        });
-      } catch (setupError) {
-        console.error("Error setting up user profile:", setupError);
-        // Don't fail the signup if setup fails, but log it
-      }
+    if (error) {
+      return {
+        error: {
+          code: error.status,
+          message: error.message,
+        },
+      };
     }
 
-    return { data, error };
+    /**
+     * 🚨 CRITICAL CHECK
+     * If identities array is empty,
+     * the email already exists
+     */
+    if (
+      data?.user &&
+      Array.isArray(data.user.identities) &&
+      data.user.identities.length === 0
+    ) {
+      return {
+        error: {
+          message: "Email already exists. Please sign in instead.",
+        },
+      };
+    }
+
+    return { error: null };
   };
 
-  /**
-   * Email + password login
-   */
-  const signIn = async (email, password) => {
-    return await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+  //RESET PASSWORD
+  const resetPassword = async (email) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        return { error };
+      }
+
+      return { error: null };
+    } catch (err) {
+      console.error("Reset password failed:", err);
+      return { error: { message: "Network error. Please try again." } };
+    }
   };
 
-  /**
-   * Google OAuth login
-   */
+  // SIGN IN WITH GOOGLE
   const signInWithGoogle = async () => {
-    return await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/dashboard`,
       },
     });
-  };
 
-  /**
-   * Logout
-   */
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-
-    if (!error) {
-      setUser(null);
-      setTenant(null);
+    if (error) {
+      throw error;
     }
 
-    return { error };
+    return data;
   };
 
-  /**
-   * Password reset
-   */
-  const resetPassword = async (email) => {
-    return await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
+  // SIGN OUT
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
   };
 
-  /**
-   * Context value exposed to the app
-   */
-  const value = {
-    user, // Supabase auth user
-    tenant, // Active tenant (organization)
-    loading, // Global auth loading state
-    signUp,
-    signIn,
-    signInWithGoogle,
-    signOut,
-    resetPassword,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        signIn,
+        signUp,
+        resetPassword,
+        signInWithGoogle,
+        signOut,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-/**
- * Custom hook for consuming auth context
- */
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);

@@ -4,7 +4,7 @@ import GeneralSettings from "../components/Dashboard/GeneralSettings";
 export default function GeneralSettingsPage() {
   return (
     <main>
-      <GeneralSettings />>
+      <GeneralSettings />
     </main>
   );
 }

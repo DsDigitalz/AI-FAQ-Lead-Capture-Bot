@@ -6,7 +6,7 @@ import PricingSection from "./components/PricingSection";
 import FAQSection from "./components/FAQSection";
 import FinalCTASection from "./components/FinalCTASection";
 import LandingPage from "./pages/LandingPage";
-import Getstarted from "./pages/GetStarted";
+import GetStartedPage from "./pages/GetStartedPage";
 import SignInPage from "./pages/SignInPage";
 import PageNotFound from "./pages/PageNotFound";
 import AboutPage from "./pages/AboutPage";
@@ -21,7 +21,7 @@ import { Toaster } from "react-hot-toast";
 import DashboardLayout from "./components/Dashboard/DashboardLayout";
 import DashboardOverview from "./components/Dashboard/DashboardOverview";
 import TeamInboxPage from "./pages/TeamInboxPage";
-import GetStartedPage from "./components/Auth/GetStartedPage";
+import AuthCallback from "./components/Auth/AuthCallback";
 import DashboardLayoutPage from "./pages/DashboardLayoutPage";
 import DashboardOverviewPage from "./pages/DashboardOverviewPage";
 import ChannelsPage from "./pages/ChannelsPage";
@@ -31,11 +31,15 @@ import FollowUpEnginePage from "./pages/FollowUpEnginePage";
 import IntegrationsPage from "./pages/IntegrationsPage";
 import PaymentIntegrationPage from "./pages/PaymentIntegrationPage";
 import ApiKeysPage from "./pages/ApiKeysPage";
+import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import GeneralSettingsPage from "./pages/GeneralSettingsPage";
 
 // --- NEW LOADER IMPORTS ---
 import { LoaderProvider, useLoader } from "./components/Loader/LoaderContext";
 import GlobalLoader from "./components/Loader/GlobalLoader";
+
+import ResetPassword from "./components/Auth/ResetPassword";
+import { motion, AnimatePresence } from "framer-motion";
 
 // --------------------------
 
@@ -47,51 +51,64 @@ function AppContent() {
     <div className="min-h-screen">
       {/* Renders the global loader over the entire screen */}
       <GlobalLoader isLoading={isLoading} />
-
       {/* ✅ Global styled & animated toaster */}
       <Toaster
         position="top-right"
         reverseOrder={false}
-        gutter={12} // spacing between toasts
+        gutter={12}
         toastOptions={{
-          duration: 3500,
+          duration: 4000,
           style: {
-            background: "#1a0035", // deep dark violet background
-            color: "#fff",
-            border: "1px solid #a21caf", // fuchsia accent
-            padding: "12px 16px",
+            background: "#1b0136",
+            color: "#ffffff",
+            border: "1px solid #8b5cf6",
+            padding: "14px 20px",
             borderRadius: "12px",
             fontSize: "0.95rem",
-            boxShadow: "0 4px 12px rgba(162, 28, 175, 0.3)",
+            fontWeight: 500,
+            boxShadow: "0 8px 20px rgba(0,0,0,0.3)",
+            backdropFilter: "blur(4px)",
+
+            maxWidth: "10px",
+            width: "fit-content",
+            wordBreak: "break-word",
+            lineHeight: "1.4",
           },
           success: {
-            iconTheme: {
-              primary: "#d946ef", // fuchsia
-              secondary: "#1a0035",
-            },
+            iconTheme: { primary: "#d946ef", secondary: "#1b0136" },
           },
           error: {
-            iconTheme: {
-              primary: "#fb7185", // soft red
-              secondary: "#1a0035",
-            },
+            iconTheme: { primary: "#f87171", secondary: "#1b0136" },
           },
-        }}
-        containerStyle={{
-          top: 20,
-          right: 20,
+          loading: {
+            iconTheme: { primary: "#facc15", secondary: "#1b0136" },
+          },
         }}
       >
         {(t) => (
-          <div
-            style={{
-              transform: t.visible ? "translateY(0)" : "translateY(-20px)",
-              opacity: t.visible ? 1 : 0,
-              transition: "all 0.3s ease-out",
-            }}
-          >
-            {t.message}
-          </div>
+          <AnimatePresence>
+            {t.visible && (
+              <motion.div
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                style={{
+                  background: t.style.background,
+                  color: t.style.color,
+                  border: t.style.border,
+                  padding: t.style.padding,
+                  borderRadius: t.style.borderRadius,
+                  fontSize: t.style.fontSize,
+                  fontWeight: t.style.fontWeight,
+                  boxShadow: t.style.boxShadow,
+                  backdropFilter: t.style.backdropFilter,
+                }}
+              >
+                {t.message}
+              </motion.div>
+            )}
+          </AnimatePresence>
         )}
       </Toaster>
 
@@ -113,10 +130,19 @@ function AppContent() {
         {/* Auth Pages */}
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<GetStartedPage />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* PARENT ROUTE: Renders the persistent UI (Sidebar & Header) */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
           {/* CHILD ROUTE 1: Renders the default content when navigating to /dashboard */}
           <Route index element={<DashboardOverviewPage />} />
 

@@ -22,18 +22,13 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import Logo from "../ProjectLogo.jsx/Logo";
+import ShieldLogo from "../ProjectLogo.jsx/HideLogo";
+import { motion, AnimatePresence } from "framer-motion";
+import HideLogo from "../ProjectLogo.jsx/HideLogo";
 
 // --- HelplyAI Logo Component ---
-const HelplyAILogo = ({ className = "w-8 h-8" }) => (
-  <div className={`relative ${className}`}>
-    <Shield className="w-full h-full text-white" strokeWidth={1.5} />
-    <Zap
-      className="absolute top-1/2 left-1/2 w-3 h-3 text-fuchsia-400 fill-fuchsia-400 transform -translate-x-1/2 -translate-y-1/2"
-      strokeWidth={0}
-    />
-  </div>
-);
-
+<Logo />;
 // --- Welcome Modal Component ---
 const WelcomeModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
@@ -122,15 +117,32 @@ const Sidebar = ({ isOpen, closeSidebar, isCollapsed, toggleCollapse }) => {
         ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
     >
       {/* Logo */}
-      <div className="flex items-center justify-between px-4 py-6">
-        <div className="flex items-center gap-3">
-          <HelplyAILogo className="w-8 h-8 flex-shrink-0" />
-          {!isCollapsed && (
-            <span className="text-xl font-black tracking-tighter text-white">
-              Helply<span className="text-fuchsia-500 italic">AI</span>
-            </span>
+      <div className="flex items-center justify-center px-4 py-6 h-[72px]">
+        <AnimatePresence mode="wait">
+          {isCollapsed ? (
+            <motion.div
+              key="shield-logo"
+              className="flex items-center justify-center w-full"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
+              <HideLogo className="w-8 h-8" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="full-logo"
+              className="flex items-center justify-start w-full"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+            >
+              <Logo className="w-8 h-8" />
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
 
       {/* Navigation */}
@@ -255,7 +267,7 @@ export default function DashboardLayout() {
   }, []);
 
   return (
-    <section className="min-h-screen flex bg-[#0A0027]">
+    <section className="min-h-screen flex bg-[#060017]">
       <WelcomeModal
         isOpen={showWelcome}
         onClose={() => setShowWelcome(false)}

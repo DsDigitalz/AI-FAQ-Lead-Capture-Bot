@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Shield, Zap } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import Logo from "./Logo";
+import Logo from "./ProjectLogo.jsx/Logo";
 
 // --- Framer Motion Animation Setup ---
 const headerVariants = {
@@ -44,7 +44,7 @@ export default function LegalSubHeader() {
           setIsHeaderVisible(!entry.isIntersecting);
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     observer.observe(targetElement);

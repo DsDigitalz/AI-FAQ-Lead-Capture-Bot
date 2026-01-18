@@ -3,6 +3,7 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
+import { getAuthErrorMessage } from "../../utils/authErrorHandler.js";
 import {
   Shield,
   Zap,
@@ -14,10 +15,12 @@ import {
   Chrome,
   KeyRound,
   ArrowRight,
+  RefreshCw,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../../contexts/AuthContext";
+import HideLogo from "../ProjectLogo.jsx/HideLogo.jsx";
 
 // -------------------- Zod Validation Schema --------------------
 const passwordSchema = z
@@ -125,7 +128,7 @@ const PasswordField = ({ name, label, placeholder }) => {
 };
 
 // -------------------- Main Component --------------------
-export default function GetStartedPage() {
+export default function GetStarted() {
   const methods = useForm({
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
@@ -137,7 +140,6 @@ export default function GetStartedPage() {
   });
 
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const { handleSubmit } = methods;
   const { signUp, signInWithGoogle } = useAuth();
 
@@ -149,10 +151,15 @@ export default function GetStartedPage() {
     try {
       const { error } = await signUp(data.email, data.password, data.fullName);
       toast.dismiss(loadingToast);
-      if (error) toast.error(error.message);
-      else {
-        toast.success("Account created! Please check your email.");
-        navigate("/signin");
+      if (error) {
+        toast.error(error.message);
+        return;
+      } else {
+        toast.success(
+          "Account created! Please check your email to confirm your account before signing in.",
+        );
+        // Don't navigate immediately - let user see the success message
+        // They can manually go to signin when ready
       }
     } catch {
       toast.dismiss(loadingToast);
@@ -167,13 +174,13 @@ export default function GetStartedPage() {
     try {
       await signInWithGoogle();
     } catch {
-      toast.error("Google sign in failed.");
+      toast.error("Google sign in failed. Please try again.");
     }
   };
 
   return (
     <main className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-[#0A0027] text-white">
-      <Toaster position="top-right" />
+      {/* <Toaster position="top-right" /> */}
 
       {/* LEFT COLUMN: Form Section */}
       <section className="flex items-center justify-center p-6 sm:p-12 lg:p-20">
@@ -240,17 +247,26 @@ export default function GetStartedPage() {
                 />
               </div>
 
-              <button
+              <motion.button
+                variants={scrollFadeVariants}
                 disabled={loading}
-                className={`w-full py-3 mt-4 rounded-md font-semibold transition-all flex items-center justify-center gap-2 ${
+                className={`w-full py-2.5 rounded-md font-semibold transition-all flex items-center justify-center gap-2 ${
                   loading
                     ? "bg-gray-700"
-                    : "bg-fuchsia-600 hover:bg-fuchsia-500 shadow-lg shadow-fuchsia-500/20"
+                    : "bg-fuchsia-600 hover:bg-fuchsia-500"
                 }`}
               >
-                {loading ? "Creating..." : "Sign up"}
-                {!loading && <ArrowRight size={18} />}
-              </button>
+                {loading ? (
+                  <>
+                    <RefreshCw className="animate-spin h-4 w-4" />
+                    <span>Creating...</span>
+                  </>
+                ) : (
+                  <span>Sign Up</span>
+                )}
+                {/* {!loading && <ArrowRight size={18} />} */}
+              </motion.button>
+              <HideLogo/>
             </form>
           </FormProvider>
 
@@ -282,7 +298,13 @@ export default function GetStartedPage() {
             "Your business never sleeps. Neither does HelplyAI."
           </blockquote>
           <div className="text-fuchsia-500 opacity-20 ">
-            <svg width="45" height="36" viewBox="0 0 45 36" fill="currentColor" className="flex rotate-180 ">
+            <svg
+              width="45"
+              height="36"
+              viewBox="0 0 45 36"
+              fill="currentColor"
+              className="flex rotate-180 "
+            >
               <path d="M13.415 35.5L0 22.085V0H19.297V22.085H9.648L13.415 35.5ZM38.415 35.5L25 22.085V0H44.297V22.085H34.648L38.415 35.5Z" />
             </svg>
           </div>
