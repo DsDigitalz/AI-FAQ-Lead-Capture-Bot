@@ -127,9 +127,9 @@ export default function GDPRCompliance() {
                 title: "Audit Logging",
                 desc: "Every access attempt is logged and monitored for suspicious activity.",
               },
-            ].map((item, idx) => (
+            ].map((item) => (
               <li
-                key={idx}
+                key={item.title}
                 className="flex gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors"
               >
                 <CheckCircle2

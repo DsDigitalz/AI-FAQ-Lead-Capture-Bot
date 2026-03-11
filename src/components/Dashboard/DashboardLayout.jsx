@@ -23,9 +23,10 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Logo from "../ProjectLogo.jsx/Logo";
-import ShieldLogo from "../ProjectLogo.jsx/HideLogo";
+
 import { motion, AnimatePresence } from "framer-motion";
-import HideLogo from "../ProjectLogo.jsx/HideLogo";
+import Logo1 from "../ProjectLogo.jsx/Logo1";
+
 
 // --- HelplyAI Logo Component ---
 <Logo />;
@@ -128,7 +129,7 @@ const Sidebar = ({ isOpen, closeSidebar, isCollapsed, toggleCollapse }) => {
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
             >
-              <HideLogo className="w-8 h-8" />
+              <Logo1 className="w-8 h-8" />
             </motion.div>
           ) : (
             <motion.div
@@ -148,7 +149,7 @@ const Sidebar = ({ isOpen, closeSidebar, isCollapsed, toggleCollapse }) => {
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-2 space-y-6 scrollbar-hide">
         {navItems.map((group, gIdx) => (
-          <div key={gIdx}>
+          <div key={group.heading || `group-${gIdx}`}>
             {!isCollapsed && group.heading && (
               <p className="px-4 mb-3 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
                 {group.heading}
