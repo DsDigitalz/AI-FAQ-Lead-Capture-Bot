@@ -128,9 +128,9 @@ export default function SubscriptionCheckout({ plan = "Pro Automation" }) {
               <span className="text-lg font-normal text-gray-400">/mo</span>
             </p>
             <ul className="space-y-2">
-              {currentPlan.features.map((feature, index) => (
+              {currentPlan.features.map((feature) => (
                 <li
-                  key={index}
+                  key={feature}
                   className="flex items-center text-gray-300 text-sm"
                 >
                   <CheckCircle
