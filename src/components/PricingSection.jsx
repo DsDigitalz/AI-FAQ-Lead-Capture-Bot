@@ -124,8 +124,8 @@ const PricingCard = ({ plan }) => (
     </div>
 
     <ul className="space-y-4 flex-grow">
-      {plan.features.map((feature) => (
-        <li key={feature} className="flex items-start gap-3">
+      {plan.features.map((feature, idx) => (
+        <li key={idx} className="flex items-start gap-3">
           <div
             className={`mt-1 p-0.5 rounded-full ${
               plan.isFeatured ? "bg-fuchsia-500" : "bg-green-500"
@@ -191,8 +191,8 @@ export default function PricingSection() {
         </header>
 
         <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-          {pricingData.map((plan) => (
-            <PricingCard key={plan.name} plan={plan} />
+          {pricingData.map((plan, index) => (
+            <PricingCard key={index} plan={plan} />
           ))}
         </main>
       </motion.div>

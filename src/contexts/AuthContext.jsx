@@ -42,41 +42,6 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  // SIGN IN (ONLY existing users)
-
-  const signIn = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    // ❌ Invalid credentials / user not found
-    if (error) {
-      return {
-        data: null,
-        error: {
-          code: error.status,
-          message: error.message,
-        },
-      };
-    }
-
-    // ❌ Email not confirmed
-    if (!data.user.email_confirmed_at) {
-      await supabase.auth.signOut();
-      return {
-        data: null,
-        error: {
-          code: "EMAIL_NOT_CONFIRMED",
-          message: "Please confirm your email before signing in.",
-        },
-      };
-    }
-
-    setUser(data.user);
-    return { data, error: null };
-  };
-
   // SIGN UP
   const signUp = async (email, password, fullName) => {
     const { data, error } = await supabase.auth.signUp({
@@ -114,6 +79,41 @@ export const AuthProvider = ({ children }) => {
     }
 
     return { error: null };
+  };
+
+  // SIGN IN (ONLY existing users)
+
+  const signIn = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    // ❌ Invalid credentials / user not found
+    if (error) {
+      return {
+        data: null,
+        error: {
+          code: error.status,
+          message: error.message,
+        },
+      };
+    }
+
+    // ❌ Email not confirmed
+    if (!data.user.email_confirmed_at) {
+      await supabase.auth.signOut();
+      return {
+        data: null,
+        error: {
+          code: "EMAIL_NOT_CONFIRMED",
+          message: "Please confirm your email before signing in.",
+        },
+      };
+    }
+
+    setUser(data.user);
+    return { data, error: null };
   };
 
   //RESET PASSWORD

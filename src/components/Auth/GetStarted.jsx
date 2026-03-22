@@ -20,7 +20,7 @@ import {
 import { Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../../contexts/AuthContext";
-import HideLogo from "../ProjectLogo.jsx/HideLogo.jsx";
+
 
 // -------------------- Zod Validation Schema --------------------
 const passwordSchema = z
@@ -266,7 +266,7 @@ export default function GetStarted() {
                 )}
                 {/* {!loading && <ArrowRight size={18} />} */}
               </motion.button>
-              <HideLogo/>
+             
             </form>
           </FormProvider>
 

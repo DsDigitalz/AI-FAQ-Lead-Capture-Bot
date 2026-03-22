@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import Logo from "./ProjectLogo.jsx/Logo";
+import HomeLogo from "./ProjectLogo.jsx/HomeLogo";
 
 // --- Animation Variants ---
 const headerVariants = {
@@ -63,7 +63,7 @@ export default function Header() {
     >
       {/* 🟢 Semantic Markup: <nav> container */}
       <nav
-        className={`max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl transition-all duration-500 ${
+        className={`max-w-7xl mx-auto flex items-center justify-between lg:px-6 lg:py-3 rounded-2xl transition-all duration-500 ${
           scrolled
             ? "bg-[#140036]/80 backdrop-blur-xl border border-white/10 shadow-2xl"
             : "bg-transparent border border-transparent"
@@ -71,7 +71,7 @@ export default function Header() {
       >
         {/* Logo */}
         <div className="flex-shrink-0">
-          <Logo />
+          <HomeLogo />
         </div>
 
         {/* Desktop Links */}

@@ -66,13 +66,21 @@ Check that these tables exist:
 - `channels`
 - `analytics`
 
-### 4. Row Level Security (RLS)
+### 4. Enable Realtime
 
-The schema automatically enables RLS on all tables. The policies ensure:
+#### Enable Realtime on Tables
 
-- Users can only access data from their tenants
-- Admins have elevated permissions
-- Profile data is properly isolated
+1. Go to **Database > Replication** in Supabase Dashboard
+2. Ensure the `supabase_realtime` publication exists
+3. Go to **SQL Editor** and run the realtime enable commands from `database/schema.sql`:
+   ```sql
+   ALTER PUBLICATION supabase_realtime ADD TABLE conversations;
+   ALTER PUBLICATION supabase_realtime ADD TABLE messages;
+   ```
+
+#### Verify Realtime is Enabled
+
+Check that the tables `conversations` and `messages` are added to the `supabase_realtime` publication.
 
 ### 5. Testing the Setup
 
@@ -208,7 +216,7 @@ const { data, error } = await supabase.auth.signInWithOAuth({
 // Password reset
 const { error } = await supabase.auth.resetPasswordForEmail(
   "user@example.com",
-  { redirectTo: "/reset-password" }
+  { redirectTo: "/reset-password" },
 );
 
 // Sign out

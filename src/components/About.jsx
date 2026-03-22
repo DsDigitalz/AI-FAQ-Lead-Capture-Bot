@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Shield, Zap, Target, Users, Globe, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import Logo from "./ProjectLogo.jsx/Logo";
+import Logo1 from "./ProjectLogo.jsx/Logo1";
+
 
 // --- Framer Motion Animation Setup ---
 const containerVariants = {
@@ -16,22 +19,14 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 40 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
-const HelplyAILogo = ({ className = "w-12 h-12" }) => (
-  <div className={`relative ${className}`}>
-    <Shield className="w-full h-full text-white" strokeWidth={1.5} />
-    <Zap
-      className="absolute top-1/2 left-1/2 w-4 h-4 text-fuchsia-400 fill-fuchsia-400 transform -translate-x-1/2 -translate-y-1/2"
-      strokeWidth={0}
-    />
-  </div>
-);
+<Logo />;
 
 const ValueCard = ({ icon: Icon, title, description }) => (
   <motion.article
@@ -66,17 +61,28 @@ export default function About() {
       >
         {/* 🟢 Semantic Markup: Page Header */}
         <header className="text-center mb-24">
-          <motion.div variants={itemVariants} className="flex justify-center mb-8">
+          <motion.div
+            variants={itemVariants}
+            className="flex justify-center mb-8"
+          >
             <Link to="/" className="hover:scale-110 transition-transform">
-              <HelplyAILogo />
+             <Logo1/>
             </Link>
           </motion.div>
-          <motion.p variants={itemVariants} className="text-fuchsia-400 font-bold uppercase tracking-[0.2em] text-xs mb-4">
+          <motion.p
+            variants={itemVariants}
+            className="text-fuchsia-400 font-bold uppercase tracking-[0.2em] text-xs mb-4"
+          >
             Our Mission & DNA
           </motion.p>
-          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-8">
+          <motion.h1
+            variants={itemVariants}
+            className="text-5xl md:text-7xl font-black leading-tight tracking-tighter mb-8"
+          >
             Building the Future of <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">Customer Support.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">
+              Customer Support.
+            </span>
           </motion.h1>
         </header>
 
@@ -91,20 +97,30 @@ export default function About() {
           <div className="relative z-10 max-w-3xl">
             <div className="flex items-center gap-3 mb-6 text-fuchsia-400">
               <Target size={28} />
-              <h2 className="text-2xl font-bold uppercase tracking-widest">The Mission</h2>
+              <h2 className="text-2xl font-bold uppercase tracking-widest">
+                The Mission
+              </h2>
             </div>
             <p className="text-2xl md:text-3xl text-gray-200 leading-snug font-medium mb-6">
-              HelplyAI was founded on the belief that <span className="text-white">Nigerian businesses</span> deserve world-class tools to scale without compromising human connection.
+              HelplyAI was founded on the belief that{" "}
+              <span className="text-white">Nigerian businesses</span> deserve
+              world-class tools to scale without compromising human connection.
             </p>
             <p className="text-lg text-gray-400 leading-relaxed">
-              We provide an AI-Powered SaaS platform that transforms traditional support into 24/7 revenue-generating engines. By automating lead qualification and delivering lightning-fast resolutions, we empower companies to grow efficiently and sustainably.
+              We provide an AI-Powered SaaS platform that transforms traditional
+              support into 24/7 revenue-generating engines. By automating lead
+              qualification and delivering lightning-fast resolutions, we
+              empower companies to grow efficiently and sustainably.
             </p>
           </div>
         </motion.section>
 
         {/* 2. Values Section */}
         <section className="mb-32">
-          <motion.h2 variants={itemVariants} className="text-3xl font-bold text-center mb-16 tracking-tight">
+          <motion.h2
+            variants={itemVariants}
+            className="text-3xl font-bold text-center mb-16 tracking-tight"
+          >
             Our Core Values
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -127,20 +143,30 @@ export default function About() {
         </section>
 
         {/* 3. The Journey Section */}
-        <motion.section 
-          variants={itemVariants} 
+        <motion.section
+          variants={itemVariants}
           className="text-center max-w-4xl mx-auto py-16 border-t border-white/5"
         >
-          <h2 className="text-4xl font-black mb-8 text-white">The HelplyAI Journey</h2>
+          <h2 className="text-4xl font-black mb-8 text-white">
+            The HelplyAI Journey
+          </h2>
           <p className="text-xl text-gray-400 leading-relaxed mb-10">
-            HelplyAI was born from the gap between ambitious local businesses and outdated support infrastructure. We saw too many missed leads and too much hold music. Since <span className="text-white font-semibold">September 30, 2025</span>, we've been on a mission in Lagos to prove that automation can be both smart and seamless.
+            HelplyAI was born from the gap between ambitious local businesses
+            and outdated support infrastructure. We saw too many missed leads
+            and too much hold music. Since{" "}
+            <span className="text-white font-semibold">September 30, 2025</span>
+            , we've been on a mission in Lagos to prove that automation can be
+            both smart and seamless.
           </p>
-          <Link 
-            to="/signup" 
+          <Link
+            to="/signup"
             className="inline-flex items-center gap-2 text-fuchsia-400 font-bold text-lg group"
           >
-            Join our journey 
-            <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+            Join our journey
+            <ArrowRight
+              size={20}
+              className="group-hover:translate-x-2 transition-transform"
+            />
           </Link>
         </motion.section>
       </motion.div>

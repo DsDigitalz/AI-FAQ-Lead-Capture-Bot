@@ -40,12 +40,14 @@ import GlobalLoader from "./components/Loader/GlobalLoader";
 
 import ResetPassword from "./components/Auth/ResetPassword";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNetworkStatus } from "./components/useNetworkStatus";
 
 // --------------------------
 
 // Wrapper component to consume the LoaderContext
 function AppContent() {
   const { isLoading } = useLoader();
+  useNetworkStatus();
 
   return (
     <div className="min-h-screen">
@@ -89,6 +91,7 @@ function AppContent() {
           <AnimatePresence>
             {t.visible && (
               <motion.div
+                key={t.id}
                 initial={{ opacity: 0, y: -20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -20, scale: 0.95 }}

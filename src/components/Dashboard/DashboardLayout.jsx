@@ -129,7 +129,7 @@ const Sidebar = ({ isOpen, closeSidebar, isCollapsed, toggleCollapse }) => {
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
             >
-              <Logo1 className="w-8 h-8" />
+              <Logo1/>
             </motion.div>
           ) : (
             <motion.div
@@ -140,7 +140,7 @@ const Sidebar = ({ isOpen, closeSidebar, isCollapsed, toggleCollapse }) => {
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
             >
-              <Logo className="w-8 h-8" />
+              <Logo/>
             </motion.div>
           )}
         </AnimatePresence>
@@ -149,7 +149,7 @@ const Sidebar = ({ isOpen, closeSidebar, isCollapsed, toggleCollapse }) => {
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-2 space-y-6 scrollbar-hide">
         {navItems.map((group, gIdx) => (
-          <div key={group.heading || `group-${gIdx}`}>
+          <div key={gIdx}>
             {!isCollapsed && group.heading && (
               <p className="px-4 mb-3 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
                 {group.heading}

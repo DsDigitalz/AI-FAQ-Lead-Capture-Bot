@@ -127,9 +127,9 @@ export default function FeaturesSection() {
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featureData.map((feature) => (
+          {featureData.map((feature, index) => (
             <motion.article
-              key={feature.title}
+              key={index}
               variants={itemVariants}
               whileHover={{ y: -8 }}
               className="group relative bg-[#140036]/50 backdrop-blur-sm p-8 rounded-2xl border border-[#210045] hover:border-fuchsia-500/30 transition-all duration-300"

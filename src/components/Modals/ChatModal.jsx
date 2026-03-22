@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // 🔑 MODIFIED: Import motion for the scroll effect personalization
 import { motion } from "framer-motion";
 import { X, Send, Shield, Zap } from "lucide-react";
 import { Link } from "react-router";
+import { supabase } from "../../utils/supabase";
 
 // Animation Variants (using combination of fade-in and slide-in)
 const modalVariants = {
@@ -34,8 +35,8 @@ const modalVariants = {
 };
 
 // Simple Chat Bubble Component
-const ChatBubble = ({ message, sender }) => {
-  const isBot = sender === "bot";
+const ChatBubble = ({ message }) => {
+  const isBot = message.sender_type === "bot";
   return (
     <div className={`flex ${isBot ? "justify-start" : "justify-end"} mb-4`}>
       <div
@@ -45,7 +46,7 @@ const ChatBubble = ({ message, sender }) => {
             : "bg-fuchsia-600 text-white rounded-tr-none"
         }`}
       >
-        {message}
+        {message.content}
       </div>
     </div>
   );
@@ -64,45 +65,149 @@ const HelplyAILogo = ({ className = "w-8 h-8" }) => (
 
 // 🟢 Semantic Markup: <section> is appropriate for a primary content container like a modal
 export default function ChatModal({ isOpen, onClose }) {
-  if (!isOpen) return null;
-
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      message:
-        "Hi there! I'm here to help answer your questions instantly. What would you like to know?",
-      sender: "bot",
-    },
-    { id: 2, message: "How does your service work?", sender: "user" },
-    {
-      id: 3,
-      message:
-        "Our service is a B2B SaaS platform that integrates with your website to provide 24/7 support and intelligently qualify leads.",
-      sender: "bot",
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
+  const [conversation, setConversation] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSend = () => {
-    if (input.trim() !== "") {
-      const newMessage = { id: Date.now(), message: input, sender: "user" };
-      setMessages([...messages, newMessage]);
-      setInput("");
+  // For demo, use a fixed tenant_id. In production, this should be dynamic
+  const tenantId = "550e8400-e29b-41d4-a716-446655440000"; // Example UUID
 
-      // Simulate Bot Response (simplified)
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: Date.now() + 1,
-            message:
-              "I've noted your question! Is there anything else I can help with?",
-            sender: "bot",
-          },
-        ]);
+  // Create or get conversation
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const initializeConversation = async () => {
+      // For demo, create a new conversation each time. In production, use session storage or user ID
+      const customerId = `customer_${Date.now()}`;
+
+      const { data, error } = await supabase
+        .from("conversations")
+        .insert({
+          tenant_id: tenantId,
+          customer_id: customerId,
+          status: "open",
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Error creating conversation:", error);
+        return;
+      }
+
+      setConversation(data);
+    };
+
+    initializeConversation();
+  }, [isOpen]);
+
+  // Subscribe to conversation changes
+  useEffect(() => {
+    if (!conversation) return;
+
+    const channel = supabase
+      .channel(`conversation_${conversation.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "conversations",
+          filter: `id=eq.${conversation.id}`,
+        },
+        (payload) => {
+          setConversation(payload.new);
+        },
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `conversation_id=eq.${conversation.id}`,
+        },
+        (payload) => {
+          setMessages((prev) => [...prev, payload.new]);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [conversation]);
+
+  // Fetch existing messages
+  useEffect(() => {
+    if (!conversation) return;
+
+    const fetchMessages = async () => {
+      const { data, error } = await supabase
+        .from("messages")
+        .select("*")
+        .eq("conversation_id", conversation.id)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching messages:", error);
+        return;
+      }
+
+      setMessages(data);
+    };
+
+    fetchMessages();
+  }, [conversation]);
+
+  const handleSend = async () => {
+    if (input.trim() === "" || !conversation) return;
+
+    setLoading(true);
+
+    // Add user message
+    const { error: msgError } = await supabase.from("messages").insert({
+      conversation_id: conversation.id,
+      sender_type: "user",
+      content: input,
+    });
+
+    if (msgError) {
+      console.error("Error sending message:", msgError);
+      setLoading(false);
+      return;
+    }
+
+    setInput("");
+
+    // Check conversation status
+    if (conversation.status === "human") {
+      // Send to realtime channel for agent
+      // For now, just add a placeholder response
+      setTimeout(async () => {
+        await supabase.from("messages").insert({
+          conversation_id: conversation.id,
+          sender_type: "agent",
+          sender_id: conversation.assigned_agent_id,
+          content: "This is a human agent response.",
+        });
+      }, 1000);
+    } else {
+      // Send to AI (placeholder)
+      setTimeout(async () => {
+        await supabase.from("messages").insert({
+          conversation_id: conversation.id,
+          sender_type: "bot",
+          content: "This is an AI response.",
+        });
       }, 1000);
     }
+
+    setLoading(false);
   };
+
+  if (!isOpen) return null;
 
   return (
     // 🟢 Semantic Markup: Use a div role="dialog" for accessibility (Aria)
@@ -143,15 +248,14 @@ export default function ChatModal({ isOpen, onClose }) {
 
         {/* Chat Body */}
         <main className="flex-grow  p-4 overflow-y-auto custom-scrollbar">
-          {messages.map((msg) => (
-            // 🔑 PERSONALIZATION: Applying Framer Motion animation to each message (scroll effect)
+          {messages.map((msg, index) => (
             <motion.div
-              key={msg.id}
-              initial={{ opacity: 0, x: msg.sender === "user" ? 50 : -50 }}
+              key={msg.id ?? index}
+              initial={{ opacity: 0, x: msg.sender_type === "user" ? 50 : -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <ChatBubble message={msg.message} sender={msg.sender} />
+              <ChatBubble message={msg} />
             </motion.div>
           ))}
         </main>
@@ -163,14 +267,15 @@ export default function ChatModal({ isOpen, onClose }) {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSend()}
+              onKeyPress={(e) => e.key === "Enter" && !loading && handleSend()}
               placeholder="Type your question here..."
               className="flex-grow bg-transparent text-white placeholder-gray-500 border-none focus:ring-0 px-4 py-2 outline-none"
+              disabled={loading}
             />
             <button
               onClick={handleSend}
               className="p-3 bg-fuchsia-600 rounded-full text-white hover:bg-fuchsia-500 transition-colors disabled:opacity-50"
-              disabled={input.trim() === ""}
+              disabled={input.trim() === "" || loading}
               aria-label="Send message"
             >
               <Send size={20} />

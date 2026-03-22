@@ -3,18 +3,9 @@ import React from "react"; // Removed useState and useEffect as they are replace
 import { Shield, Zap, Mail, Twitter, Linkedin } from "lucide-react";
 // 🔑 MODIFIED: Import Link and useLocation from 'react-router-dom'
 import { Link, useLocation } from "react-router-dom";
+import HomeLogo from "./ProjectLogo.jsx/HomeLogo";
 
-// New Logo Component (repeated for self-sufficiency)
-const HelplyAILogo = ({ className = "w-8 h-8" }) => (
-  // 🟢 Semantic Markup: Keeping <div> as this is purely a visual, non-semantic container for positioning icons
-  <div className={`relative ${className}`}>
-    <Shield className="w-full h-full text-white" strokeWidth={1.5} />
-    <Zap
-      className="absolute top-1/2 left-1/2 w-3 h-3 text-fuchsia-400 fill-fuchsia-400 transform -translate-x-1/2 -translate-y-1/2"
-      strokeWidth={0}
-    />
-  </div>
-);
+
 
 const currentYear = new Date().getFullYear();
 
@@ -41,7 +32,10 @@ export default function LegalSubFooter() {
 
   return (
     // 🟢 Semantic Markup: <footer>
-    <footer className="bg-[#0A0027] flex justify-center pt-12 pb-6 border-t border-[#1e004a]" id="footer-section">
+    <footer
+      className="bg-[#0A0027] flex justify-center pt-12 pb-6 border-t border-[#1e004a]"
+      id="footer-section"
+    >
       {/* Replaced motion.div with standard div */}
       <div className="max-w-7xl mx-auto px-6 text-white">
         {/* Top Section: Logo, Mission, and Socials */}
@@ -50,18 +44,11 @@ export default function LegalSubFooter() {
           {/* Column 1: Brand & Mission */}
           {/* 🟢 Semantic Markup: <article> */}
           <article className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
+            <div className="flex items-center space-x-3 mb-8">
               <Link to="/">
-                <HelplyAILogo />
+                <HomeLogo />
               </Link>
-              <h3 className="text-3xl font-extrabold">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">
-                  Helply
-                </span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-blue-400 font-bold italic">
-                  AI
-                </span>
-              </h3>
+            
             </div>
             <p className="text-gray-400 max-w-sm">
               The fastest way for Nigerian businesses to automate support,
@@ -77,12 +64,12 @@ export default function LegalSubFooter() {
             </h4>
             {/* 🔑 MODIFIED: Applied getLinkClasses to navigation links */}
             <ul className="space-y-3">
-              <li>
+              <li key="about">
                 <Link to="/about" className={getLinkClasses("/about")}>
                   About Us
                 </Link>
               </li>
-              <li>
+              <li key="privacy">
                 <Link
                   to="/privacy-policy"
                   className={getLinkClasses("/privacy-policy")}
@@ -90,20 +77,20 @@ export default function LegalSubFooter() {
                   Privacy Policy
                 </Link>
               </li>
-              <li>
-                <Link to="/terms-of-service"
-                 
+              <li key="terms">
+                <Link
+                  to="/terms-of-service"
                   className={getLinkClasses("/terms-of-service")}
                 >
                   Terms of Service
                 </Link>
               </li>
-              <li>
-                <Link to="/gdpr-compliance"
+              <li key="gdpr">
+                <Link
+                  to="/gdpr-compliance"
                   href="/gdpr-compliance"
                   className={getLinkClasses("/gdpr-compliance")}
-                >
-                  GDPR Compliance
+                >GDPR Compliance
                 </Link>
               </li>
             </ul>

@@ -2,18 +2,13 @@ import React, { useState, useEffect } from "react";
 // Removed: import { motion } from "framer-motion";
 import { Shield, Zap, Mail, Twitter, Linkedin } from "lucide-react";
 import { Link } from "react-router-dom"; // Changed to react-router-dom for proper SPA routing
+import Logo from "./ProjectLogo.jsx/Logo";
+import HomeLogo from "./ProjectLogo.jsx/HomeLogo";
 
 // New Logo Component (repeated for self-sufficiency)
-const HelplyAILogo = ({ className = "w-8 h-8" }) => (
-  // 🟢 Semantic Markup: Keeping <div> as this is purely a visual, non-semantic container for positioning icons
-  <div className={`relative ${className}`}>
-    <Shield className="w-full h-full text-white" strokeWidth={1.5} />
-    <Zap
-      className="absolute top-1/2 left-1/2 w-3 h-3 text-fuchsia-400 fill-fuchsia-400 transform -translate-x-1/2 -translate-y-1/2"
-      strokeWidth={0}
-    />
-  </div>
-);
+
+// 🟢 Semantic Markup: Keeping <div> as this is purely a visual, non-semantic container for positioning icons
+<HomeLogo/>;  
 
 const currentYear = new Date().getFullYear();
 
@@ -45,7 +40,7 @@ export default function Footer() {
   // 🔑 NEW: Function to check if a link is active and return the class
   const getLinkClasses = (
     hrefOrTo,
-    defaultHoverClass = "hover:text-fuchsia-300"
+    defaultHoverClass = "hover:text-fuchsia-300",
   ) => {
     let isActive = false;
     const path = hrefOrTo.startsWith("/") ? hrefOrTo : "";
@@ -70,7 +65,10 @@ export default function Footer() {
 
   return (
     // 🟢 Semantic Markup: <footer>
-    <footer className="bg-[#0A0027] pt-12 pb-6 border-t border-[#1e004a]" id="footer-section">
+    <footer
+      className="bg-[#0A0027] pt-12 pb-6 border-t border-[#1e004a]"
+      id="footer-section"
+    >
       {/* Replaced motion.div with standard div */}
       <div className="max-w-7xl mx-auto px-6 text-white">
         {/* Top Section: Logo, Mission, and Socials */}
@@ -79,18 +77,10 @@ export default function Footer() {
           {/* Column 1: Brand & Mission */}
           {/* 🟢 Semantic Markup: <article> */}
           <article className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
+            <div className="flex items-center space-x-3 mb-8">
               <Link to="/">
-                <HelplyAILogo />
+                <HomeLogo disableLink={true} />
               </Link>
-              <h3 className="text-3xl font-extrabold">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-fuchsia-400">
-                  Helply
-                </span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-blue-400 font-bold italic">
-                  AI
-                </span>
-              </h3>
             </div>
             <p className="text-gray-400 max-w-sm">
               The fastest way for Nigerian businesses to automate support,
@@ -104,22 +94,22 @@ export default function Footer() {
             <h4 className="text-lg font-bold mb-4 text-fuchsia-400">Product</h4>
             {/* 🔑 MODIFIED: Applied getLinkClasses for active hash links */}
             <ul className="space-y-3">
-              <li>
+              <li key="features">
                 <a href="#features" className={getLinkClasses("#features")}>
                   Features
                 </a>
               </li>
-              <li>
+              <li key="pricing">
                 <a href="#pricing" className={getLinkClasses("#pricing")}>
                   Pricing
                 </a>
               </li>
-              <li>
+              <li key="faq">
                 <a href="#faq" className={getLinkClasses("#faq")}>
                   FAQ
                 </a>
               </li>
-              <li>
+              <li key="demo">
                 <a href="#demo" className={getLinkClasses("#demo")}>
                   Request a Demo
                 </a>
@@ -135,12 +125,12 @@ export default function Footer() {
             </h4>
             {/* 🔑 MODIFIED: Applied getLinkClasses for active route links */}
             <ul className="space-y-3">
-              <li>
+              <li key="about">
                 <Link to="/about" className={getLinkClasses("/about")}>
                   About Us
                 </Link>
               </li>
-              <li>
+              <li key="privacy">
                 <Link
                   to="/privacy-policy"
                   className={getLinkClasses("/privacy-policy")}
@@ -148,7 +138,7 @@ export default function Footer() {
                   Privacy Policy
                 </Link>
               </li>
-              <li>
+              <li key="terms">
                 <a
                   href="/terms-of-service"
                   className={getLinkClasses("/terms-of-service")}
@@ -156,7 +146,7 @@ export default function Footer() {
                   Terms of Service
                 </a>
               </li>
-              <li>
+              <li key="gdpr">
                 <a
                   href="/gdpr-compliance"
                   className={getLinkClasses("/gdpr-compliance")}
